@@ -64,7 +64,6 @@
 #define false					0
 #endif // false
 
-typedef unsigned char			bool;	///<BOOL
 #define  ALG_SHA1           (uint16_t)(0x0004)
 #define  ALG_SHA224         (uint16_t)(0x000A)
 #define  ALG_SHA256         (uint16_t)(0x000B)

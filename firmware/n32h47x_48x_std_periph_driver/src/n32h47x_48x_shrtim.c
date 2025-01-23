@@ -6405,7 +6405,7 @@ void SHRTIM_EXEV_SetFilter(SHRTIM_Module *SHRTIMx, uint32_t Event, uint32_t Filt
     uint32_t iEvent = (uint8_t)(POSITION_VAL(Event) - POSITION_VAL(SHRTIM_EVENT_1));
     __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&SHRTIMx->sCommonRegs.EXEVCTRL3) +
                                                        REG_OFFSET_TAB_EXEVCTRL[iEvent]));
-    MODIFY_REG(*pReg, (SHRTIM_EXEVCTRL3_EXEV1FLT << REG_SHIFT_TAB_EXEVx[iEvent]), (Filter << REG_SHIFT_TAB_EXEVx[iEvent]));
+    MODIFY_REG(*pReg, (SHRTIM_EXEVCTRL3_EXEV1F << REG_SHIFT_TAB_EXEVx[iEvent]), (Filter << REG_SHIFT_TAB_EXEVx[iEvent]));
 }
 
 /**
@@ -6445,7 +6445,7 @@ uint32_t SHRTIM_EXEV_GetFilter(SHRTIM_Module *SHRTIMx, uint32_t Event)
     uint32_t iEvent = (uint8_t)(POSITION_VAL(Event) - POSITION_VAL(SHRTIM_EVENT_1));
     const __IO uint32_t *pReg = (__IO uint32_t *)((uint32_t)((uint32_t)(&SHRTIMx->sCommonRegs.EXEVCTRL3) +
                                                              REG_OFFSET_TAB_EXEVCTRL[iEvent]));
-    return (READ_BIT(*pReg, (uint32_t)(SHRTIM_EXEVCTRL3_EXEV1FLT) << REG_SHIFT_TAB_EXEVx[iEvent]) >> REG_SHIFT_TAB_EXEVx[iEvent]);
+    return (READ_BIT(*pReg, (uint32_t)(SHRTIM_EXEVCTRL3_EXEV1F) << REG_SHIFT_TAB_EXEVx[iEvent]) >> REG_SHIFT_TAB_EXEVx[iEvent]);
 }
 
 /**
@@ -7245,11 +7245,12 @@ uint32_t SHRTIM_BM_GetMode(SHRTIM_Module *SHRTIMx)
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_C
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_D
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_E
-*\*\        - SHRTIM_BM_CLKSRC_TIM16_OC
-*\*\        - SHRTIM_BM_CLKSRC_TIM17_OC
-*\*\        - SHRTIM_BM_CLKSRC_TIM7_TRGO
-*\*\        - SHRTIM_BM_CLKSRC_FSHRTIM
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_F
+*\*\        - SHRTIM_BM_CLKSRC_GTIM8_OC1
+*\*\        - SHRTIM_BM_CLKSRC_GTIM9_OC1
+*\*\        - SHRTIM_BM_CLKSRC_GTIM10_OC1
+*\*\        - SHRTIM_BM_CLKSRC_BTIM1_TRGO
+*\*\        - SHRTIM_BM_CLKSRC_FSHRTIM
 *\*\return None
 **/
 void SHRTIM_BM_SetClockSrc(SHRTIM_Module *SHRTIMx, uint32_t ClockSrc)
@@ -7267,11 +7268,12 @@ void SHRTIM_BM_SetClockSrc(SHRTIM_Module *SHRTIMx, uint32_t ClockSrc)
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_C
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_D
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_E
-*\*\        - SHRTIM_BM_CLKSRC_TIM16_OC
-*\*\        - SHRTIM_BM_CLKSRC_TIM17_OC
-*\*\        - SHRTIM_BM_CLKSRC_TIM7_TRGO
-*\*\        - SHRTIM_BM_CLKSRC_FSHRTIM
 *\*\        - SHRTIM_BM_CLKSRC_TIMER_F
+*\*\        - SHRTIM_BM_CLKSRC_GTIM8_OC1
+*\*\        - SHRTIM_BM_CLKSRC_GTIM9_OC1
+*\*\        - SHRTIM_BM_CLKSRC_GTIM10_OC1
+*\*\        - SHRTIM_BM_CLKSRC_BTIM1_TRGO
+*\*\        - SHRTIM_BM_CLKSRC_FSHRTIM
 **/
 uint32_t SHRTIM_BM_GetClockSrc(SHRTIM_Module *SHRTIMx)
 {

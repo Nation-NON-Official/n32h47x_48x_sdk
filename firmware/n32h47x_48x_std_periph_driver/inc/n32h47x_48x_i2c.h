@@ -216,8 +216,8 @@ typedef struct
 #define BYTENUM_BTNUMEN_SET     ((uint32_t)0x00008000U)
 #define BYTENUM_BTNUMEN_RESET   ((uint32_t)0xFFFF7FFFU)
 
-#define RESTART_PROCESS					((uint32_t)0x00004000U)
-#define STOP_PROCESS						((uint32_t)0x00000000U)
+#define RESTART_PROCESS				((uint32_t)0x00004000U)
+#define STOP_PROCESS				((uint32_t)0x00000000U)
 
 /* I2C BYTENUM byte number mask */
 #define BYTENUM_Mask              ((uint16_t)0x3FFF)
@@ -245,48 +245,35 @@ typedef struct
 #define I2C_ANALOG_FILTER_WIDTH_15NS   ((uint32_t)0x00000100U)			
 #define I2C_ANALOG_FILTER_WIDTH_25NS   ((uint32_t)0x00000200U)		
 #define I2C_ANALOG_FILTER_WIDTH_35NS   ((uint32_t)0x00000300U)
-
-#define IS_I2C_ANF_WIDTH(WIDTH) (((WIDTH) == I2C_ANALOG_FILTER_WIDTH_5NS) ||  ((WIDTH) == I2C_ANALOG_FILTER_WIDTH_15NS) || ((WIDTH) == I2C_ANALOG_FILTER_WIDTH_25NS) ||  ((WIDTH) == I2C_ANALOG_FILTER_WIDTH_35NS))
 			
 /*===================================================================================================================================*/		
 
-/** I2C_Exported_Constants **/
-
-#define IS_I2C_PERIPH(PERIPH) (((PERIPH) == I2C1) || ((PERIPH) == I2C2) || ((PERIPH) == I2C3) || ((PERIPH) == I2C4))
 
 /** I2C_BusMode **/
 
 #define I2C_BUSMODE_I2C       ((uint16_t)0x0000U)
 #define I2C_BUSMODE_SMBDEVICE ((uint16_t)0x0002U)
 #define I2C_BUSMODE_SMBHOST   ((uint16_t)0x0006U)
-#define IS_I2C_BUS_MODE(MODE)                                                                                          \
-    (((MODE) == I2C_BUSMODE_I2C) || ((MODE) == I2C_BUSMODE_SMBDEVICE) || ((MODE) == I2C_BUSMODE_SMBHOST))
 
 /** I2C_duty_cycle_in_fast_mode **/
 
 #define I2C_FMDUTYCYCLE_16_9        ((uint16_t)0x8000U) /*!< I2C fast mode Tlow/Thigh = 16/9 */
 #define I2C_FMDUTYCYCLE_2           ((uint16_t)0x7FFFU) /*!< I2C fast mode Tlow/Thigh = 2 */
-#define IS_I2C_FM_DUTY_CYCLE(CYCLE) (((CYCLE) == I2C_FMDUTYCYCLE_16_9) || ((CYCLE) == I2C_FMDUTYCYCLE_2))
-
 
 /** I2C_acknowledgement **/
 
 #define I2C_ACKEN               ((uint16_t)0x0200U)
 #define I2C_ACKDIS              ((uint16_t)0x0000U)
-#define IS_I2C_ACK_STATE(STATE) (((STATE) == I2C_ACKEN) || ((STATE) == I2C_ACKDIS))
 
 /** I2C_transfer_direction **/
 
 #define I2C_DIRECTION_SEND          ((uint8_t)0x00U)
 #define I2C_DIRECTION_RECV          ((uint8_t)0x01U)
-#define IS_I2C_DIRECTION(DIRECTION) (((DIRECTION) == I2C_DIRECTION_SEND) || ((DIRECTION) == I2C_DIRECTION_RECV))
 
 /** I2C_acknowledged_address **/
 
 #define I2C_ADDR_MODE_7BIT        ((uint16_t)0x0000U)
 #define I2C_ADDR_MODE_10BIT       ((uint16_t)0x8000U)
-#define IS_I2C_ADDR_MODE(ADDRESS) (((ADDRESS) == I2C_ADDR_MODE_7BIT) || ((ADDRESS) == I2C_ADDR_MODE_10BIT))
-
 
 /** I2C_registers **/
 
@@ -296,95 +283,70 @@ typedef struct
 #define I2C_REG_OADDR2  				((uint8_t)0x0CU)
 #define I2C_REG_DAT     				((uint8_t)0x10U)
 #define I2C_REG_STS1    				((uint8_t)0x14U)
-#define I2C_REG_STS2   				  ((uint8_t)0x18U)
+#define I2C_REG_STS2   				    ((uint8_t)0x18U)
 #define I2C_REG_CLKCTRL 				((uint8_t)0x1CU)
 #define I2C_REG_TMRISE  				((uint8_t)0x20U)
-#define I2C_REG_BYTENUM    			((uint8_t)0x24U)
-#define I2C_REG_GFLTRCTRL  			((uint8_t)0x28U)
+#define I2C_REG_BYTENUM    		    	((uint8_t)0x24U)
+#define I2C_REG_GFLTRCTRL  		    	((uint8_t)0x28U)
 #define I2C_REG_FIFODAT  				((uint8_t)0x2CU)
-#define IS_I2C_REG(REGISTER)                                                                                           \
-    (((REGISTER) == I2C_REG_CTRL1) || ((REGISTER) == I2C_REG_CTRL2) || ((REGISTER) == I2C_REG_OADDR1)                  \
-     || ((REGISTER) == I2C_REG_OADDR2) || ((REGISTER) == I2C_REG_DAT) || ((REGISTER) == I2C_REG_STS1)                  \
-     || ((REGISTER) == I2C_REG_STS2) || ((REGISTER) == I2C_REG_CLKCTRL) || ((REGISTER) == I2C_REG_TMRISE) 							\
-		 || ((REGISTER) == I2C_REG_BYTENUM) || ((REGISTER) == I2C_REG_GFLTRCTRL) || ((REGISTER) == I2C_REG_FIFODAT))
 
 /** I2C_SMBus_alert_pin_level **/
-
 #define I2C_SMBALERT_LOW        ((uint16_t)0x1000U)
 #define I2C_SMBALERT_HIGH       ((uint16_t)0xEFFFU)
-#define IS_I2C_SMB_ALERT(ALERT) (((ALERT) == I2C_SMBALERT_LOW) || ((ALERT) == I2C_SMBALERT_HIGH))
 
 /** I2C_PEC_position **/
 
 #define I2C_PEC_POS_NEXT         ((uint16_t)0x0400U)
 #define I2C_PEC_POS_CURRENT      ((uint16_t)0xFBFFU)
-#define IS_I2C_PEC_POS(POSITION) (((POSITION) == I2C_PEC_POS_NEXT) || ((POSITION) == I2C_PEC_POS_CURRENT))
-
 
 /** I2C_NCAK_position **/
 
 #define I2C_NACK_POS_NEXT         ((uint16_t)0x0400U)
 #define I2C_NACK_POS_CURRENT      ((uint16_t)0xFBFFU)
-#define IS_I2C_NACK_POS(POSITION) (((POSITION) == I2C_NACK_POS_NEXT) || ((POSITION) == I2C_NACK_POS_CURRENT))
-
 
 /** I2C_interrupts_definition **/
 
-#define I2C_INT_BUF        				((uint32_t)0x00001000U)
-#define I2C_INT_EVENT      				((uint32_t)0x00002000U)
-#define I2C_INT_ERR        				((uint32_t)0x00004000U)
-#define I2C_INT_FIFOF    		((uint32_t)0x00010000U) /*!< FIFO full interrupt enable */
-#define I2C_INT_FIFOE    		((uint32_t)0x00020000U) /*!< FIFO empty interrupt enable */
-#define I2C_INT_FIFOHF    		((uint32_t)0x00040000U) /*!< FIFOHF interrupt enable, when fifo enable */
-#define I2C_INT_FIFOHE    		((uint32_t)0x00080000U) /*!< FIFOHE interrupt enable,when fifo enable */
-#define I2C_INT_FIFORDEIEN        ((uint32_t)0x00100000U) /*!< FIFORDEIEN interrupt enable,when fifo enable */
-#define I2C_INT_FIFOWREIEN				((uint32_t)0x00200000U) /*!< FIFOWREIEN interrupt enable,when fifo enable */
-#define I2C_INT_DMAETOEIEN        ((uint32_t)0x00400000U) /*!< DMAETOEIEN interrupt enable,when fifo enable */
-#define I2C_INT_FIFONE		    ((uint32_t)0x01000000U) /*!< FIFO not empty interrupt enable */
-#define I2C_INT_FIFONF		    ((uint32_t)0x02000000U) /*!< FIFO not full interrupt enable */
-#define I2C_INT_SDATOLIEN		      ((uint32_t)0x04000000U) /*!< SDA low timeout interrupt enable */
-#define I2C_INT_SCLTOHIEN		      ((uint32_t)0x08000000U) /*!< SCL high timeout interrupt enable */
-#define I2C_INT_SCLTOLIEN		      ((uint32_t)0x10000000U) /*!< SCL low timeout interrupt enable */
-
-//#define IS_I2C_CFG_INT(IT) ((((IT) & (uint16_t)0x8FFF) == 0x00) && ((IT) != 0x00))
+#define I2C_INT_BUF        		  ((uint32_t)0x00001000U)
+#define I2C_INT_EVENT      		  ((uint32_t)0x00002000U)
+#define I2C_INT_ERR        		  ((uint32_t)0x00004000U)
+#define I2C_INT_FIFOF    		  ((uint32_t)0x00010000U) /* FIFO full interrupt enable */
+#define I2C_INT_FIFOE    		  ((uint32_t)0x00020000U) /* FIFO empty interrupt enable */
+#define I2C_INT_FIFOHF    		  ((uint32_t)0x00040000U) /* FIFOHF interrupt enable, when fifo enable */
+#define I2C_INT_FIFOHE    		  ((uint32_t)0x00080000U) /* FIFOHE interrupt enable,when fifo enable */
+#define I2C_INT_FIFORDEIEN        ((uint32_t)0x00100000U) /* FIFORDEIEN interrupt enable,when fifo enable */
+#define I2C_INT_FIFOWREIEN		  ((uint32_t)0x00200000U) /* FIFOWREIEN interrupt enable,when fifo enable */
+#define I2C_INT_DMAETOEIEN        ((uint32_t)0x00400000U) /* DMAETOEIEN interrupt enable,when fifo enable */
+#define I2C_INT_FIFONE		      ((uint32_t)0x01000000U) /* FIFO not empty interrupt enable */
+#define I2C_INT_FIFONF		      ((uint32_t)0x02000000U) /* FIFO not full interrupt enable */
+#define I2C_INT_SDATOLIEN		  ((uint32_t)0x04000000U) /* SDA low timeout interrupt enable */
+#define I2C_INT_SCLTOHIEN		  ((uint32_t)0x08000000U) /* SCL high timeout interrupt enable */
+#define I2C_INT_SCLTOLIEN		  ((uint32_t)0x10000000U) /* SCL low timeout interrupt enable */
 
 /** I2C_interrupts_definition **/
 
-#define I2C_INT_STARTBF  				((uint32_t)0x00000001U) /*!< Start Bit (Master mode) */
-#define I2C_INT_ADDRF    				((uint32_t)0x00000002U) /*!< Address sent (master mode)/matched (slave mode) */
-#define I2C_INT_BSF      				((uint32_t)0x00000004U) /*!< Byte Transfer Finished */
-#define I2C_INT_STOPF    				((uint32_t)0x00000008U) /*!< Stop detection (Slave mode) */
-#define I2C_INT_RXDATNE  				((uint32_t)0x00000010U) /*!< Data Register not Empty (receivers) */
-#define I2C_INT_TXDATE   				((uint32_t)0x00000020U) /*!< Data Register Empty (transmitters) */
-#define I2C_INT_ADDR10F  				((uint32_t)0x00000040U) /*!< 10-bit header sent (Master mode) */
-#define I2C_INT_ACKFAIL  				((uint32_t)0x00000100U) /*!< Acknowledge Failure */
-#define I2C_INT_ARLOST   				((uint32_t)0x00000200U) /*!< Arbitration Lost (master mode) */
-#define I2C_INT_BUSERR   				((uint32_t)0x00000400U) /*!< Bus Error */
-#define I2C_INT_OVERRUN  				((uint32_t)0x00000800U) /*!< Overrun/Underrun */
-#define I2C_INT_PECERR   				((uint32_t)0x00001000U) /*!< PEC Error in reception */
-#define I2C_INT_SMBALERT 				((uint32_t)0x00004000U) /*!< SMBus Alert */
-#define I2C_INT_FIFOF 					((uint32_t)0x00010000U) /*!< FIFO full */
-#define I2C_INT_FIFOE 					((uint32_t)0x00020000U) /*!< FIFO empty */
-#define I2C_INT_FIFOHF 					((uint32_t)0x00040000U) /*!< FIFO half full */
-#define I2C_INT_FIFOHE 					((uint32_t)0x00080000U) /*!< FIFO half empty */
-#define I2C_INT_FIFORDERR 			((uint32_t)0x00100000U) /*!< Read data when FIFO is empty */
-#define I2C_INT_FIFOWRERR 			((uint32_t)0x00200000U) /*!< Write data when FIFO is full */
-#define I2C_INT_DMAETOERR 			((uint32_t)0x00400000U) /*!< Prove that the DMA transmission is complete but no ETO signal is given */
-#define I2C_INT_SDALTO 	    		((uint32_t)0x00800000U) /*!< SDA timeout low error */
-#define I2C_INT_SCLHTO      		((uint32_t)0x01000000U) /*!< SCL timeout high error */
-#define I2C_INT_SCLLTO 	    		((uint32_t)0x02000000U) /*!< SCL timeout low error */
-
-
-
-
-#define IS_I2C_CLR_INT(IT) ((((IT) & (uint16_t)0x80FFU) == 0x00) && ((IT) != (uint16_t)0x00U))
-
-#define IS_I2C_GET_INT(IT)                                                                                             \
-   (((IT) == I2C_INT_SMBALERT) || ((IT) == I2C_INT_TIMOUT) || ((IT) == I2C_INT_PECERR) || ((IT) == I2C_INT_OVERRUN)   \
-    || ((IT) == I2C_INT_ACKFAIL) || ((IT) == I2C_INT_ARLOST) || ((IT) == I2C_INT_BUSERR) || ((IT) == I2C_INT_TXDATE)  \
-    || ((IT) == I2C_INT_RXDATNE) || ((IT) == I2C_INT_STOPF) || ((IT) == I2C_INT_ADDR10F) || ((IT) == I2C_INT_BYTEF)   \
-     || ((IT) == I2C_INT_ADDRF) || ((IT) == I2C_INT_STARTBF))
-
+#define I2C_INT_STARTBF  				((uint32_t)0x00000001U) /* Start Bit (Master mode) */
+#define I2C_INT_ADDRF    				((uint32_t)0x00000002U) /* Address sent (master mode)/matched (slave mode) */
+#define I2C_INT_BSF      				((uint32_t)0x00000004U) /* Byte Transfer Finished */
+#define I2C_INT_STOPF    				((uint32_t)0x00000008U) /* Stop detection (Slave mode) */
+#define I2C_INT_RXDATNE  				((uint32_t)0x00000010U) /* Data Register not Empty (receivers) */
+#define I2C_INT_TXDATE   				((uint32_t)0x00000020U) /* Data Register Empty (transmitters) */
+#define I2C_INT_ADDR10F  				((uint32_t)0x00000040U) /* 10-bit header sent (Master mode) */
+#define I2C_INT_ACKFAIL  				((uint32_t)0x00000100U) /* Acknowledge Failure */
+#define I2C_INT_ARLOST   				((uint32_t)0x00000200U) /* Arbitration Lost (master mode) */
+#define I2C_INT_BUSERR   				((uint32_t)0x00000400U) /* Bus Error */
+#define I2C_INT_OVERRUN  				((uint32_t)0x00000800U) /* Overrun/Underrun */
+#define I2C_INT_PECERR   				((uint32_t)0x00001000U) /* PEC Error in reception */
+#define I2C_INT_SMBALERT 				((uint32_t)0x00004000U) /* SMBus Alert */
+#define I2C_INT_FIFOF 					((uint32_t)0x00010000U) /* FIFO full */
+#define I2C_INT_FIFOE 					((uint32_t)0x00020000U) /* FIFO empty */
+#define I2C_INT_FIFOHF 					((uint32_t)0x00040000U) /* FIFO half full */
+#define I2C_INT_FIFOHE 					((uint32_t)0x00080000U) /* FIFO half empty */
+#define I2C_INT_FIFORDERR 			    ((uint32_t)0x00100000U) /* Read data when FIFO is empty */
+#define I2C_INT_FIFOWRERR 			    ((uint32_t)0x00200000U) /* Write data when FIFO is full */
+#define I2C_INT_DMAETOERR 			    ((uint32_t)0x00400000U) /* Prove that the DMA transmission is complete but no ETO signal is given */
+#define I2C_INT_SDALTO 	    		    ((uint32_t)0x00800000U) /* SDA timeout low error */
+#define I2C_INT_SCLHTO      		    ((uint32_t)0x01000000U) /* SCL timeout high error */
+#define I2C_INT_SCLLTO 	    		    ((uint32_t)0x02000000U) /* SCL timeout low error */
 
 /** I2C_flags_definition **/
 
@@ -406,39 +368,23 @@ typedef struct
 #define I2C_FLAG_DMAETOERR					((uint32_t)0x10400000U)
 #define I2C_FLAG_FIFOWRERR					((uint32_t)0x10200000U)
 #define I2C_FLAG_FIFORDERR					((uint32_t)0x10100000U)
-#define I2C_FLAG_FIFOHE							((uint32_t)0x10080000U)
-#define I2C_FLAG_FIFOHF							((uint32_t)0x10040000U)
-#define I2C_FLAG_FIFOE							((uint32_t)0x10020000U)
-#define I2C_FLAG_FIFOF							((uint32_t)0x10010000U)
+#define I2C_FLAG_FIFOHE						((uint32_t)0x10080000U)
+#define I2C_FLAG_FIFOHF						((uint32_t)0x10040000U)
+#define I2C_FLAG_FIFOE						((uint32_t)0x10020000U)
+#define I2C_FLAG_FIFOF						((uint32_t)0x10010000U)
 #define I2C_FLAG_SMBALERT 					((uint32_t)0x10004000U)
 #define I2C_FLAG_PECERR   					((uint32_t)0x10001000U)
 #define I2C_FLAG_OVERRUN  					((uint32_t)0x10000800U)
 #define I2C_FLAG_BUSERR   					((uint32_t)0x10000400U)
 #define I2C_FLAG_ARLOST   					((uint32_t)0x10000200U)
-#define I2C_FLAG_ACKFAIL						((uint32_t)0x10000100U)
+#define I2C_FLAG_ACKFAIL					((uint32_t)0x10000100U)
 #define I2C_FLAG_ADDR10F  					((uint32_t)0x10000040U)
 #define I2C_FLAG_TXDATE   					((uint32_t)0x10000020U)
 #define I2C_FLAG_RXDATNE  					((uint32_t)0x10000010U)
 #define I2C_FLAG_STOPF    					((uint32_t)0x10000008U)
-#define I2C_FLAG_BSF     	 					((uint32_t)0x10000004U)
+#define I2C_FLAG_BSF     	 				((uint32_t)0x10000004U)
 #define I2C_FLAG_ADDRF    					((uint32_t)0x10000002U)
 #define I2C_FLAG_STARTBF  					((uint32_t)0x10000001U)
-
-#define IS_I2C_CLR_FLAG(FLAG) ((((FLAG) & (uint16_t)0x80FFU) == 0x00) && ((FLAG) != (uint16_t)0x00U))
-
-#define IS_I2C_GET_FLAG(FLAG)                                                                                          \
-    (((FLAG) == I2C_FLAG_DUALFLAG) || ((FLAG) == I2C_FLAG_SMBHADDR) || ((FLAG) == I2C_FLAG_SMBDADDR)                   \
-     || ((FLAG) == I2C_FLAG_GCALLADDR) || ((FLAG) == I2C_FLAG_TRF) || ((FLAG) == I2C_FLAG_BUSY)                        \
-     || ((FLAG) == I2C_FLAG_MSMODE) || ((FLAG) == I2C_FLAG_SMBALERT) || ((FLAG) == I2C_FLAG_SCLLTO)            \
-     || ((FLAG) == I2C_FLAG_PECERR) || ((FLAG) == I2C_FLAG_OVERRUN) || ((FLAG) == I2C_FLAG_ACKFAIL)                    \
-     || ((FLAG) == I2C_FLAG_ARLOST) || ((FLAG) == I2C_FLAG_BUSERR) || ((FLAG) == I2C_FLAG_TXDATE)                      \
-     || ((FLAG) == I2C_FLAG_RXDATNE) || ((FLAG) == I2C_FLAG_STOPF) || ((FLAG) == I2C_FLAG_ADDR10F)                     \
-     || ((FLAG) == I2C_FLAG_SCLHTO) || ((FLAG) == I2C_FLAG_ADDRF) || ((FLAG) == I2C_FLAG_STARTBF)						 \
-		 ||  ((FLAG) == I2C_FLAG_SDALTO) ||  ((FLAG) == I2C_FLAG_DMAETOERR) || ((FLAG) == I2C_FLAG_FIFOWRERR)			 \
-		 || ((FLAG) == I2C_FLAG_FIFORDERR) || ((FLAG) == I2C_FLAG_FIFOHE) ||((FLAG) == I2C_FLAG_FIFOHF) 									 \
-		 ||((FLAG) == I2C_FLAG_FIFOE) ||((FLAG) == I2C_FLAG_FIFOF) ||((FLAG) == I2C_FLAG_BSF))
-
-
 
 /***  I2C_Events ***/
 
@@ -639,23 +585,6 @@ typedef struct
 /* --EV3_2_FIFO */
 #define  I2C_EVENT_SLAVE_FIFO_ACK_FAILURE                  ((uint32_t)0x000A0100U)  /* FIFOHE, FIFOE and AF flag */
 
-
-/*===========================      End of Events Description           ==========================================*/
-
-#define IS_I2C_EVT(EVENT)                                                                                              \
-    (((EVENT) == I2C_EVT_SLAVE_SEND_ADDR_MATCHED) || ((EVENT) == I2C_EVT_SLAVE_RECV_ADDR_MATCHED)                      \
-     || ((EVENT) == I2C_EVT_SLAVE_SEND_ADDR2_MATCHED) || ((EVENT) == I2C_EVT_SLAVE_RECV_ADDR2_MATCHED)                 \
-     || ((EVENT) == I2C_EVT_SLAVE_GCALLADDR_MATCHED) || ((EVENT) == I2C_EVT_SLAVE_DATA_RECVD)                          \
-     || ((EVENT) == (I2C_EVT_SLAVE_DATA_RECVD | I2C_FLAG_DUALFLAG))                                                    \
-     || ((EVENT) == (I2C_EVT_SLAVE_DATA_RECVD | I2C_FLAG_GCALLADDR)) || ((EVENT) == I2C_EVT_SLAVE_DATA_SENDED)         \
-     || ((EVENT) == (I2C_EVT_SLAVE_DATA_SENDED | I2C_FLAG_DUALFLAG))                                                   \
-     || ((EVENT) == (I2C_EVT_SLAVE_DATA_SENDED | I2C_FLAG_GCALLADDR)) || ((EVENT) == I2C_EVT_SLAVE_STOP_RECVD)         \
-     || ((EVENT) == I2C_EVT_MASTER_MODE_FLAG) || ((EVENT) == I2C_EVT_MASTER_TXMODE_FLAG)                               \
-     || ((EVENT) == I2C_EVT_MASTER_RXMODE_FLAG) || ((EVENT) == I2C_EVT_MASTER_DATA_RECVD_FLAG)                         \
-     || ((EVENT) == I2C_EVT_MASTER_DATA_SENDED) || ((EVENT) == I2C_EVT_MASTER_DATA_SENDING)                            \
-     || ((EVENT) == I2C_EVT_MASTER_MODE_ADDRESS10_FLAG) || ((EVENT) == I2C_EVT_SLAVE_ACK_MISS))
-
-
 /** I2C_own_address1 **/
 
 #define IS_I2C_OWN_ADDR1(ADDRESS1) ((ADDRESS1) <= 0x3FF)
@@ -663,7 +592,7 @@ typedef struct
 
 /** I2C_clock_speed **/
 
-#define IS_I2C_CLK_SPEED(SPEED) (((SPEED) >= 0x1) && ((SPEED) <= 400000))
+#define IS_I2C_CLK_SPEED(SPEED) (((SPEED) >= 0x1) && ((SPEED) <= 1000000))
 
 
 /** I2C_Exported_Macros **/
@@ -697,12 +626,8 @@ void I2C_EnableArp(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_EnableExtendClk(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_ConfigFastModeDutyCycle(I2C_Module* I2Cx, uint16_t FmDutyCycle);
 uint16_t I2C_GetRegister(const I2C_Module* I2Cx, uint8_t I2C_Register);
-
-
 ErrorStatus I2C_CheckFifoEvent(I2C_Module* I2Cx, uint32_t I2C_FIFO_EVENT);
-uint32_t I2C_GetLastFifoEvent(I2C_Module* I2Cx);
-
-	
+uint32_t I2C_GetLastFifoEvent(I2C_Module* I2Cx);	
 void I2C_ClrFIFO(I2C_Module* I2Cx);
 void I2C_EnableFIFO(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_EnableDMAFIFO(I2C_Module* I2Cx, FunctionalState Cmd);
@@ -711,13 +636,10 @@ void I2C_SetByteNumLastStartStop(I2C_Module* I2Cx, uint16_t LastStatus);
 void I2C_SetReceivedDataBytesNum(I2C_Module* I2Cx, uint16_t Number_Of_bytes);
 void I2C_SetTxFifoThreshold( I2C_Module* I2Cx, uint8_t TxFifoThreshold );
 void I2C_SetRxFifoThreshold( I2C_Module* I2Cx, uint8_t RxFifoThreshold );
-
 void I2C_SetFIFODAT(I2C_Module* I2Cx, uint32_t I2C_BYTENUM);
 uint8_t I2C_GetFIFODAT(const I2C_Module* I2Cx);
 void I2C_EnableLowTimeout(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_EnableHighTimeout(I2C_Module* I2Cx, FunctionalState Cmd);
-
-/*========================================Below is for analouge and digital filter function==========================================*/		
 void I2C_EnableSCLAnalogFilter(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_EnableSDAAnalogFilter(I2C_Module* I2Cx, FunctionalState Cmd);
 void I2C_SetSCLAnalogFilterWidth(I2C_Module* I2Cx, uint32_t width);

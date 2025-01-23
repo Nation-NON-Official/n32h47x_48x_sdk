@@ -250,16 +250,10 @@ ErrorStatus RTC_EnterInitMode(void)
     __IO uint32_t initcounter = 0x00;
     ErrorStatus status;
     uint32_t initstatus;
-    uint32_t count = 0;
 
     /* Check if the Initialization mode is set */
     if ((RTC->INITSTS & RTC_INITSTS_INITF) == (uint32_t)RESET)
     {
-        /*SUBS is not less than 2 befor entering the initializations mode*/
-        while((RTC->SUBS <=3) && (count < INITMODE_TIMEOUT))
-        {
-            count++;
-        };
         /* Set the Initialization mode */
         RTC->INITSTS = (uint32_t)RTC_INITSTS_INITM;
 

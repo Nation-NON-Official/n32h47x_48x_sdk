@@ -1635,6 +1635,10 @@ FLASH_STS FLASH_WaitForLastOpt(uint32_t Timeout)
     uint32_t Timeout_temp;
     Timeout_temp = Timeout;
 
+    __NOP();
+    __NOP();
+    __NOP();
+    __NOP();
     /* Check for the Flash Status */
     status_value = FLASH_GetSTS();
     /* Wait for a Flash operation to complete or a TIMEOUT to occur */

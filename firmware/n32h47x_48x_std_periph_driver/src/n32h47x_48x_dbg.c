@@ -87,7 +87,6 @@ void GetUCID(uint8_t *UCIDbuf)
         UCIDbuf[num] = (uint8_t)(temp >> 16);
         num++;
         UCIDbuf[num] = (uint8_t)(temp >> 24);
-        num++;
     }
 }
 
@@ -123,7 +122,6 @@ void GetUID(uint8_t *UIDbuf)
         UIDbuf[num] = (uint8_t)(temp >> 16);
         num++;
         UIDbuf[num] = (uint8_t)(temp >> 24);
-        num++;
     }
 }
 
@@ -150,7 +148,6 @@ void GetDBGMCU_ID(uint8_t *DBGMCU_IDbuf)
         DBGMCU_IDbuf[num] = (uint8_t)(temp >> 16);
         num++;
         DBGMCU_IDbuf[num] = (uint8_t)(temp >> 24);
-        num++;
     }
 }
 
@@ -206,6 +203,9 @@ uint32_t DBG_GetDevNum(void)
                 - DBG_GTIM9_STOP        \* GTIM9 counter stopped when core is halted *\
                 - DBG_GTIM10_STOP       \* GTIM10 counter stopped when core is halted *\
                 - DBG_SHRTIM1_STOP      \* SHRTIM1 counter stopped when core is halted *\  
+*\*\param   Cmd: 
+*\*\          - ENABLE  
+*\*\          - DISABLE      
 *\*\return  none
 **/
 void DBG_ConfigPeriph(uint32_t DBG_Periph, FunctionalState Cmd)

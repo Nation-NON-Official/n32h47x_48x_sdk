@@ -88,7 +88,7 @@ static uint8_t  USBD_MSC_CDC_DataOut      (void *pdev , uint8_t epnum);
 static uint8_t  USBD_MSC_CDC_SOF          (void *pdev); 
 static uint8_t* USBD_MSC_CDC_GetConfigDescriptor(uint8_t speed , uint16_t *length); 
 
-#define USB_HID_CDC_CONFIG_DESC_SIZ  (USB_MSC_CONFIG_DESC_SIZ -9 + USB_CDC_CONFIG_DESC_SIZ  + 8)
+#define USB_MSC_CDC_CONFIG_DESC_SIZ  (USB_MSC_CONFIG_DESC_SIZ -9 + USB_CDC_CONFIG_DESC_SIZ  + 8)
 
 #define MSC_INTERFACE       0x00
 #define CDC_COM_INTERFACE   0x01
@@ -117,11 +117,11 @@ USBD_Class_cb_TypeDef  USBD_MSC_CDC_cb =
   #endif
 #endif /* USB_INTERNAL_DMA_ENABLED */ 
 /* USB MSC/CDC device Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_MSC_CDC_CfgDesc[USB_HID_CDC_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_MSC_CDC_CfgDesc[USB_MSC_CDC_CONFIG_DESC_SIZ] __ALIGN_END =
 {
     0x09, /* bLength: Configuration Descriptor size */
     USB_CONFIGURATION_DESCRIPTOR_TYPE, /* bDescriptorType: Configuration */
-    USB_HID_CDC_CONFIG_DESC_SIZ,
+    USB_MSC_CDC_CONFIG_DESC_SIZ,
     /* wTotalLength: Bytes returned */
     0x00,   
     0x03,         /*bNumInterfaces: 3 interfaces (2 for CDC, 1 for MSC)*/

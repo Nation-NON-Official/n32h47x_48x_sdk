@@ -811,29 +811,33 @@ void SPI_I2S_ClrCRCErrFlag(SPI_Module* SPIx, uint16_t SPI_I2S_FLAG)
 *\*\param   SPIx :
 *\*\				 - 1, 2, 3, 4, 5 or 6 in SPI mode
 *\*\				 - 2 or 3 in I2S mode 
-*\*\param   SPI_I2S_IT :
-*\*\         - SPI_I2S_INT_TE           
-*\*\         - SPI_I2S_INT_RNE           
-*\*\      	 - SPI_I2S_INT_ERR          
-*\*\      	 - SPI_I2S_INT_RXONLYC       
-*\*\      	 - SPI_I2S_INT_RXFIFOF      
-*\*\      	 - SPI_I2S_INT_RXFIFOHF     
-*\*\      	 - SPI_I2S_INT_TXFIFOHE  
+*\*\param   SPI_I2S_IT :         
+*\*\         - SPI_I2S_INT_TE 
+*\*\         - SPI_I2S_INT_RNE
+*\*\         - SPI_I2S_INT_RXONLYC
+*\*\         - SPI_I2S_INT_RXFIFOF
+*\*\         - SPI_I2S_INT_RXFIFOHF
+*\*\         - SPI_I2S_INT_TXFIFOHE
+*\*\         - SPI_I2S_INT_CRCERR
+*\*\         - SPI_I2S_INT_MODERR
+*\*\         - SPI_I2S_INT_OVERERR
+*\*\         - I2S_I2S_INT_UNDER
 *\*\return  The new state of SPI_I2S_IT (SET or RESET).
 **/
+
 INTStatus SPI_I2S_GetIntStatus(const SPI_Module* SPIx, uint8_t SPI_I2S_IT)
 {
-    INTStatus bitstatus;
-    uint16_t itpos, itmask , enablestatus;
+    INTStatus bitstatus = RESET;
+    uint16_t itpos = 0, itmask = 0 , enablestatus = 0;
 
     /* Get the SPI/I2S IT index */
-    itpos = 0x0001 << (SPI_I2S_IT & 0x0F);
+    itpos = 0x01 << (SPI_I2S_IT & 0x0F);
 
     /* Get the SPI/I2S IT mask */
     itmask = SPI_I2S_IT >> 4;
 
     /* Set the IT mask */
-    itmask = 0x0001 << itmask;
+    itmask = 0x01 << itmask;
 
     /* Get the SPI_I2S_IT enable bit status */
     enablestatus = (SPIx->CTRL2 & itmask);
@@ -1332,11 +1336,15 @@ FlagStatus I2S_EXT_GetStatus(const I2S_EXT_Module* I2Sx, uint16_t I2S_EXT_FLAG)
 *\*\				 - I2S2_EXT
 *\*\				 - I2S3_EXT
 *\*\param   I2S_EXT_IT :
-*\*\      	 - I2S_EXT_INT_TEINTEN        
-*\*\      	 - I2S_EXT_INT_RNEINTEN      
-*\*\      	 - I2S_EXT_INT_ERRINTEN   
+*\*\      	 - I2S_EXT_TE_FLAG        
+*\*\      	 - I2S_EXT_RNE_FLAG      
+*\*\      	 - I2S_EXT_BUSY_FLAG  
+*\*\      	 - I2S_EXT_OVER_FLAG
+*\*\      	 - I2S_EXT_UNDER_FLAG
+*\*\      	 - I2S_EXT_CHSIDE_FLAG
 *\*\return  The new state of I2S_EXT_IT (SET or RESET).
 **/
+
 INTStatus I2S_EXT_GetIntStatus(const I2S_EXT_Module* I2Sx, uint8_t I2S_EXT_IT)
 {
     INTStatus bitstatus ;

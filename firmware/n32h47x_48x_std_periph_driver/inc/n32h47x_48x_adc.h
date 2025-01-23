@@ -103,7 +103,7 @@ typedef struct
  
 typedef enum
 {
-    ADC_CALIBRATION_SIGNAL_MODE = 0,
+    ADC_CALIBRATION_SINGLE_MODE = 0,
     ADC_CALIBRATION_DIFF_MODE   = 1,
 } ADC_CALI_MOD;
 
@@ -666,7 +666,7 @@ void ADC_Enable(ADC_Module* ADCx, FunctionalState Cmd);
 void ADC_SetDMATransferMode(ADC_Module *ADCx, uint32_t DMAMode);
 void ADC_CalibrationOperation(ADC_Module* ADCx, ADC_CALI_MOD cali_mode);
 void ADC_CalibrationReset(ADC_Module* ADCx, ADC_CALI_MOD cali_mode);
-FlagStatus ADC_GetCalibrationStatus(ADC_Module* ADCx);
+FlagStatus ADC_GetCalibrationStatus(ADC_Module* ADCx, ADC_CALI_MOD cali_mode);
 
 void ADC_EnableSoftwareStartConv(ADC_Module* ADCx, FunctionalState Cmd);
 FlagStatus ADC_GetSoftwareStartConvStatus(ADC_Module* ADCx);
@@ -724,7 +724,7 @@ void ADC_EnableCalibrationAutoLoad(ADC_Module* ADCx, FunctionalState Cmd);
 /*functions related to channel connections */
 void ADC_EnableCH1PositiveEndConnetPGA_P(ADC_Module *ADCx, FunctionalState Cmd);
 void ADC_EnableCH1NegtiveEndConnetPGA_N(ADC_Module *ADCx, FunctionalState Cmd);
-void ADC_EnableCH2PositiveEndConnetPGA_P(ADC_Module *ADCx, FunctionalState Cmd);
+void ADC_EnableCH2PositiveEndConnetPGA_N(ADC_Module *ADCx, FunctionalState Cmd);
 
 /*functions related to oversampling */
 void ADC_ConfigOverSamplingRatioAndShift(ADC_Module *ADCx, uint32_t Ratio, uint32_t Shift);

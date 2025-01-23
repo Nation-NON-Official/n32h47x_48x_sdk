@@ -79,7 +79,7 @@
 #define USB_MAX_EP_NUM                    (16U)
 #define USB_MAX_EP0_SIZE                  (64U)
 
-#define USB_HS_MAX_PACKET_SIZE            (512U)
+#define USB_HS_MAX_PACKET_SIZE            (1024U)
 #define USB_FS_MAX_PACKET_SIZE            (64U)
 #define USB_MAX_CHANNEL_NUM               (16U)           /* USBHS host channel count */
 #define USB_MAX_FIFO_WORDLEN              (1280U)         /* USBHS max fifo size in words */

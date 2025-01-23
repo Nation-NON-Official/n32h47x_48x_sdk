@@ -281,7 +281,7 @@ typedef struct
  
 /** SPI_NSS_internal_software_management **/
 
-#define SPI_NSS_HIGH               ((uint16_t)0x0080U)
+#define SPI_NSS_HIGH               ((uint16_t)0x0800U)
 #define SPI_NSS_LOW                ((uint16_t)0x0000U)
 #define IS_SPI_NSS_LEVEL(INTERNAL) (((INTERNAL) == SPI_NSS_HIGH) || ((INTERNAL) == SPI_NSS_LOW))
 
@@ -302,18 +302,21 @@ typedef struct
 
 /** SPI_I2S_interrupts_definition **/
 
-#define SPI_I2S_INT_TE            ((uint16_t)0x0040U)
-#define SPI_I2S_INT_RNE           ((uint16_t)0x0051U)
-#define SPI_I2S_INT_ERR           ((uint16_t)0x0060U)
-#define SPI_I2S_INT_RXONLYC       ((uint16_t)0x00E0U)
-#define SPI_I2S_INT_RXFIFOF       ((uint16_t)0x00C0U)
-#define SPI_I2S_INT_RXFIFOHF      ((uint16_t)0x00B0U)
-#define SPI_I2S_INT_TXFIFOHE      ((uint16_t)0x00A0U)
+#define SPI_I2S_INT_TE            ((uint8_t)0x40)
+#define SPI_I2S_INT_RNE           ((uint8_t)0x51)
+#define SPI_I2S_INT_ERR           ((uint8_t)0x60)
+#define SPI_I2S_INT_RXONLYC       ((uint8_t)0xEC)
+#define SPI_I2S_INT_RXFIFOF       ((uint8_t)0xCB)
+#define SPI_I2S_INT_RXFIFOHF      ((uint8_t)0xB9)
+#define SPI_I2S_INT_TXFIFOHE      ((uint8_t)0xA8) 
+#define SPI_I2S_INT_MODERR        ((uint8_t)0x64)
+#define SPI_I2S_INT_CRCERR        ((uint8_t)0x63)
+#define SPI_I2S_INT_OVERERR       ((uint8_t)0x65)
+#define I2S_I2S_INT_UNDER         ((uint8_t)0x66)
 #define IS_SPI_I2S_CONFIG_INT(IT) (((IT) == SPI_I2S_INT_TE) || ((IT) == SPI_I2S_INT_RNE) || 			\
                                   ((IT) == SPI_I2S_INT_RXFIFOF) || ((IT) == SPI_I2S_INT_RXFIFOHF)|| \
                                   ((IT) == SPI_I2S_INT_TXFIFOHE)|| ((IT) == SPI_I2S_INT_RXONLYC) || \
                                   ((IT) == SPI_I2S_INT_ERR))
-
 
 
 #define SPI_I2S_INT_OVER          ((uint16_t)0x0065U)
@@ -382,14 +385,14 @@ typedef struct
 
 /** SPI_RX_FIFO_Level **/
 
-#define SPI_RX_FIF0NUM_7               ((uint16_t)0x0007U)
-#define SPI_RX_FIF0NUM_6               ((uint16_t)0x0006U)
-#define SPI_RX_FIF0NUM_5               ((uint16_t)0x0005U)
-#define SPI_RX_FIF0NUM_4               ((uint16_t)0x0004U)
-#define SPI_RX_FIF0NUM_3               ((uint16_t)0x0003U)
-#define SPI_RX_FIF0NUM_2               ((uint16_t)0x0002U)
-#define SPI_RX_FIF0NUM_1               ((uint16_t)0x0001U)
-#define SPI_RX_FIF0NUM_0               ((uint16_t)0x0000U)
+#define SPI_RX_FIF0NUM_7        ((uint16_t)0x0070U)    
+#define SPI_RX_FIF0NUM_6        ((uint16_t)0x0060U)    
+#define SPI_RX_FIF0NUM_5        ((uint16_t)0x0050U)    
+#define SPI_RX_FIF0NUM_4        ((uint16_t)0x0040U)    
+#define SPI_RX_FIF0NUM_3        ((uint16_t)0x0030U)    
+#define SPI_RX_FIF0NUM_2        ((uint16_t)0x0020U)    
+#define SPI_RX_FIF0NUM_1        ((uint16_t)0x0010U)    
+#define SPI_RX_FIF0NUM_0        ((uint16_t)0x0000U)    
 #define IS_SPI_RX_FIFO_NUM(NUM) (((NSS) == SPI_RX_FIF0NUM_0) || \
 																((NSS) == SPI_RX_FIF0NUM_1) || \
 																((NSS) == SPI_RX_FIF0NUM_2) || \
@@ -401,14 +404,14 @@ typedef struct
 
 /** SPI_TX_FIFO_Level **/
 
-#define SPI_TX_FIF0NUM_7               ((uint16_t)0x0070U)
-#define SPI_TX_FIF0NUM_6               ((uint16_t)0x0060U)
-#define SPI_TX_FIF0NUM_5               ((uint16_t)0x0050U)
-#define SPI_TX_FIF0NUM_4               ((uint16_t)0x0040U)
-#define SPI_TX_FIF0NUM_3               ((uint16_t)0x0030U)
-#define SPI_TX_FIF0NUM_2               ((uint16_t)0x0020U)
-#define SPI_TX_FIF0NUM_1               ((uint16_t)0x0010U)
-#define SPI_TX_FIF0NUM_0               ((uint16_t)0x0000U)
+#define SPI_TX_FIF0NUM_7        ((uint16_t)0x0007U)     
+#define SPI_TX_FIF0NUM_6        ((uint16_t)0x0006U)     
+#define SPI_TX_FIF0NUM_5        ((uint16_t)0x0005U)     
+#define SPI_TX_FIF0NUM_4        ((uint16_t)0x0004U)     
+#define SPI_TX_FIF0NUM_3        ((uint16_t)0x0003U)     
+#define SPI_TX_FIF0NUM_2        ((uint16_t)0x0002U)     
+#define SPI_TX_FIF0NUM_1        ((uint16_t)0x0001U)     
+#define SPI_TX_FIF0NUM_0        ((uint16_t)0x0000U)     
 #define IS_SPI_TX_FIFO_NUM(NUM) (((NSS) == SPI_TX_FIF0NUM_0) || \
 																((NSS) == SPI_TX_FIF0NUM_1) || \
 																((NSS) == SPI_TX_FIF0NUM_2) || \

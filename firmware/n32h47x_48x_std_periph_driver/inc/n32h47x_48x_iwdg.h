@@ -101,8 +101,4 @@ FlagStatus IWDG_GetStatus(IWDG_STATUS_FLAG IWDG_FLAG);
 }
 #endif
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif /* __N32H47X_IWDG_H__ */

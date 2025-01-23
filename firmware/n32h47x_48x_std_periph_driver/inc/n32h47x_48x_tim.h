@@ -835,6 +835,7 @@ void TIM_EnableCapCmpCh(TIM_Module* TIMx, uint32_t Channel, uint32_t TIM_CCx);
 void TIM_EnableCapCmpChN(TIM_Module* TIMx, uint32_t Channel, uint32_t TIM_CCxN);
 void TIM_SelectOcMode(TIM_Module* TIMx, uint32_t Channel, uint32_t OcMode);
 void TIM_EnableUpdateEvt(TIM_Module* TIMx, FunctionalState Cmd);
+void TIM_ConfigUpdateEvt(TIM_Module* TIMx, FunctionalState Cmd);
 void TIM_ConfigUpdateRequestIntSrc(TIM_Module* TIMx, uint32_t TIM_UpdateSource);
 void TIM_SelectHallSensor(TIM_Module* TIMx, FunctionalState Cmd);
 void TIM_SelectOnePulseMode(TIM_Module* TIMx, uint32_t TIM_OPMode);

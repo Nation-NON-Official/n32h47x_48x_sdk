@@ -197,7 +197,7 @@ void USART_Init(USART_Module* USARTx, USART_InitType* USART_InitStruct)
     /* Write to USART CTRL3 */
     USARTx->CTRL3 = (uint32_t)tmpregister;
 
-    /* USART PBC Configuration */
+    /* USART BRCF Configuration */
     /* Configure the USART Baud Rate */
     RCC_GetClocksFreqValue(&RCC_ClocksStatus);
     if ((usartxbase == USART1_BASE) || (usartxbase == USART4_BASE) \
@@ -222,7 +222,6 @@ void USART_Init(USART_Module* USARTx, USART_InitType* USART_InitStruct)
         integerdivider = ((25 * (apbclock / 2)) / (USART_InitStruct->BaudRate));
     }
     tmpregister = (integerdivider / 100) << 4;
-
     /* Determine the fractional part */
     fractionaldivider = integerdivider - (100 * (tmpregister >> 4));
 
@@ -230,15 +229,23 @@ void USART_Init(USART_Module* USARTx, USART_InitType* USART_InitStruct)
     if((USARTx->CTRL1 & USART_8OVER) != 0)
     {
         /* Oversampling mode is 8 Samples */
-        tmpregister |= ((((fractionaldivider * 8) + 50) / 100)) & ((uint8_t)0x07);
+			fractionaldivider = ((((fractionaldivider * 8) + 50) / 100)) & ((uint8_t)0x0F);
+			if((fractionaldivider >> 3) == 1)
+			{
+				tmpregister = tmpregister+0x10; 
+			}
+			else
+			{
+				tmpregister |= fractionaldivider;
+			}				
     }
     else
     {
         /* Oversampling mode is 16 Samples */
-        tmpregister |= ((((fractionaldivider * 16) + 50) / 100)) & ((uint8_t)0x0F);
+        tmpregister += ((((fractionaldivider * 16) + 50) / 100)) & ((uint8_t)0x1F);
     }
 
-    /* Write to USART PBC */
+    /* Write to USART BRCF */
     USARTx->BRCF = (uint32_t)tmpregister;
 }
 

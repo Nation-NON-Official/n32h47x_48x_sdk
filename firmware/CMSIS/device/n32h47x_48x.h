@@ -1662,11 +1662,13 @@ typedef struct
 		__IO uint16_t RX_FIFO;			//0x24   
 			uint16_t RESERVED9;
 		__IO uint16_t FIFONUM;			//0x28  
-			uint16_t RESERVED10;
-		__IO uint16_t FIFOCNT;			//0x30 
-			uint16_t RESERVED11;  
-		__IO uint16_t TRANSNUM;		  //0x34  
+			uint16_t RESERVED10;	
+			uint16_t RESERVED11;      //0x2C  
 			uint16_t RESERVED12;
+		__IO uint16_t FIFOCNT;			//0x30 
+			uint16_t RESERVED13;  
+		__IO uint16_t TRANSNUM;		  //0x34  
+			uint16_t RESERVED14;
 		__IO uint16_t CR3;			    //0x38  
 } SPI_Module;
 
@@ -2230,8 +2232,6 @@ typedef struct {
 #define FLASH               ((FLASH_Module*)FLASH_R_BASE)
 #define OBT                 ((OB_Module *) OB_BASE)
 #define CORDIC              ((CORDIC_Module*)CORDIC_BASE)
-#define BKP_SRAM            ((BKP_SRAM_Module*)BKP_SRAM_BASE)
-#define SMPU                ((SMPU_Module*)SMPU_BASE)
 #define ETH                 ((ETH_Module*)ETH_BASE)
 #define SAC                 ((SAC_Module*)SAC_BASE)
 #define DAC56               ((DAC_Module*)DAC56_BASE)
@@ -3226,12 +3226,12 @@ typedef struct {
 #define RCC_SRAMCFG1_CSRECCF_2BIT     ((uint32_t)0x20000000U) /*2bit ECC error occurred */
 #define RCC_SRAMCFG1_CSRECCF_1_2BIT   ((uint32_t)0x30000000U) /*1bit and 2bit ECC error occurred */
 
-#define RCC_SRAMCFG1_SR2PEF         ((uint32_t)0x00001000U) /*SRAM2 parity error flag bit */
-#define RCC_SRAMCFG1_SR1PEF         ((uint32_t)0x00000100U) /*SRAM1 parity error flag bit */
-#define RCC_SRAMCFG1_FECCRSTEN      ((uint32_t)0x00004000U) /*FLASH ECC error reset enable */
-#define RCC_SRAMCFG1_CSRECCCLR      ((uint32_t)0x00001000U) /*CCM SRAM ECC Error Flag Bit Clear */
-#define RCC_SRAMCFG1_SR2PECLR       ((uint32_t)0x00001000U) /*SRAM2 parity error flag bit clear */
-#define RCC_SRAMCFG1_SR1PECLR       ((uint32_t)0x00000100U) /*SRAM1 parity error flag bit clear */
+#define RCC_SRAMCFG1_SR2PEF         ((uint32_t)0x04000000U) /*SRAM2 parity error flag bit */
+#define RCC_SRAMCFG1_SR1PEF         ((uint32_t)0x01000000U) /*SRAM1 parity error flag bit */
+#define RCC_SRAMCFG1_FECCRSTEN      ((uint32_t)0x00800000U) /*FLASH ECC error reset enable */
+#define RCC_SRAMCFG1_CSRECCCLR      ((uint32_t)0x00400000U) /*CCM SRAM ECC Error Flag Bit Clear */
+#define RCC_SRAMCFG1_SR2PECLR       ((uint32_t)0x00200000U) /*SRAM2 parity error flag bit clear */
+#define RCC_SRAMCFG1_SR1PECLR       ((uint32_t)0x00100000U) /*SRAM1 parity error flag bit clear */
 
 #define RCC_SRAMCFG1_CSRECCRSTEN     ((uint32_t)0x000C0000U) /*SRAM3ECCRSTEN[1:0] */
 #define RCC_SRAMCFG1_CSRECCRST_0     ((uint32_t)0x00040000U) /*Bit0 */
@@ -3260,7 +3260,7 @@ typedef struct {
 #define RCC_SRAMCFG1_SRAMREF        ((uint32_t)0x00000010U) /*SRAM read error flag bit */
 #define RCC_SRAMCFG1_CSRINIF        ((uint32_t)0x00000008U) /*CCM SRAM initialization complete flag bit */
 #define RCC_SRAMCFG1_CSRINIEN       ((uint32_t)0x00000004U) /*CCM SRAM initialization enable */
-#define RCC_SRAMCFG1_SRAMPEN        ((uint32_t)0x00000001U) /*SRAM1/2 parity enable */
+#define RCC_SRAMCFG1_SRAMPEN        ((uint32_t)0x00000001U) /*CCM SRAM and BKP SRAM ECC enable */
 
 /** Bit definition for RCC_SRAMCFG2 register  **/
 #define RCC_SRAMCFG2_INIDAT         ((uint32_t)0xFFFFFFFFU) /*SRAM initialization data */
@@ -10376,8 +10376,6 @@ typedef struct {
 #define FDCAN_TXEFA_EFAI        ((uint32_t)0x0000001FU)  /* Event FIFO Acknowledge Index bits  */
 
 /** Bit definition for FDCAN_TTTS register **/
-#define FDCAN_TTSS_MRD          ((uint32_t)0x00000010U)  /* Modify on read */
-
 #define FDCAN_TTSS_TS_SEL       ((uint32_t)0x000000E0U)  /* Select External timestamp clock divided bits  */
 #define FDCAN_TTSS_TS_SEL_0     ((uint32_t)0x00000020U)  /* Select External timestamp clock divided bit 0 */
 #define FDCAN_TTSS_TS_SEL_1     ((uint32_t)0x00000040U)  /* Select External timestamp clock divided bit 1 */
@@ -14568,70 +14566,70 @@ typedef struct {
 
 /** Bit definition for SHRTIM_EXEVCTRL3 register  **/
 #define SHRTIM_EXEVCTRL3_EXEV5FM                                 ((uint32_t)0x10000000U)            /* Bit[28] External event 5 fast mode */
-#define SHRTIM_EXEVCTRL3_EXEV5FLT                                ((uint32_t)0x0F000000U)            /* Bit[27:24] External event 5 filter */
-#define SHRTIM_EXEVCTRL3_EXEV5FLT_0                              ((uint32_t)0x01000000U)            /* Bit24 */
-#define SHRTIM_EXEVCTRL3_EXEV5FLT_1                              ((uint32_t)0x02000000U)            /* Bit25 */
-#define SHRTIM_EXEVCTRL3_EXEV5FLT_2                              ((uint32_t)0x04000000U)            /* Bit26 */
-#define SHRTIM_EXEVCTRL3_EXEV5FLT_3                              ((uint32_t)0x08000000U)            /* Bit27 */
+#define SHRTIM_EXEVCTRL3_EXEV5F                                ((uint32_t)0x0F000000U)            /* Bit[27:24] External event 5 filter */
+#define SHRTIM_EXEVCTRL3_EXEV5F_0                              ((uint32_t)0x01000000U)            /* Bit24 */
+#define SHRTIM_EXEVCTRL3_EXEV5F_1                              ((uint32_t)0x02000000U)            /* Bit25 */
+#define SHRTIM_EXEVCTRL3_EXEV5F_2                              ((uint32_t)0x04000000U)            /* Bit26 */
+#define SHRTIM_EXEVCTRL3_EXEV5F_3                              ((uint32_t)0x08000000U)            /* Bit27 */
 #define SHRTIM_EXEVCTRL3_EXEV4FM                                 ((uint32_t)0x00400000U)            /* Bit[22] External event 4 fast mode */
-#define SHRTIM_EXEVCTRL3_EXEV4FLT                                ((uint32_t)0x003C0000U)            /* Bit[21:18] External event 4 filter */
-#define SHRTIM_EXEVCTRL3_EXEV4FLT_0                              ((uint32_t)0x00040000U)            /* Bit18 */
-#define SHRTIM_EXEVCTRL3_EXEV4FLT_1                              ((uint32_t)0x00080000U)            /* Bit19 */
-#define SHRTIM_EXEVCTRL3_EXEV4FLT_2                              ((uint32_t)0x00100000U)            /* Bit20 */
-#define SHRTIM_EXEVCTRL3_EXEV4FLT_3                              ((uint32_t)0x00200000U)            /* Bit21 */
+#define SHRTIM_EXEVCTRL3_EXEV4F                                ((uint32_t)0x003C0000U)            /* Bit[21:18] External event 4 filter */
+#define SHRTIM_EXEVCTRL3_EXEV4F_0                              ((uint32_t)0x00040000U)            /* Bit18 */
+#define SHRTIM_EXEVCTRL3_EXEV4F_1                              ((uint32_t)0x00080000U)            /* Bit19 */
+#define SHRTIM_EXEVCTRL3_EXEV4F_2                              ((uint32_t)0x00100000U)            /* Bit20 */
+#define SHRTIM_EXEVCTRL3_EXEV4F_3                              ((uint32_t)0x00200000U)            /* Bit21 */
 #define SHRTIM_EXEVCTRL3_EXEV3FM                                 ((uint32_t)0x00010000U)            /* Bit[16] External event 3 fast mode */
-#define SHRTIM_EXEVCTRL3_EXEV3FLT                                ((uint32_t)0x0000F000U)            /* Bit[15:12] External event 3 filter */
-#define SHRTIM_EXEVCTRL3_EXEV3FLT_0                              ((uint32_t)0x00001000U)            /* Bit12 */
-#define SHRTIM_EXEVCTRL3_EXEV3FLT_1                              ((uint32_t)0x00002000U)            /* Bit13 */
-#define SHRTIM_EXEVCTRL3_EXEV3FLT_2                              ((uint32_t)0x00004000U)            /* Bit14 */
-#define SHRTIM_EXEVCTRL3_EXEV3FLT_3                              ((uint32_t)0x00008000U)            /* Bit15 */
+#define SHRTIM_EXEVCTRL3_EXEV3F                                ((uint32_t)0x0000F000U)            /* Bit[15:12] External event 3 filter */
+#define SHRTIM_EXEVCTRL3_EXEV3F_0                              ((uint32_t)0x00001000U)            /* Bit12 */
+#define SHRTIM_EXEVCTRL3_EXEV3F_1                              ((uint32_t)0x00002000U)            /* Bit13 */
+#define SHRTIM_EXEVCTRL3_EXEV3F_2                              ((uint32_t)0x00004000U)            /* Bit14 */
+#define SHRTIM_EXEVCTRL3_EXEV3F_3                              ((uint32_t)0x00008000U)            /* Bit15 */
 #define SHRTIM_EXEVCTRL3_EXEV2FM                                 ((uint32_t)0x00000400U)            /* Bit[10] External event 2 fast mode */
-#define SHRTIM_EXEVCTRL3_EXEV2FLT                                ((uint32_t)0x000003C0U)            /* Bit[9:6] External event 2 filter */
-#define SHRTIM_EXEVCTRL3_EXEV2FLT_0                              ((uint32_t)0x00000040U)            /* Bit6 */
-#define SHRTIM_EXEVCTRL3_EXEV2FLT_1                              ((uint32_t)0x00000080U)            /* Bit7 */
-#define SHRTIM_EXEVCTRL3_EXEV2FLT_2                              ((uint32_t)0x00000100U)            /* Bit8 */
-#define SHRTIM_EXEVCTRL3_EXEV2FLT_3                              ((uint32_t)0x00000200U)            /* Bit9 */
+#define SHRTIM_EXEVCTRL3_EXEV2F                                ((uint32_t)0x000003C0U)            /* Bit[9:6] External event 2 filter */
+#define SHRTIM_EXEVCTRL3_EXEV2F_0                              ((uint32_t)0x00000040U)            /* Bit6 */
+#define SHRTIM_EXEVCTRL3_EXEV2F_1                              ((uint32_t)0x00000080U)            /* Bit7 */
+#define SHRTIM_EXEVCTRL3_EXEV2F_2                              ((uint32_t)0x00000100U)            /* Bit8 */
+#define SHRTIM_EXEVCTRL3_EXEV2F_3                              ((uint32_t)0x00000200U)            /* Bit9 */
 #define SHRTIM_EXEVCTRL3_EXEV1FM                                 ((uint32_t)0x00000010U)            /* Bit[4] External event 1 fast mode */
-#define SHRTIM_EXEVCTRL3_EXEV1FLT                                ((uint32_t)0x0000000FU)            /* Bit[3:0] External event 1 filter */
-#define SHRTIM_EXEVCTRL3_EXEV1FLT_0                              ((uint32_t)0x00000001U)            /* Bit0 */
-#define SHRTIM_EXEVCTRL3_EXEV1FLT_1                              ((uint32_t)0x00000002U)            /* Bit1 */
-#define SHRTIM_EXEVCTRL3_EXEV1FLT_2                              ((uint32_t)0x00000004U)            /* Bit2 */
-#define SHRTIM_EXEVCTRL3_EXEV1FLT_3                              ((uint32_t)0x00000008U)            /* Bit3 */
+#define SHRTIM_EXEVCTRL3_EXEV1F                                ((uint32_t)0x0000000FU)            /* Bit[3:0] External event 1 filter */
+#define SHRTIM_EXEVCTRL3_EXEV1F_0                              ((uint32_t)0x00000001U)            /* Bit0 */
+#define SHRTIM_EXEVCTRL3_EXEV1F_1                              ((uint32_t)0x00000002U)            /* Bit1 */
+#define SHRTIM_EXEVCTRL3_EXEV1F_2                              ((uint32_t)0x00000004U)            /* Bit2 */
+#define SHRTIM_EXEVCTRL3_EXEV1F_3                              ((uint32_t)0x00000008U)            /* Bit3 */
 
 /** Bit definition for SHRTIM_EXEVCTRL4 register  **/
 #define SHRTIM_EXEVCTRL4_EXEVSCD                                 ((uint32_t)0xC0000000U)            /* Bit[31:30] External event sampling clock division */
 #define SHRTIM_EXEVCTRL4_EXEVSCD_0                               ((uint32_t)0x40000000U)            /* Bit30 */
 #define SHRTIM_EXEVCTRL4_EXEVSCD_1                               ((uint32_t)0x80000000U)            /* Bit31 */
 #define SHRTIM_EXEVCTRL4_EXEV10FM                                ((uint32_t)0x10000000U)            /* Bit[28] External event10 fast mode */
-#define SHRTIM_EXEVCTRL4_EXEV10FLT                               ((uint32_t)0x0F000000U)            /* Bit[27:24] External event 10 filter */
-#define SHRTIM_EXEVCTRL4_EXEV10FLT_0                             ((uint32_t)0x01000000U)            /* Bit24 */
-#define SHRTIM_EXEVCTRL4_EXEV10FLT_1                             ((uint32_t)0x02000000U)            /* Bit25 */
-#define SHRTIM_EXEVCTRL4_EXEV10FLT_2                             ((uint32_t)0x04000000U)            /* Bit26 */
-#define SHRTIM_EXEVCTRL4_EXEV10FLT_3                             ((uint32_t)0x08000000U)            /* Bit27 */
+#define SHRTIM_EXEVCTRL4_EXEV10F                               ((uint32_t)0x0F000000U)            /* Bit[27:24] External event 10 filter */
+#define SHRTIM_EXEVCTRL4_EXEV10F_0                             ((uint32_t)0x01000000U)            /* Bit24 */
+#define SHRTIM_EXEVCTRL4_EXEV10F_1                             ((uint32_t)0x02000000U)            /* Bit25 */
+#define SHRTIM_EXEVCTRL4_EXEV10F_2                             ((uint32_t)0x04000000U)            /* Bit26 */
+#define SHRTIM_EXEVCTRL4_EXEV10F_3                             ((uint32_t)0x08000000U)            /* Bit27 */
 #define SHRTIM_EXEVCTRL4_EXEV9FM                                 ((uint32_t)0x00400000U)            /* Bit[22] External event9 fast mode */
-#define SHRTIM_EXEVCTRL4_EXEV9FLT                                ((uint32_t)0x003C0000U)            /* Bit[21:18] External event 9 filter */
-#define SHRTIM_EXEVCTRL4_EXEV9FLT_0                              ((uint32_t)0x00040000U)            /* Bit18 */
-#define SHRTIM_EXEVCTRL4_EXEV9FLT_1                              ((uint32_t)0x00080000U)            /* Bit19 */
-#define SHRTIM_EXEVCTRL4_EXEV9FLT_2                              ((uint32_t)0x00100000U)            /* Bit20 */
-#define SHRTIM_EXEVCTRL4_EXEV9FLT_3                              ((uint32_t)0x00200000U)            /* Bit21 */
+#define SHRTIM_EXEVCTRL4_EXEV9F                                ((uint32_t)0x003C0000U)            /* Bit[21:18] External event 9 filter */
+#define SHRTIM_EXEVCTRL4_EXEV9F_0                              ((uint32_t)0x00040000U)            /* Bit18 */
+#define SHRTIM_EXEVCTRL4_EXEV9F_1                              ((uint32_t)0x00080000U)            /* Bit19 */
+#define SHRTIM_EXEVCTRL4_EXEV9F_2                              ((uint32_t)0x00100000U)            /* Bit20 */
+#define SHRTIM_EXEVCTRL4_EXEV9F_3                              ((uint32_t)0x00200000U)            /* Bit21 */
 #define SHRTIM_EXEVCTRL4_EXEV8FM                                 ((uint32_t)0x00010000U)            /* Bit[16] External event 8 fast mode */
-#define SHRTIM_EXEVCTRL4_EXEV8FLT                                ((uint32_t)0x0000F000U)            /* Bit[15:12] External event 8 filter */
-#define SHRTIM_EXEVCTRL4_EXEV8FLT_0                              ((uint32_t)0x00001000U)            /* Bit12 */
-#define SHRTIM_EXEVCTRL4_EXEV8FLT_1                              ((uint32_t)0x00002000U)            /* Bit13 */
-#define SHRTIM_EXEVCTRL4_EXEV8FLT_2                              ((uint32_t)0x00004000U)            /* Bit14 */
-#define SHRTIM_EXEVCTRL4_EXEV8FLT_3                              ((uint32_t)0x00008000U)            /* Bit15 */
+#define SHRTIM_EXEVCTRL4_EXEV8F                                ((uint32_t)0x0000F000U)            /* Bit[15:12] External event 8 filter */
+#define SHRTIM_EXEVCTRL4_EXEV8F_0                              ((uint32_t)0x00001000U)            /* Bit12 */
+#define SHRTIM_EXEVCTRL4_EXEV8F_1                              ((uint32_t)0x00002000U)            /* Bit13 */
+#define SHRTIM_EXEVCTRL4_EXEV8F_2                              ((uint32_t)0x00004000U)            /* Bit14 */
+#define SHRTIM_EXEVCTRL4_EXEV8F_3                              ((uint32_t)0x00008000U)            /* Bit15 */
 #define SHRTIM_EXEVCTRL4_EXEV7FM                                 ((uint32_t)0x00000400U)            /* Bit[10] External event7 fast mode */
-#define SHRTIM_EXEVCTRL4_EXEV7FLT                                ((uint32_t)0x000003C0U)            /* Bit[9:6] External event 7 filter */
-#define SHRTIM_EXEVCTRL4_EXEV7FLT_0                              ((uint32_t)0x00000040U)            /* Bit6 */
-#define SHRTIM_EXEVCTRL4_EXEV7FLT_1                              ((uint32_t)0x00000080U)            /* Bit7 */
-#define SHRTIM_EXEVCTRL4_EXEV7FLT_2                              ((uint32_t)0x00000100U)            /* Bit8 */
-#define SHRTIM_EXEVCTRL4_EXEV7FLT_3                              ((uint32_t)0x00000200U)            /* Bit9 */
+#define SHRTIM_EXEVCTRL4_EXEV7F                                ((uint32_t)0x000003C0U)            /* Bit[9:6] External event 7 filter */
+#define SHRTIM_EXEVCTRL4_EXEV7F_0                              ((uint32_t)0x00000040U)            /* Bit6 */
+#define SHRTIM_EXEVCTRL4_EXEV7F_1                              ((uint32_t)0x00000080U)            /* Bit7 */
+#define SHRTIM_EXEVCTRL4_EXEV7F_2                              ((uint32_t)0x00000100U)            /* Bit8 */
+#define SHRTIM_EXEVCTRL4_EXEV7F_3                              ((uint32_t)0x00000200U)            /* Bit9 */
 #define SHRTIM_EXEVCTRL4_EXEV6FM                                 ((uint32_t)0x00000010U)            /* Bit[4] External event6 fast mode */
-#define SHRTIM_EXEVCTRL4_EXEV6FLT                                ((uint32_t)0x0000000FU)            /* Bit[3:0] External event 6 filter */
-#define SHRTIM_EXEVCTRL4_EXEV6FLT_0                              ((uint32_t)0x00000001U)            /* Bit0 */
-#define SHRTIM_EXEVCTRL4_EXEV6FLT_1                              ((uint32_t)0x00000002U)            /* Bit1 */
-#define SHRTIM_EXEVCTRL4_EXEV6FLT_2                              ((uint32_t)0x00000004U)            /* Bit2 */
-#define SHRTIM_EXEVCTRL4_EXEV6FLT_3                              ((uint32_t)0x00000008U)            /* Bit3 */
+#define SHRTIM_EXEVCTRL4_EXEV6F                                ((uint32_t)0x0000000FU)            /* Bit[3:0] External event 6 filter */
+#define SHRTIM_EXEVCTRL4_EXEV6F_0                              ((uint32_t)0x00000001U)            /* Bit0 */
+#define SHRTIM_EXEVCTRL4_EXEV6F_1                              ((uint32_t)0x00000002U)            /* Bit1 */
+#define SHRTIM_EXEVCTRL4_EXEV6F_2                              ((uint32_t)0x00000004U)            /* Bit2 */
+#define SHRTIM_EXEVCTRL4_EXEV6F_3                              ((uint32_t)0x00000008U)            /* Bit3 */
 
 /** Bit definition for SHRTIM_ADTG1SRC1 register  **/
 #define SHRTIM_ADTG1SRC1_ADTG1TCPRD                             ((uint32_t)0x04000000U)            /* Bit[26] ADC trigger 1 driven by timer C period event */
@@ -15475,3 +15473,6 @@ typedef struct {
 #endif
 
 #endif /* __N32H47X_48X_H__ */
+
+
+

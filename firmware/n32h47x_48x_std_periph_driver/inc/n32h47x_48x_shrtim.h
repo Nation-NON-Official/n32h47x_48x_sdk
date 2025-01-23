@@ -1583,21 +1583,21 @@ static const uint32_t REG_MASK_TAB_CPT[] =
 /** Defining the frequency used to sample an external event input (fSAMPLING)
     and the length (N) of the digital filter applied. **/
 #define SHRTIM_EXEV_FILTER_NONE      0x00000000U                                                               /* Filter disabled */
-#define SHRTIM_EXEV_FILTER_1         (SHRTIM_EXEVCTRL3_EXEV1FLT_0)                                                                  /* fSAMPLING = fSHRTIM, N=2 */
-#define SHRTIM_EXEV_FILTER_2         (SHRTIM_EXEVCTRL3_EXEV1FLT_1)                                                                  /* fSAMPLING = fSHRTIM, N=4 */
-#define SHRTIM_EXEV_FILTER_3         (SHRTIM_EXEVCTRL3_EXEV1FLT_1 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                                             /* fSAMPLING = fSHRTIM, N=8 */
-#define SHRTIM_EXEV_FILTER_4         (SHRTIM_EXEVCTRL3_EXEV1FLT_2)                                                                  /* fSAMPLING = fEXEVS/2, N=6 */
-#define SHRTIM_EXEV_FILTER_5         (SHRTIM_EXEVCTRL3_EXEV1FLT_2 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                                             /* fSAMPLING = fEXEVS/2, N=8 */
-#define SHRTIM_EXEV_FILTER_6         (SHRTIM_EXEVCTRL3_EXEV1FLT_2 | SHRTIM_EXEVCTRL3_EXEV1FLT_1)                                             /* fSAMPLING = fEXEVS/4, N=6 */
-#define SHRTIM_EXEV_FILTER_7         (SHRTIM_EXEVCTRL3_EXEV1FLT_2 | SHRTIM_EXEVCTRL3_EXEV1FLT_1 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                        /* fSAMPLING = fEXEVS/4, N=8 */
-#define SHRTIM_EXEV_FILTER_8         (SHRTIM_EXEVCTRL3_EXEV1FLT_3)                                                                  /* fSAMPLING = fEXEVS/8, N=6 */
-#define SHRTIM_EXEV_FILTER_9         (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                                             /* fSAMPLING = fEXEVS/8, N=8 */
-#define SHRTIM_EXEV_FILTER_10        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_1)                                             /* fSAMPLING = fEXEVS/16, N=5 */
-#define SHRTIM_EXEV_FILTER_11        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_1 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                        /* fSAMPLING = fEXEVS/16, N=6 */
-#define SHRTIM_EXEV_FILTER_12        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_2)                                             /* fSAMPLING = fEXEVS/16, N=8 */
-#define SHRTIM_EXEV_FILTER_13        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_2  | SHRTIM_EXEVCTRL3_EXEV1FLT_0)                       /* fSAMPLING = fEXEVS/32, N=5 */
-#define SHRTIM_EXEV_FILTER_14        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_2  | SHRTIM_EXEVCTRL3_EXEV1FLT_1)                       /* fSAMPLING = fEXEVS/32, N=6 */
-#define SHRTIM_EXEV_FILTER_15        (SHRTIM_EXEVCTRL3_EXEV1FLT_3 | SHRTIM_EXEVCTRL3_EXEV1FLT_2  | SHRTIM_EXEVCTRL3_EXEV1FLT_1 | SHRTIM_EXEVCTRL3_EXEV1FLT_0)  /* fSAMPLING = fEXEVS/32, N=8 */
+#define SHRTIM_EXEV_FILTER_1         (SHRTIM_EXEVCTRL3_EXEV1F_0)                                                                  /* fSAMPLING = fSHRTIM, N=2 */
+#define SHRTIM_EXEV_FILTER_2         (SHRTIM_EXEVCTRL3_EXEV1F_1)                                                                  /* fSAMPLING = fSHRTIM, N=4 */
+#define SHRTIM_EXEV_FILTER_3         (SHRTIM_EXEVCTRL3_EXEV1F_1 | SHRTIM_EXEVCTRL3_EXEV1F_0)                                             /* fSAMPLING = fSHRTIM, N=8 */
+#define SHRTIM_EXEV_FILTER_4         (SHRTIM_EXEVCTRL3_EXEV1F_2)                                                                  /* fSAMPLING = fEXEVS/2, N=6 */
+#define SHRTIM_EXEV_FILTER_5         (SHRTIM_EXEVCTRL3_EXEV1F_2 | SHRTIM_EXEVCTRL3_EXEV1F_0)                                             /* fSAMPLING = fEXEVS/2, N=8 */
+#define SHRTIM_EXEV_FILTER_6         (SHRTIM_EXEVCTRL3_EXEV1F_2 | SHRTIM_EXEVCTRL3_EXEV1F_1)                                             /* fSAMPLING = fEXEVS/4, N=6 */
+#define SHRTIM_EXEV_FILTER_7         (SHRTIM_EXEVCTRL3_EXEV1F_2 | SHRTIM_EXEVCTRL3_EXEV1F_1 | SHRTIM_EXEVCTRL3_EXEV1F_0)                        /* fSAMPLING = fEXEVS/4, N=8 */
+#define SHRTIM_EXEV_FILTER_8         (SHRTIM_EXEVCTRL3_EXEV1F_3)                                                                  /* fSAMPLING = fEXEVS/8, N=6 */
+#define SHRTIM_EXEV_FILTER_9         (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_0)                                             /* fSAMPLING = fEXEVS/8, N=8 */
+#define SHRTIM_EXEV_FILTER_10        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_1)                                             /* fSAMPLING = fEXEVS/16, N=5 */
+#define SHRTIM_EXEV_FILTER_11        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_1 | SHRTIM_EXEVCTRL3_EXEV1F_0)                        /* fSAMPLING = fEXEVS/16, N=6 */
+#define SHRTIM_EXEV_FILTER_12        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_2)                                             /* fSAMPLING = fEXEVS/16, N=8 */
+#define SHRTIM_EXEV_FILTER_13        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_2  | SHRTIM_EXEVCTRL3_EXEV1F_0)                       /* fSAMPLING = fEXEVS/32, N=5 */
+#define SHRTIM_EXEV_FILTER_14        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_2  | SHRTIM_EXEVCTRL3_EXEV1F_1)                       /* fSAMPLING = fEXEVS/32, N=6 */
+#define SHRTIM_EXEV_FILTER_15        (SHRTIM_EXEVCTRL3_EXEV1F_3 | SHRTIM_EXEVCTRL3_EXEV1F_2  | SHRTIM_EXEVCTRL3_EXEV1F_1 | SHRTIM_EXEVCTRL3_EXEV1F_0)  /* fSAMPLING = fEXEVS/32, N=8 */
 
 
 /** Defining division ratio between the timer clock frequency (fSHRTIM) and the external event signal sampling clock (fEXEVS) used by the digital filters.
@@ -1694,9 +1694,10 @@ static const uint32_t REG_MASK_TAB_CPT[] =
 #define SHRTIM_BM_CLKSRC_TIMER_D    (SHRTIM_BMCTRL_BMCK_2)                                            /* Timer D counter reset/roll-over is used as clock source for the burst mode counter */
 #define SHRTIM_BM_CLKSRC_TIMER_E    (SHRTIM_BMCTRL_BMCK_2 | SHRTIM_BMCTRL_BMCK_0)                       /* Timer E counter reset/roll-over is used as clock source for the burst mode counter */
 #define SHRTIM_BM_CLKSRC_TIMER_F    (SHRTIM_BMCTRL_BMCK_3 | SHRTIM_BMCTRL_BMCK_1 | SHRTIM_BMCTRL_BMCK_0)  /* Timer F counter reset/roll-over is used as clock source for the burst mode counter */
-#define SHRTIM_BM_CLKSRC_TIM16_OC   (SHRTIM_BMCTRL_BMCK_2 | SHRTIM_BMCTRL_BMCK_1)                       /* On-chip Event 1 (BMClk[1]), acting as a burst mode counter clock */
-#define SHRTIM_BM_CLKSRC_TIM17_OC   (SHRTIM_BMCTRL_BMCK_2 | SHRTIM_BMCTRL_BMCK_1 | SHRTIM_BMCTRL_BMCK_0)  /* On-chip Event 2 (BMClk[2]), acting as a burst mode counter clock */
-#define SHRTIM_BM_CLKSRC_TIM7_TRGO  (SHRTIM_BMCTRL_BMCK_3)                                            /* On-chip Event 3 (BMClk[3]), acting as a burst mode counter clock */
+#define SHRTIM_BM_CLKSRC_GTIM8_OC1   (SHRTIM_BMCTRL_BMCK_2 | SHRTIM_BMCTRL_BMCK_1)                       /* On-chip Event 1 (BMClk[1]), acting as a burst mode counter clock */
+#define SHRTIM_BM_CLKSRC_GTIM9_OC1   (SHRTIM_BMCTRL_BMCK_2 | SHRTIM_BMCTRL_BMCK_1 | SHRTIM_BMCTRL_BMCK_0)  /* On-chip Event 2 (BMClk[2]), acting as a burst mode counter clock */
+#define SHRTIM_BM_CLKSRC_GTIM10_OC1  (SHRTIM_BMCTRL_BMCK_3)                                            /* On-chip Event 3 (BMClk[3]), acting as a burst mode counter clock */
+#define SHRTIM_BM_CLKSRC_BTIM1_TRGO  (SHRTIM_BMCTRL_BMCK_3 | SHRTIM_BMCTRL_BMCK_0)                        /* On-chip Event 4 (BMClk[4]), acting as a burst mode counter clock */
 #define SHRTIM_BM_CLKSRC_FSHRTIM     (SHRTIM_BMCTRL_BMCK_3 | SHRTIM_BMCTRL_BMCK_1)                       /* Prescaled fSHRTIM clock is used as clock source for the burst mode counter */
 
 

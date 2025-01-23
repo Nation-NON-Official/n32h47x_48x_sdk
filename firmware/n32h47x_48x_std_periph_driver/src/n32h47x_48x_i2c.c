@@ -1056,7 +1056,7 @@ ErrorStatus I2C_CheckEvent(const I2C_Module* I2Cx, uint32_t I2C_EVENT)
     flag2 = flag2 << 16;
 
     /* Get the last event value from I2C status register */
-    lastevent = (flag1 | flag2) & FLAG_MASK;
+    lastevent = ((uint16_t)flag1 | flag2) & FLAG_MASK;
 
     /* Check whether the last event contains the I2C_EVENT */
     if ((lastevent & I2C_EVENT) == I2C_EVENT)
@@ -1087,11 +1087,11 @@ ErrorStatus I2C_CheckEvent(const I2C_Module* I2Cx, uint32_t I2C_EVENT)
 **/
 uint32_t I2C_GetLastEvent(const I2C_Module* I2Cx)
 {	
-	  uint32_t lastevent;
+    uint32_t lastevent;
     uint32_t flag1, flag2;
 
     /* Read the I2Cx status register */
-		flag1 = (I2Cx->STS1 << 16) >> 16;
+	flag1 = (I2Cx->STS1 << 16) >> 16;
     flag2 = I2Cx->STS2;
     flag2 = flag2 << 16;
 
@@ -1651,7 +1651,7 @@ void I2C_EnableHighTimeout(I2C_Module* I2Cx, FunctionalState Cmd)
 
 
 
-/*========================================Below is for analouge and digital filter function=================================================================================*/
+/*==============Below is for analouge and digital filter function===========================*/
 
 /**
 *\*\name    I2C_EnableSCLAnalogFilter.
@@ -1670,11 +1670,11 @@ void I2C_EnableSCLAnalogFilter(I2C_Module* I2Cx, FunctionalState Cmd)
 {
 	if( Cmd == DISABLE)
 	{
-		I2Cx->GFLTRCTRL &= ~SCL_AFE_RESET;
+		I2Cx->GFLTRCTRL |= SCL_AFE_SET;
 	}
 	else
 	{
-		I2Cx->GFLTRCTRL |= SCL_AFE_SET;
+        I2Cx->GFLTRCTRL &= SCL_AFE_RESET;
 	}
 }
 /**
@@ -1694,11 +1694,11 @@ void I2C_EnableSDAAnalogFilter(I2C_Module* I2Cx, FunctionalState Cmd)
 {
 	if( Cmd == DISABLE)
 	{
-		I2Cx->GFLTRCTRL &= ~SDA_AFE_RESET;
+        I2Cx->GFLTRCTRL |= SDA_AFE_SET;
 	}
 	else
 	{
-		I2Cx->GFLTRCTRL |= SDA_AFE_SET;
+		I2Cx->GFLTRCTRL &= SDA_AFE_RESET;
 	}
 }
 
@@ -1726,7 +1726,7 @@ void I2C_SetSCLAnalogFilterWidth(I2C_Module* I2Cx, uint32_t width)
     /* Clear SCLAFW[1:0] bits */
     temp_value &= I2C_SCLAFW_MASK;
     /* Set SCLAFW[1:0] bits according to width value */
-    temp_value |= (width << 12);
+    temp_value |= ((uint32_t)width << 4);
     /* Store the new value */
     I2Cx->GFLTRCTRL = temp_value;
     
@@ -1756,7 +1756,7 @@ void I2C_SetSDAAnalogFilterWidth(I2C_Module* I2Cx, uint32_t width)
     /* Clear SDAAFW[1:0] bits */
     temp_value &= I2C_SDAAFW_MASK;
     /* Set SDAAFW[1:0] bits according to width value */
-		temp_value |= ((uint32_t)width << 8);
+		temp_value |= width;
     /* Store the new value */
     I2Cx->GFLTRCTRL = temp_value;
     
@@ -1800,7 +1800,8 @@ void I2C_SetSCLDigitalFilterWidth(I2C_Module* I2Cx, uint32_t width)
 *\*\          - I2C3
 *\*\          - I2C4
 *\*\param   width :
-*\*\          - 0x00 ~ 0x0F     The numbers of pclk cycles(width is 0x00: Disable the digital filter).
+*\*\          - 0x00            Disable the digital filter.
+*\*\          - 0x01 ~ 0x0F     The numbers of pclk cycles.
 *\*\return  none
 **/
 void I2C_SetSDADigitalFilterWidth(I2C_Module* I2Cx, uint32_t width)

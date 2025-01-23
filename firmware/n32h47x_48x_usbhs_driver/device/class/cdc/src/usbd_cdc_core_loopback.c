@@ -482,7 +482,6 @@ uint8_t  USBD_CDC_DataOut (void *pdev, uint8_t epnum)
     return USBD_OK;
 }
 
-
 /**
 *\*\name    USBD_CDC_GetCfgDesc.
 *\*\fun     Return configuration descriptor.

@@ -48,7 +48,7 @@
 /**
 *\*\file n32h47x_48x_tim.c
 *\*\author Nations
-*\*\version v1.0.0
+*\*\version v1.0.1
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
@@ -918,23 +918,14 @@ void TIM_InitOc4(TIM_Module* TIMx, OCInitType* TIM_OCInitStruct)
 *\*\          - OutputState
 *\*\            * TIM_OUTPUT_STATE_DISABLE
 *\*\            * TIM_OUTPUT_STATE_ENABLE
-*\*\          - OutputNState
-*\*\            * TIM_OUTPUT_NSTATE_DISABLE
-*\*\            * TIM_OUTPUT_NSTATE_ENABLE
 *\*\          - Pulse
 *\*\            * 0x0000 ~ 0xFFFF
 *\*\          - OCPolarity
 *\*\            * TIM_OC_POLARITY_HIGH
 *\*\            * TIM_OC_POLARITY_LOW
-*\*\          - OCNPolarity
-*\*\            * TIM_OCN_POLARITY_HIGH
-*\*\            * TIM_OCN_POLARITY_LOW
 *\*\          - OCIdleState
 *\*\            * TIM_OC_IDLE_STATE_SET
 *\*\            * TIM_OC_IDLE_STATE_RESET
-*\*\          - OCNIdleState
-*\*\            * TIM_OCN_IDLE_STATE_SET
-*\*\            * TIM_OCN_IDLE_STATE_RESET
 *\*\return  none
 **/
 void TIM_InitOc5(TIM_Module* TIMx, OCInitType* TIM_OCInitStruct)
@@ -1004,23 +995,14 @@ void TIM_InitOc5(TIM_Module* TIMx, OCInitType* TIM_OCInitStruct)
 *\*\          - OutputState
 *\*\            * TIM_OUTPUT_STATE_DISABLE
 *\*\            * TIM_OUTPUT_STATE_ENABLE
-*\*\          - OutputNState
-*\*\            * TIM_OUTPUT_NSTATE_DISABLE
-*\*\            * TIM_OUTPUT_NSTATE_ENABLE
 *\*\          - Pulse
 *\*\            * 0x0000 ~ 0xFFFF
 *\*\          - OCPolarity
 *\*\            * TIM_OC_POLARITY_HIGH
 *\*\            * TIM_OC_POLARITY_LOW
-*\*\          - OCNPolarity
-*\*\            * TIM_OCN_POLARITY_HIGH
-*\*\            * TIM_OCN_POLARITY_LOW
 *\*\          - OCIdleState
 *\*\            * TIM_OC_IDLE_STATE_SET
 *\*\            * TIM_OC_IDLE_STATE_RESET
-*\*\          - OCNIdleState
-*\*\            * TIM_OCN_IDLE_STATE_SET
-*\*\            * TIM_OCN_IDLE_STATE_RESET
 *\*\return  none
 **/
 void TIM_InitOc6(TIM_Module* TIMx, OCInitType* TIM_OCInitStruct)
@@ -3911,7 +3893,7 @@ void TIM_SelectOcMode(TIM_Module* TIMx, uint32_t Channel, uint32_t OcMode)
 
 /**
 *\*\name    TIM_EnableUpdateEvt
-*\*\fun     Enables or Disables the TIMx Update event.
+*\*\fun     Enables or Disables the TIMx Update event bit.
 *\*\param   TIMx (The input parameters must be the following values):
 *\*\          - ATIM1
 *\*\          - ATIM2
@@ -3937,13 +3919,51 @@ void TIM_EnableUpdateEvt(TIM_Module* TIMx, FunctionalState Cmd)
 {
     if (Cmd != DISABLE)
     {
-        /* Set the Update Disable Bit */
+        /* Set the Update Disable Bit,disable UEV */
         TIMx->CTRL1 |= (uint32_t)TIM_CTRL1_UPDIS;
     }
     else
     {
-        /* Reset the Update Disable Bit */
+        /* Reset the Update Disable Bit,enable UEV */
         TIMx->CTRL1 &= (uint32_t)(~((uint32_t)TIM_CTRL1_UPDIS));
+    }
+}
+
+/**
+*\*\name    TIM_ConfigUpdateEvt
+*\*\fun     Enables or Disables the TIMx Update event.
+*\*\param   TIMx (The input parameters must be the following values):
+*\*\          - ATIM1
+*\*\          - ATIM2
+*\*\          - ATIM3
+*\*\          - GTIM1
+*\*\          - GTIM2
+*\*\          - GTIM3
+*\*\          - GTIM4
+*\*\          - GTIM5
+*\*\          - GTIM6
+*\*\          - GTIM7
+*\*\          - GTIM8
+*\*\          - GTIM9
+*\*\          - GTIM10
+*\*\          - BTIM1
+*\*\          - BTIM2
+*\*\param   Cmd
+*\*\          - ENABLE
+*\*\          - DISABLE
+*\*\return  none
+**/
+void TIM_ConfigUpdateEvt(TIM_Module* TIMx, FunctionalState Cmd)
+{
+    if (Cmd != DISABLE)
+    {
+        /* Reset the Update Disable Bit,enable UEV */
+        TIMx->CTRL1 &= (uint32_t)(~((uint32_t)TIM_CTRL1_UPDIS));
+    }
+    else
+    {
+        /* Set the Update Disable Bit,disable UEV */
+        TIMx->CTRL1 |= (uint32_t)TIM_CTRL1_UPDIS;
     }
 }
 

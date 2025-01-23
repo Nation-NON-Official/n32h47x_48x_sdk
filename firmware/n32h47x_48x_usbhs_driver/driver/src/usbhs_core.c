@@ -1358,8 +1358,8 @@ USB_STS USB_EPStartXfer(USB_CORE_MODULE *USBx, USB_EP *ep)
         /* Zero Length Packet */
         if (ep->xfer_len == 0)
         {
-            dineptxsiz &= (~USBHS_DINEPTXSIZ_TLEN);
-            dineptxsiz |= 1 << USBHS_DINEPTXSIZ_PKTCNT_POS;
+            dineptxsiz = 1 << USBHS_DINEPTXSIZ_PKTCNT_POS;
+            dineptxsiz |= 1 << USBHS_DINEPTXSIZ_MCNT_POS;
         }
         else
         {
@@ -1376,6 +1376,14 @@ USB_STS USB_EPStartXfer(USB_CORE_MODULE *USBx, USB_EP *ep)
             {
                 dineptxsiz &= (~USBHS_DINEPTXSIZ_MCNT) ;
                 dineptxsiz |= 1 << USBHS_DINEPTXSIZ_MCNT_POS;
+            }
+            else if (ep->type == EP_TYPE_INTR)
+            {
+                dineptxsiz &= (~USBHS_DINEPTXSIZ_MCNT) ;
+                if(((ep->xfer_len - 1 + ep->maxpacket) / ep->maxpacket) <=3)
+                {
+                    dineptxsiz |= ((ep->xfer_len - 1 + ep->maxpacket) / ep->maxpacket) << USBHS_DINEPTXSIZ_MCNT_POS;
+                }
             }
         }
         USB_WRITE_REG32(&USBx->regs.INEPCSR[ep->num]->DINEPTXSIZ, dineptxsiz);

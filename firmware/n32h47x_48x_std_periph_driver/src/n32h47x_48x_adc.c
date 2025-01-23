@@ -207,8 +207,18 @@ void ADC_Init(ADC_Module* ADCx, ADC_InitType* ADC_InitStruct)
 {
     uint32_t tempreg1;
     uint8_t tempreg2;
+	
     /* ADC BUF Enable  */
     *(uint32_t *)ADCBUF_CTRL  |= (0x01U << 13); 
+    /*---------------------------- ADCx PCTRL Configuration -----------------*/
+    /* Get the ADCx PCTRL value */
+    tempreg1 = ADCx->PCTRL;
+    /* clear ADC_PCTRL register EXPEN RANGESEL VREFLDOEN bits */
+    tempreg1 &= (~(ADC_PCTRL_EXPEN_MASK | ADC_PCTRL_RANGESEL_MASK | ADC_PCTRL_VREFLDOEN_MASK));
+    /* Set EXPEN RANGESEL VREFLDOEN select bits */
+    tempreg1 |= ADC_EXTERN_POWER_SUPPORT;
+     /* Store the new register value */
+    ADCx->PCTRL = tempreg1;
     /*---------------------------- ADCx CTRL1 Configuration -----------------*/
     /* Get the ADCx CTRL1 value */
     tempreg1 = ADCx->CTRL1;
@@ -244,16 +254,6 @@ void ADC_Init(ADC_Module* ADCx, ADC_InitType* ADC_InitStruct)
     tempreg1 |= ADC_InitStruct->Resolution;
     /* Write to ADCx CTRL3 */
     ADCx->CTRL3 = tempreg1;
-    
-    /*---------------------------- ADCx PCTRL Configuration -----------------*/
-    /* Get the ADCx PCTRL value */
-    tempreg1 = ADCx->PCTRL;
-    /* clear ADC_PCTRL register EXPEN RANGESEL VREFLDOEN bits */
-    tempreg1 &= (~(ADC_PCTRL_EXPEN_MASK | ADC_PCTRL_RANGESEL_MASK | ADC_PCTRL_VREFLDOEN_MASK));
-    /* Set EXPEN RANGESEL VREFLDOEN select bits */
-    tempreg1 |= ADC_EXTERN_POWER_SUPPORT;
-     /* Store the new register value */
-    ADCx->PCTRL = tempreg1;
 
     /*---------------------------- ADCx RSEQ3 Configuration -----------------*/
     /* Get the ADCx RSEQ3 value */
@@ -266,7 +266,6 @@ void ADC_Init(ADC_Module* ADCx, ADC_InitType* ADC_InitStruct)
     tempreg1 |= (uint32_t)tempreg2 << 25;
     /* Write to ADCx RSEQ3 */
     ADCx->RSEQ3 = tempreg1;
-
 }
 
 /**
@@ -365,7 +364,7 @@ void ADC_SetDMATransferMode(ADC_Module *ADCx, uint32_t DMAMode)
 *\*\          - ADC3
 *\*\          - ADC4
 *\*\param   cali_mode : specifies differential or signal mode of calibration.
-*\*\          - ADC_CALIBRATION_SIGNAL_MODE
+*\*\          - ADC_CALIBRATION_SINGLE_MODE
 *\*\          - ADC_CALIBRATION_DIFF_MODE
 *\*\return  none
 **/
@@ -391,7 +390,7 @@ void ADC_CalibrationOperation(ADC_Module* ADCx, ADC_CALI_MOD cali_mode)
 *\*\          - ADC3
 *\*\          - ADC4
 *\*\param   cali_mode : specifies differential or signal mode of calibration.
-*\*\          - ADC_CALIBRATION_SIGNAL_MODE
+*\*\          - ADC_CALIBRATION_SINGLE_MODE
 *\*\          - ADC_CALIBRATION_DIFF_MODE
 *\*\return  none
 **/
@@ -417,11 +416,14 @@ void ADC_CalibrationReset(ADC_Module* ADCx, ADC_CALI_MOD cali_mode)
 *\*\          - ADC2
 *\*\          - ADC3
 *\*\          - ADC4
+*\*\param   cali_mode : specifies differential or signal mode of calibration.
+*\*\          - ADC_CALIBRATION_SINGLE_MODE
+*\*\          - ADC_CALIBRATION_DIFF_MODE
 *\*\return  FlagStatus:
 *\*\          - RESET : ADCx calibration is finished;
 *\*\          - SET   : ADCx calibration is not finished;
 **/
-FlagStatus ADC_GetCalibrationStatus(ADC_Module* ADCx)
+FlagStatus ADC_GetCalibrationStatus(ADC_Module* ADCx, ADC_CALI_MOD cali_mode)
 {
     FlagStatus bitstatus;
 
@@ -436,13 +438,27 @@ FlagStatus ADC_GetCalibrationStatus(ADC_Module* ADCx)
         /* CAL bit is reset: end of calibration */
         bitstatus = RESET;
     }
-    if(ADCx->CALFACT != 0)
+    if(cali_mode == ADC_CALIBRATION_DIFF_MODE)
     {
-        bitstatus = RESET;
+        if((ADCx->CALFACT&ADC_CALFACT_CALFACTD_MASK) != 0)
+        {
+            bitstatus = RESET;
+        }
+        else
+        {
+            /* no process*/
+        }
     }
     else
     {
-        /* no process*/
+        if((ADCx->CALFACT&ADC_CALFACT_CALFACTS_MASK) != 0)
+        {
+            bitstatus = RESET;
+        }
+        else
+        {
+            /* no process*/
+        }
     }
     /* Return the CAL bit status */
     return bitstatus;
@@ -2300,8 +2316,8 @@ void ADC_EnableCH1NegtiveEndConnetPGA_N(ADC_Module *ADCx, FunctionalState Cmd)
 }
 
 /**
-*\*\name    ADC_EnableCH2PositiveEndConnetPGA_P.
-*\*\fun     enable or disable ADC channel 2 positive end connecting to output of PGAx positive end.
+*\*\name    ADC_EnableCH2PositiveEndConnetPGA_N.
+*\*\fun     enable or disable ADC channel 2 positive end connecting to output of PGAx negtive end.
 *\*\param   ADCx :
 *\*\          - ADC1
 *\*\          - ADC2
@@ -2312,7 +2328,7 @@ void ADC_EnableCH1NegtiveEndConnetPGA_N(ADC_Module *ADCx, FunctionalState Cmd)
 *\*\          - DISABLE
 *\*\return  none
 **/
-void ADC_EnableCH2PositiveEndConnetPGA_P(ADC_Module *ADCx, FunctionalState Cmd)
+void ADC_EnableCH2PositiveEndConnetPGA_N(ADC_Module *ADCx, FunctionalState Cmd)
 {
     if (Cmd != DISABLE)
     {

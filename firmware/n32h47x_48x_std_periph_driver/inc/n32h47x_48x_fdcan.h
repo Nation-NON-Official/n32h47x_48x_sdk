@@ -952,10 +952,6 @@ typedef struct
 #define FDCAN_TIMEOUT_RX_FIFO0          (FDCAN_TOCC_TOS_RX_FIFO0     ) /* Timeout controlled by Rx FIFO 0     */
 #define FDCAN_TIMEOUT_RX_FIFO1          (FDCAN_TOCC_TOS_RX_FIFO1     ) /* Timeout controlled by Rx FIFO 1     */
 
-/* FDCAN modify on read function define */
-#define FDCAN_ENABLE_MODIFY_ON_READ     ((uint32_t)0x00000000U)     /* Modify on read enable    */
-#define FDCAN_DISABLE_MODIFY_ON_READ    (FDCAN_TTSS_MRD)            /* Modify on read disable   */
-
 /** FDCAN Interrupt masks **/
 #define FDCAN_INT_MASK                      ((uint32_t)0x3FCFFFFFU)/* FDCAN interrupts mask */
 
@@ -1132,7 +1128,7 @@ uint32_t FDCAN_GetRxFifoFillLevel(FDCAN_Module *FDCANx, uint32_t RxFifo);
 
 ErrorStatus FDCAN_GetRxMsg(FDCAN_Module *FDCANx, uint32_t RxLocation, FDCAN_RxHeaderType *pRxHeader, uint8_t *pRxData);
 void FDCAN_GetHpMsgStatus(FDCAN_Module *FDCANx, FDCAN_HpMsgStatus *HpMsgStatus);
-ErrorStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index);
+FlagStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index);
 
 void FDCAN_ConfigTSPrescaler(FDCAN_Module *FDCANx, uint32_t Prescaler);
 void FDCAN_Config_TS(FDCAN_Module *FDCANx, uint32_t Select);
@@ -1140,7 +1136,6 @@ uint16_t FDCAN_Get_TS(FDCAN_Module *FDCANx);
 void FDCAN_Reset_TS(FDCAN_Module *FDCANx);
 void FDCAN_ConfigExtTSDivider(FDCAN_Module *FDCANx, uint32_t Div);
 void FDCAN_EnableExtTS(FDCAN_Module *FDCANx, FunctionalState Cmd);
-void FDCAN_ConfigModifyOnRead(FDCAN_Module *FDCANx, FunctionalState Cmd);
 void FDCAN_ConfigTimeoutCounter(FDCAN_Module *FDCANx, uint32_t TimeoutSelect, uint32_t TimeoutPeriod);
 void FDCAN_EnableTimeoutCounter(FDCAN_Module *FDCANx);
 void FDCAN_DisableTimeoutCounter(FDCAN_Module *FDCANx);
@@ -1157,9 +1152,9 @@ void FDCAN_EnableTxBufferRequest(FDCAN_Module *FDCANx, uint32_t BufferIndex);
 uint32_t FDCAN_GetLastTxFifoQReqBuf(FDCAN_Module *FDCANx);
 void FDCAN_AbortTxRequest(FDCAN_Module *FDCANx, uint32_t BufferIndex);
 ErrorStatus FDCAN_GetTxEvent(FDCAN_Module *FDCANx, FDCAN_TxEventFifoType *pTxEvent);
-ErrorStatus FDCAN_CheckTxBufRequest(FDCAN_Module *FDCANx, uint32_t IndexBit);
-ErrorStatus FDCAN_CheckBufTxResult(FDCAN_Module *FDCANx, uint32_t IndexBit);
-ErrorStatus FDCAN_CheckBufTxCancel(FDCAN_Module *FDCANx, uint32_t IndexBit);
+FlagStatus FDCAN_CheckTxBufRequest(FDCAN_Module *FDCANx, uint32_t IndexBit);
+FlagStatus FDCAN_CheckBufTxResult(FDCAN_Module *FDCANx, uint32_t IndexBit);
+FlagStatus FDCAN_CheckBufTxCancel(FDCAN_Module *FDCANx, uint32_t IndexBit);
 uint32_t FDCAN_GetTxFifoFreeLevel(FDCAN_Module *FDCANx);
 
 FlagStatus FDCAN_GetFlag(FDCAN_Module *FDCANx, uint32_t Flag);

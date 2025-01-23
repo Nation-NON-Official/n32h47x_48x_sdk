@@ -97,9 +97,6 @@ void SDIO_Init(SDIO_InitType* InitStruct)
 {
     uint32_t tempReg;
 
-    /* Set SDIO clock source as HCLK/2 */
-    RCC->CFG2 |= RCC_CFG2_HCLKPRES;
-
     /* Enable SDIO_CLK edge configuration */
     SDIO->RESERVED1[1] = 0x0000000D;
     
@@ -818,7 +815,7 @@ uint32_t SDIO_CmdWriteSingleBlock(uint32_t WriteAdd)
 }
 
 /**
- *\*\name   SDIO_CmdWriteSingleBlock.
+ *\*\name   SDIO_CmdWriteMultiBlock.
  *\*\fun    Send the Write Multi Block command and check the response
  *\*\param  WriteAdd specifies the start address for writing.
  *\*\return SDIO error state

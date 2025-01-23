@@ -2017,14 +2017,15 @@ void FDCAN_GetErrorCounters(FDCAN_Module *FDCANx, FDCAN_ErrorCounters *ErrorCoun
  *\*\          - FDCAN_RX_BUFFER61
  *\*\          - FDCAN_RX_BUFFER62
  *\*\          - FDCAN_RX_BUFFER63
- *\*\return ErrorStatus
- *\*\          - ERROR : No new message on RxBufferIndex.
- *\*\          - SUCCESS : New message received on RxBufferIndex.
+ *\*\return FlagStatus
+ *\*\          - RESET : No new message on RxBufferIndex.
+ *\*\          - SET   : New message received on RxBufferIndex.
  */
-ErrorStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index)
+FlagStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index)
 {
     __IO uint32_t *pReg;
     uint32_t IndexBit;
+    FlagStatus status;
 
     /* Get new data register point according to the Rx Buffer Index */
     if(Index < FDCAN_RX_BUFFER32)
@@ -2040,13 +2041,17 @@ ErrorStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index)
     IndexBit = (0x1UL) << (Index & 0x1FUL);
     if(0UL == (*pReg & IndexBit))
     {
-        return ERROR;
+        status = RESET;
+    }
+    else
+    {
+        status = SET;
     }
 
     /* Clear the new data flag. */
     *pReg = IndexBit;
 
-    return SUCCESS;
+    return status;
 }
 
 /**
@@ -2089,21 +2094,25 @@ ErrorStatus FDCAN_CheckNewRxBufMsg(FDCAN_Module *FDCANx, uint32_t Index)
  *\*\          - FDCAN_TX_BUFFER29
  *\*\          - FDCAN_TX_BUFFER30
  *\*\          - FDCAN_TX_BUFFER31
- *\*\return Status
- *\*\          - ERROR : No request pending on TxBufferIndex.
- *\*\          - SUCCESS : Have request pending on RxBufferIndex.
+ *\*\return FlagStatus
+ *\*\          - RESET : No request pending on TxBufferIndex.
+ *\*\          - SET : Have request pending on TxBufferIndex.
  */
-ErrorStatus FDCAN_CheckTxBufRequest(FDCAN_Module *FDCANx, uint32_t IndexBit)
+FlagStatus FDCAN_CheckTxBufRequest(FDCAN_Module *FDCANx, uint32_t IndexBit)
 {
+    FlagStatus status;
+    
     /* Check pending transmission request on the selected buffer */
     if (0UL == (FDCANx->TXBRP & IndexBit))
     {
-        return ERROR;
+        status = RESET;
     }
     else
     {
-        return SUCCESS;
+        status = SET;
     }
+    
+    return status;
 }
 
 /**
@@ -2146,21 +2155,25 @@ ErrorStatus FDCAN_CheckTxBufRequest(FDCAN_Module *FDCANx, uint32_t IndexBit)
  *\*\          - FDCAN_TX_BUFFER29
  *\*\          - FDCAN_TX_BUFFER30
  *\*\          - FDCAN_TX_BUFFER31
- *\*\return Status
- *\*\          - ERROR : Transmission is not finished or cacelled.
- *\*\          - SUCCESS : Transmission is finished.
+ *\*\return FlagStatus
+ *\*\          - RESET : Transmission is not finished or cacelled.
+ *\*\          - SET : Transmission is finished.
  */
-ErrorStatus FDCAN_CheckBufTxResult(FDCAN_Module *FDCANx, uint32_t IndexBit)
+FlagStatus FDCAN_CheckBufTxResult(FDCAN_Module *FDCANx, uint32_t IndexBit)
 {
+    FlagStatus status;
+    
     /* Check pending transmission request on the selected buffer */
     if (0UL == (FDCANx->TXBTO & IndexBit))
     {
-        return ERROR;
+        status = RESET;
     }
     else
     {
-        return SUCCESS;
+        status = SET;
     }
+    
+    return status;
 }
 
 /**
@@ -2203,21 +2216,25 @@ ErrorStatus FDCAN_CheckBufTxResult(FDCAN_Module *FDCANx, uint32_t IndexBit)
  *\*\          - FDCAN_TX_BUFFER29
  *\*\          - FDCAN_TX_BUFFER30
  *\*\          - FDCAN_TX_BUFFER31
- *\*\return Status
- *\*\          - ERROR : Transmission is not cacelled.
- *\*\          - SUCCESS : Transmission is cacelled.
+ *\*\return FlagStatus
+ *\*\          - RESET : Transmission is not cacelled.
+ *\*\          - SET : Transmission is cacelled.
  */
-ErrorStatus FDCAN_CheckBufTxCancel(FDCAN_Module *FDCANx, uint32_t IndexBit)
+FlagStatus FDCAN_CheckBufTxCancel(FDCAN_Module *FDCANx, uint32_t IndexBit)
 {
+    FlagStatus status;
+    
     /* Check pending transmission request on the selected buffer */
     if (0UL == (FDCANx->TXBCF & IndexBit))
     {
-        return ERROR;
+        status = RESET;
     }
     else
     {
-        return SUCCESS;
+        status = SET;
     }
+    
+    return status;
 }
 
 /**
@@ -2319,8 +2336,6 @@ void FDCAN_ExitRestrictedMode(FDCAN_Module *FDCANx)
  *\*\          - FDCAN_INT_RX_BUFFER_NEW_MESSAGE
  *\*\          - FDCAN_INT_TIMESTAMP_WRAPAROUND
  *\*\          - FDCAN_INT_TIMEOUT_OCCURRED    
- *\*\          - FDCAN_INT_CALIB_STATE_CHANGED 
- *\*\          - FDCAN_INT_CALIB_WATCHDOG_EVENT
  *\*\          - FDCAN_INT_TX_EVT_FIFO_ELT_LOST 
  *\*\          - FDCAN_INT_TX_EVT_FIFO_FULL     
  *\*\          - FDCAN_INT_TX_EVT_FIFO_WATERMARK
@@ -2375,8 +2390,6 @@ void FDCAN_ConfigIntLine(FDCAN_Module *FDCANx, uint32_t Int, uint32_t IntLine)
  *\*\          - FDCAN_INT_RX_BUFFER_NEW_MESSAGE
  *\*\          - FDCAN_INT_TIMESTAMP_WRAPAROUND
  *\*\          - FDCAN_INT_TIMEOUT_OCCURRED    
- *\*\          - FDCAN_INT_CALIB_STATE_CHANGED 
- *\*\          - FDCAN_INT_CALIB_WATCHDOG_EVENT
  *\*\          - FDCAN_INT_TX_EVT_FIFO_ELT_LOST 
  *\*\          - FDCAN_INT_TX_EVT_FIFO_FULL     
  *\*\          - FDCAN_INT_TX_EVT_FIFO_WATERMARK
@@ -2420,8 +2433,6 @@ void FDCAN_EnableInt(FDCAN_Module *FDCANx, uint32_t Int)
  *\*\          - FDCAN_INT_RX_BUFFER_NEW_MESSAGE
  *\*\          - FDCAN_INT_TIMESTAMP_WRAPAROUND
  *\*\          - FDCAN_INT_TIMEOUT_OCCURRED    
- *\*\          - FDCAN_INT_CALIB_STATE_CHANGED 
- *\*\          - FDCAN_INT_CALIB_WATCHDOG_EVENT
  *\*\          - FDCAN_INT_TX_EVT_FIFO_ELT_LOST 
  *\*\          - FDCAN_INT_TX_EVT_FIFO_FULL     
  *\*\          - FDCAN_INT_TX_EVT_FIFO_WATERMARK
@@ -2466,8 +2477,6 @@ void FDCAN_DisableInt(FDCAN_Module *FDCANx, uint32_t Int)
  *\*\          - FDCAN_FLAG_ERROR_WARNING          
  *\*\          - FDCAN_FLAG_ERROR_PASSIVE          
  *\*\          - FDCAN_FLAG_ERROR_LOGGING_OVERFLOW 
- *\*\          - FDCAN_FLAG_BIT_ERROR_UNCORRECTED  
- *\*\          - FDCAN_FLAG_BIT_ERROR_CORRECTED    
  *\*\          - FDCAN_FLAG_RX_BUFFER_NEW_MESSAGE  
  *\*\          - FDCAN_FLAG_TIMEOUT_OCCURRED       
  *\*\          - FDCAN_FLAG_RAM_ACCESS_FAILURE     
@@ -2494,19 +2503,24 @@ void FDCAN_DisableInt(FDCAN_Module *FDCANx, uint32_t Int)
  */
 FlagStatus FDCAN_GetIntFlag(FDCAN_Module *FDCANx, uint32_t Flag)
 {
+    FlagStatus status;
+    
     /* Check whether the specified FDCAN interrupt is enable or not. */
     if((FDCANx->IE & Flag) != Flag )
     {
-        return RESET;
+        status = RESET;
     }
-
     /* Check whether the specified FDCAN interrupt flag is set or not. */
-    if((FDCANx->IR & Flag) != Flag )
+    else if((FDCANx->IR & Flag) != Flag )
     {
-        return RESET;
+        status = RESET;
+    }
+    else
+    {
+        status = SET;
     }
 
-    return SET;
+    return status;
 }
 
 /**
@@ -2525,8 +2539,6 @@ FlagStatus FDCAN_GetIntFlag(FDCAN_Module *FDCANx, uint32_t Flag)
  *\*\          - FDCAN_FLAG_ERROR_WARNING          
  *\*\          - FDCAN_FLAG_ERROR_PASSIVE          
  *\*\          - FDCAN_FLAG_ERROR_LOGGING_OVERFLOW 
- *\*\          - FDCAN_FLAG_BIT_ERROR_UNCORRECTED  
- *\*\          - FDCAN_FLAG_BIT_ERROR_CORRECTED    
  *\*\          - FDCAN_FLAG_RX_BUFFER_NEW_MESSAGE  
  *\*\          - FDCAN_FLAG_TIMEOUT_OCCURRED       
  *\*\          - FDCAN_FLAG_RAM_ACCESS_FAILURE     
@@ -2553,14 +2565,18 @@ FlagStatus FDCAN_GetIntFlag(FDCAN_Module *FDCANx, uint32_t Flag)
  */
 FlagStatus FDCAN_GetFlag(FDCAN_Module *FDCANx, uint32_t Flag)
 {
+    FlagStatus status;
+    
     if((FDCANx->IR & Flag) == Flag )
     {
-        return SET;
+        status = SET;
     }
     else
     {
-        return RESET;
+        status = RESET;
     }
+    
+    return status;
 }
 
 /**
@@ -2579,8 +2595,6 @@ FlagStatus FDCAN_GetFlag(FDCAN_Module *FDCANx, uint32_t Flag)
  *\*\          - FDCAN_FLAG_ERROR_WARNING          
  *\*\          - FDCAN_FLAG_ERROR_PASSIVE          
  *\*\          - FDCAN_FLAG_ERROR_LOGGING_OVERFLOW 
- *\*\          - FDCAN_FLAG_BIT_ERROR_UNCORRECTED  
- *\*\          - FDCAN_FLAG_BIT_ERROR_CORRECTED    
  *\*\          - FDCAN_FLAG_RX_BUFFER_NEW_MESSAGE  
  *\*\          - FDCAN_FLAG_TIMEOUT_OCCURRED       
  *\*\          - FDCAN_FLAG_RAM_ACCESS_FAILURE     
@@ -2623,8 +2637,6 @@ void FDCAN_ClearFlag(FDCAN_Module *FDCANx, uint32_t Flag)
  *\*\          - FDCAN_INT_RX_BUFFER_NEW_MESSAGE
  *\*\          - FDCAN_INT_TIMESTAMP_WRAPAROUND
  *\*\          - FDCAN_INT_TIMEOUT_OCCURRED    
- *\*\          - FDCAN_INT_CALIB_STATE_CHANGED 
- *\*\          - FDCAN_INT_CALIB_WATCHDOG_EVENT
  *\*\          - FDCAN_INT_TX_EVT_FIFO_ELT_LOST 
  *\*\          - FDCAN_INT_TX_EVT_FIFO_FULL     
  *\*\          - FDCAN_INT_TX_EVT_FIFO_WATERMARK
@@ -2744,8 +2756,6 @@ ErrorStatus FDCAN_ActivateInt(FDCAN_Module *FDCANx, uint32_t Int, uint32_t Buffe
  *\*\          - FDCAN_INT_RX_BUFFER_NEW_MESSAGE
  *\*\          - FDCAN_INT_TIMESTAMP_WRAPAROUND
  *\*\          - FDCAN_INT_TIMEOUT_OCCURRED    
- *\*\          - FDCAN_INT_CALIB_STATE_CHANGED 
- *\*\          - FDCAN_INT_CALIB_WATCHDOG_EVENT
  *\*\          - FDCAN_INT_TX_EVT_FIFO_ELT_LOST 
  *\*\          - FDCAN_INT_TX_EVT_FIFO_FULL     
  *\*\          - FDCAN_INT_TX_EVT_FIFO_WATERMARK
@@ -3032,31 +3042,6 @@ static void FDCAN_CopyMsgToRAM(FDCAN_Module *FDCANx, FDCAN_TxHeaderType *pTxHead
     {
         pRam[Cnt] = pTxData[Cnt];
     }
-}
-
-/**
- *\*\name   FDCAN_ConfigModifyOnRead.
- *\*\fun    Config the modify on read function.
- *\*\param  FDCANx :
- *\*\          - FDCAN1
- *\*\          - FDCAN2
- *\*\          - FDCAN3
- *\*\param  Cmd : 
- *\*\          - ENABLE
- *\*\          - DISABLE
- *\*\return none
- */
-void FDCAN_ConfigModifyOnRead(FDCAN_Module *FDCANx, FunctionalState Cmd)
-{
-    uint32_t tempReg;
-
-    tempReg = FDCANx->TTSS &(~FDCAN_TTSS_MRD);
-    if(Cmd != ENABLE)
-    {
-        tempReg |= FDCAN_DISABLE_MODIFY_ON_READ;
-    }
-
-    FDCANx->TTSS = tempReg;
 }
 
 /**

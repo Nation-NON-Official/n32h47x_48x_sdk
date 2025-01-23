@@ -536,7 +536,7 @@ uint8_t  USBD_CDC_DataIn (void *pdev, uint8_t epnum)
                     USB_Tx_State = USB_CDC_ZLP;
                 }
             }
-          
+            
             /* Prepare the available data buffer to be sent on IN endpoint */
             USBDEV_EP_Tx (pdev, CDC_IN_EP, (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr], USB_Tx_length);
             return USBD_OK;
@@ -635,10 +635,6 @@ static void Handle_USBAsynchXfer (void *pdev)
         {
             APP_Rx_length = APP_Rx_ptr_in - APP_Rx_ptr_out;
         }
-#ifdef USB_INTERNAL_DMA_ENABLED
-        APP_Rx_length &= ~0x03;
-#endif /* USB_INTERNAL_DMA_ENABLED */
-    
         if (APP_Rx_length > CDC_DATA_IN_PACKET_SIZE)
         {
             USB_Tx_ptr = APP_Rx_ptr_out;

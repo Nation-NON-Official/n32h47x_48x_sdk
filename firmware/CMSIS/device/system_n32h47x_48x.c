@@ -158,6 +158,13 @@
 #define PLL_INPRE    1
 #define PLL_OUTPRE   1
 
+#elif ((SYSCLK_FREQ % (HSE_VALUE / 3)) == 0) && (SYSCLK_FREQ / (HSE_VALUE / 3) >= 8) 
+
+#define PLLSRC_DIV   1
+#define PLL_MUL     (SYSCLK_FREQ / (HSE_VALUE / 6))
+#define PLL_INPRE    3
+#define PLL_OUTPRE   2
+
 #else
 #error Cannot make a PLL multiply factor to SYSCLK_FREQ.
 #endif
@@ -208,7 +215,7 @@ static void SetSysClock(void);
 static void SetStartupVolt(uint32_t start_volt);
 
 #ifdef DATA_IN_ExtSRAM
-static void SystemInit_ExtMemCtl(void);
+extern void SystemInit_ExtMemCtl(void);
 #endif /* DATA_IN_ExtSRAM */
 
 /**
@@ -253,12 +260,9 @@ void SystemInit(void)
     /* Reset MCOCFG register */
     RCC->MCOCFG = 0x00000000;
 
-    /* Enable ICACHE and Prefetch Buffer */
-    FLASH->AC |= (uint32_t)(FLASH_AC_ICAHEN | FLASH_AC_PRFTBFEN);
-
-#ifdef DATA_IN_ExtSRAM
-    SystemInit_ExtMemCtl();
-#endif /* DATA_IN_ExtSRAM */
+    /* Enable ICACHE and disable Prefetch Buffer */
+    FLASH->AC |= (uint32_t)(FLASH_AC_ICAHEN);
+    FLASH->AC &= (uint32_t)(~FLASH_AC_PRFTBFEN);
 
     /* Configure the System clock frequency, HCLK, PCLK2 and PCLK1 prescalers */
     /* Configure the Flash Latency cycles and enable prefetch buffer */
@@ -270,6 +274,10 @@ void SystemInit(void)
     SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH. */
 #endif
     SetStartupVolt(STARTUP_VOLT_1V78);
+    
+#ifdef DATA_IN_ExtSRAM
+    SystemInit_ExtMemCtl();
+#endif /* DATA_IN_ExtSRAM */
 
 }
 
@@ -366,6 +374,8 @@ void SystemCoreClockUpdate(void)
 static void SetSysClock(void)
 {   
     uint32_t tmpregister, tmpregister1;
+    const uint8_t PLLoutpresTable[10] = {0, 0, 1, 1, 2, 2, 2, 2, 3, 3};
+    
 #if ((SYSCLK_SRC == SYSCLK_USE_HSE) || (SYSCLK_SRC == SYSCLK_USE_HSE_PLL))
     uint32_t HSEStatus;
     uint32_t StartUpCounter = 0;
@@ -461,6 +471,10 @@ static void SetSysClock(void)
     {
         tmpregister1 |= ((uint32_t)0x00006C40);
     }
+    /* set PLLINPRES[1:0] bits */
+    tmpregister1 |= (PLL_INPRE-1)<<16;
+    /* set PLLOUTPRES[1:0] bits */
+    tmpregister1 |= (uint32_t)PLLoutpresTable[PLL_OUTPRE]<<18;
 
     RCC->CFG = tmpregister;
     RCC->PLLCTRL = tmpregister1;

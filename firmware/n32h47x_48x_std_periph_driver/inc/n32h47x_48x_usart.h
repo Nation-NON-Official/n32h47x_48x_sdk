@@ -172,8 +172,8 @@ typedef struct
 #define CTRL1_SWAP_ENABLE        ((uint32_t)USART_CTRL1_SWAP)    /* USART Idle frame Enable */
 #define CTRL1_SWAP_DISABLE       ((uint32_t)(~USART_CTRL1_SWAP)) /* USART Idle frame Disable */
 
-#define CTRL1_DEP_ENABLE         ((uint32_t)USART_CTRL1_DEP)    /* USART DE signal active high  */
-#define CTRL1_DEP_DISABLE        ((uint32_t)(~USART_CTRL1_DEP)) /* USART DE signal active low */
+#define CTRL1_DEP_ENABLE         ((uint32_t)USART_CTRL1_DEP)    /* USART DE signal active low  */
+#define CTRL1_DEP_DISABLE        ((uint32_t)(~USART_CTRL1_DEP)) /* USART DE signal active high */
 
 /* USART Driver enable mode  */
 #define CTRL1_DEM_ENABLE         ((uint32_t)USART_CTRL1_DEM)  
