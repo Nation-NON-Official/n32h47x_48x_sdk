@@ -214,9 +214,8 @@ void USB_Istr(void)
                 wCNTR &= ~CTRL_FRST;
                 _SetCNTR(wCNTR);
 
-                /*poll for RESET flag in STS*/
-                while ((_GetISTR() & STS_RST) == 0)
-                    ;
+                /* poll for RESET flag in STS, this bit will be set by hardware, if this flag is always not set, it means maybe USB module failure */
+                while ((_GetISTR() & STS_RST) == 0);
 
                 /* clear RESET flag in STS */
                 _SetISTR((uint16_t)CLR_RST);

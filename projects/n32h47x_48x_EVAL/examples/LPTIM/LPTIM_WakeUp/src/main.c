@@ -292,6 +292,8 @@ int main(void)
     
     /* Enable LSI */
     RCC_EnableLsi(ENABLE);
+    /* Wait for LSI ready */
+    RCC_WaitLsiStable();
     /* Configure the LSI as the clock source for LPTIM1 */
     RCC_ConfigLPTIM1Clk(RCC_LPTIMCLK_SRC_LSI);
 
@@ -330,7 +332,7 @@ int main(void)
         PWR_EnterSTOPMode(PWR_REGULATOR_NORMAL, PWR_STOPENTRY_WFI);
         /* Configures system clock after wake-up from STOP: enable HSI, PLL and select
         PLL as system clock source */
-        SetSysClockToPLL(RCC_PLL_SRC_HSI, 160000000U);
+        SetSysClockToPLL(RCC_PLL_SRC_HSI, 240000000U);
     }
 }
 

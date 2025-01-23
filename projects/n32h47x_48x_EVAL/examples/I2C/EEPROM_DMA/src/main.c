@@ -55,6 +55,8 @@
 
 #include "n32h47x_48x.h"
 #include "i2c_eeprom.h"
+#include "n32h47x_48x_gpio.h"
+#include "n32h47x_48x_rcc.h"
 #include "log.h"
 
 /** N32H47X_StdPeriph_Examples **/
@@ -72,6 +74,16 @@ uint8_t rx_buf[TEST_EEPROM_SIZE] = {0};
 volatile Status test_status      = FAILED;
 
 Status Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
+
+void Delay_us(uint32_t nCount)
+{
+    uint32_t tcnt;
+    while (nCount--)
+    {
+        tcnt = 144 / 5;
+        while (tcnt--){;}
+    }
+}
 
 /**
 *\*\name    main.
@@ -138,6 +150,41 @@ Status Buffercmp(uint8_t* pBuffer, uint8_t* pBuffer1, uint16_t BufferLength)
     }
 
     return PASSED;
+}
+
+void IIC_RestoreSlaveByClock(void)
+{
+    uint8_t i;
+    GPIO_InitType i2cx_gpio;
+    
+    I2C_GPIO->POD |= (I2Cx_SCL_PIN | I2Cx_SDA_PIN);//pull up
+	RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOB, ENABLE);
+    I2C_GPIO->POD |= (I2Cx_SCL_PIN | I2Cx_SDA_PIN);//pull up
+    
+    GPIO_InitStruct(&i2cx_gpio);
+    i2cx_gpio.Pin        = I2Cx_SCL_PIN;
+    i2cx_gpio.GPIO_Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitPeripheral(I2C_GPIO, &i2cx_gpio);
+    
+    for (i = 0; i < 9; i++)
+    {
+        GPIO_SetBits(I2C_GPIO, I2Cx_SCL_PIN);
+        Delay_us(5);
+        GPIO_ResetBits(I2C_GPIO, I2Cx_SCL_PIN);
+        Delay_us(5);
+    }
+}
+    
+
+void IIC_RCCReset(void)
+{   
+    RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_I2C1);
+  
+    IIC_RestoreSlaveByClock();
+        
+    I2C_EE_Init();
+    
+    log_info("***** IIC module by RCC reset! *****\r\n");
 }
 
 

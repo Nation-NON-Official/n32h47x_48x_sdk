@@ -69,7 +69,7 @@ int main(void)
     log_init();
     /* LCD configuration */
     LCD_Configuration();
-    LCD_GramScan(6);
+    LCD_GramScan(0);
     LCD_Test();
     
     while (1)
@@ -86,7 +86,7 @@ void LCD_Test(void)
     testCNT++;
 
     LCD_SetFont(&Font8x16);
-    LCD_SetColors(RED,BLACK);
+    LCD_SetColors(RED,WHITE);
 
     LCD_Clear(0,0,lcd_width,lcd_height);  
     lcd_draw_image((lcd_width - pic_logo1.width) / 2, lcd_height / 4, &pic_logo1);

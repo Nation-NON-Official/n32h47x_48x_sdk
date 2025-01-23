@@ -1,6 +1,6 @@
-1、功能说明
+﻿1、功能说明
 
-    此示例展示IIR 中断计算方式
+    此示例展示FIR 中断计算方式
 
 2、使用环境
 
@@ -40,7 +40,7 @@
     
     
 1. Function description
-    This example shows how IIR is calculated by interrupt
+    This example shows how FIR is calculated by interrupt
     
 
 2. Use environment

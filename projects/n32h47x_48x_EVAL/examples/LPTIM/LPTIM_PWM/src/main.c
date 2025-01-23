@@ -99,6 +99,8 @@ int main(void)
     
     /* Enable LSI */
     RCC_EnableLsi(ENABLE);
+    /* Wait for LSI ready */
+    RCC_WaitLsiStable();
     /* Configure the LSI as the clock source for LPTIM1 */
     RCC_ConfigLPTIM1Clk(RCC_LPTIMCLK_SRC_LSI);
 

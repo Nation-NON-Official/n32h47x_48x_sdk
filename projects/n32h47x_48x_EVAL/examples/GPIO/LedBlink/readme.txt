@@ -7,11 +7,11 @@
                  IAR EWARM 8.50.1
 
     硬件开发环境：
-        N32H473系列：基于评估板N32H487ZEL7_EVB V1.0开发
-        N32H474系列：基于评估板N32H487ZEL7_EVB V1.0开发
+        N32H473系列：基于评估板N32H473VEL7_STB V1.0开发
+        N32H474系列：基于评估板N32H474VEL7_STB V1.0开发
         N32H475系列：基于评估板N32H475UEQ7_STB V1.0开发
-        N32H482系列：基于评估板N32H487ZEL7_EVB V1.0开发
-        N32H487系列：基于评估板N32H487ZEL7_EVB V1.0开发
+        N32H482系列：基于评估板N32H482ZEL7_EVB V1.0开发
+        N32H487系列：基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 
@@ -23,8 +23,9 @@
             N32H473/474系列：    200MHz
             N32H475/482/487系列：240MHz
         3、GPIO：
-            N32H473/474/482/487系列: PA3-D14,PA8-D6,PB4-D15
-            N32H475系列: PA3-D1,PA7-D2,PB4-D3
+            N32H473/474系列: PA3-D1, PA8-D2, PB4-D3
+            N32482/487系列:  PA3-D13,PB4-D14,PA8-D15
+            N32H475系列:     PA3-D1, PA7-D2, PB4-D3
 
     使用方法：
         1、编译后将程序下载到开发板并复位运行。
@@ -43,11 +44,11 @@
                                       IAR EWARM 8.50.1
 
     Hardware development environment:
-        N32H473 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
-        N32H474 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        N32H473 series: Developed based on the evaluation board N32H473VEL7_STB V1.0
+        N32H474 series: Developed based on the evaluation board N32H474VEL7_STB V1.0
         N32H475 series: Developed based on the evaluation board N32H475UEQ7_STB V1.0
-        N32H482 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
-        N32H487 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        N32H482 series: Developed based on the evaluation board N32H482ZEL7_EVB V1.0
+        N32H487 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 
 3. Instructions for use
@@ -58,8 +59,9 @@
             N32H473/474 series:     200MHz
             N32H475/482/487 series: 240MHz
         3.GPIO:
-            N32H473/474/482/487 Serie: PA3-D14,PA8-D6,PB4-D15
-            N32H475 Serie: PA3-D1,PA7-D2,PB4-D3
+            N32H473/474 Serie: PA3-D1, PA8-D2, PB4-D3
+            N32H482/487 Serie: PA3-D13,PB4-D14,PA8-D15
+            N32H475 Serie:     PA3-D1, PA7-D2, PB4-D3
 
      Instructions:
         1. After compiling, download the program and reset, the program start running.

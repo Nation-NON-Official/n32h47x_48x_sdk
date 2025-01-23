@@ -71,7 +71,7 @@ void USB_BSP_Init(void)
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
 
     GPIO_InitStruct(&GPIO_InitStructure);
-	
+
     // VBUS
     GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;

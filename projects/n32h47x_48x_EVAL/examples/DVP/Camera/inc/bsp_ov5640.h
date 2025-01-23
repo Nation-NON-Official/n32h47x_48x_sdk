@@ -58,13 +58,15 @@
 extern "C" {
 #endif
 
-#include "n32h47x_48x.h"
 #include "bsp_dvp.h"
+#include "log.h"
 
 /* DVP pin group 1 */
 #define DVP_MODULE_REMAP0_PCLK_PIN      GPIO_PIN_4
 #define DVP_MODULE_REMAP0_PCLK_PORT     GPIOE
 #define DVP_MODULE_REMAP0_PCLK_AF       GPIO_AF6
+
+
 #define DVP_MODULE_REMAP0_HSYNC_PIN     GPIO_PIN_2
 #define DVP_MODULE_REMAP0_HSYNC_PORT    GPIOE
 #define DVP_MODULE_REMAP0_HSYNC_AF      GPIO_AF6
@@ -73,8 +75,6 @@ extern "C" {
 #define DVP_MODULE_REMAP0_VSYNC_PIN     GPIO_PIN_3
 #define DVP_MODULE_REMAP0_VSYNC_PORT    GPIOE
 #define DVP_MODULE_REMAP0_VSYNC_AF      GPIO_AF6
-
-
 
 
 #define DVP_MODULE_REMAP0_DATA0_PIN     GPIO_PIN_5
@@ -119,8 +119,6 @@ extern "C" {
 #define CAMERA_RST         GPIO_PIN_4
 #define CAMERA_RST_PORT    GPIOB
 
-#define CAMERA_PWDN         GPIO_PIN_5
-#define CAMERA_PWDN_PORT    GPIOH
 
 #define SCCB_SCL        GPIO_PIN_6
 #define SCCB_SCL_PORT   GPIOB
@@ -142,7 +140,8 @@ extern "C" {
 void OV5640_InitPort(void);
 uint8_t OV5640_Init(void);
 void OV5640_RGB565_Config(void);
-
+void OV5640_Delay1( __IO uint32_t x);
+void OV5640_Delay(void);
 
 #ifdef __cplusplus
 }

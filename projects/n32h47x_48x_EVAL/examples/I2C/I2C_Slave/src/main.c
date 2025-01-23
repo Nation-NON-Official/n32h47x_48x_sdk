@@ -97,7 +97,6 @@
 static uint8_t data_buf[TEST_BUFFER_SIZE] = {0};
 static __IO uint32_t I2CTimeout;
 static uint8_t rxDataNum = 0;
-static uint8_t RCC_RESET_Flag = 0;
 
 void CommTimeOut_CallBack(ErrCode_t errcode);
 
@@ -114,6 +113,8 @@ int i2c_slave_init(void)
     RCC_EnableAPB1PeriphClk(I2Cx_RCC, ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
     
     /* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
@@ -133,6 +134,7 @@ int i2c_slave_init(void)
     GPIO_InitPeripheral(I2Cx_SDA_GPIO, &i2cx_gpio);
 
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&i2cx_slave); 
     i2cx_slave.BusMode     = I2C_BUSMODE_I2C;
     i2cx_slave.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     i2cx_slave.OwnAddr1    = I2C_SLAVE_ADDR;
@@ -143,10 +145,6 @@ int i2c_slave_init(void)
     I2C_Init(I2Cx, &i2cx_slave);
     I2C_Enable(I2Cx, ENABLE);
 		
-    //scl enable digital filter:2*Pclk
-    I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-    //sda enable digital filter:2*Pclk
-    I2C_SetSDADigitalFilterWidth(I2Cx, 2);
     return 0;
 }
 
@@ -161,10 +159,17 @@ int i2c_slave_send(uint8_t* data, int len)
 {
     uint32_t lastevent;
     uint8_t* sendBufferPtr = data;
-    I2CTimeout = I2CT_LONG_TIMEOUT;
+    I2CTimeout = I2CT_LONG_TIMEOUT*10;
     
     while (!I2C_CheckEvent(I2Cx, I2C_EVT_SLAVE_SEND_ADDR_MATCHED))
-        ; // send addr matched
+		{
+        if ((I2CTimeout--) == 0)    // send addr matched
+        {
+            CommTimeOut_CallBack(SLAVE_MODE);
+            return 1;
+        }
+    }
+    I2CTimeout = I2CT_LONG_TIMEOUT;
 
     I2C_Enable(I2Cx, ENABLE);
     I2C_SendData(I2Cx, *sendBufferPtr++);
@@ -185,11 +190,15 @@ int i2c_slave_send(uint8_t* data, int len)
         else if ((lastevent & 0x00000400) == 0x00000400)
         {
             CommTimeOut_CallBack(SLAVE_BUSERR);
+					  return 1;
         }
         else
         {
             if ((I2CTimeout--) == 0)
+						{
                 CommTimeOut_CallBack(SLAVE_UNKNOW);
+							  return 1;
+						}
         }
     }
     return 0;
@@ -206,10 +215,17 @@ int i2c_slave_recv(uint8_t* data, uint32_t rcv_len)
 {
     uint32_t lastevent;
     rxDataNum = 0;
-    I2CTimeout = I2CT_LONG_TIMEOUT;
+    I2CTimeout = I2CT_LONG_TIMEOUT*10;
     
     while (!I2C_CheckEvent(I2Cx, I2C_EVT_SLAVE_RECV_ADDR_MATCHED))
-        ; // receive addr matched
+		{
+        if ((I2CTimeout--) == 0)  // receive addr matched
+        {
+            CommTimeOut_CallBack(SLAVE_MODE);
+            return 1;
+        }
+    }
+    I2CTimeout = I2CT_LONG_TIMEOUT;
 
     I2C_Enable(I2Cx, ENABLE);
     while (1)
@@ -229,11 +245,15 @@ int i2c_slave_recv(uint8_t* data, uint32_t rcv_len)
         else if ((lastevent & 0x00000400) == 0x00000400)
         {
             CommTimeOut_CallBack(SLAVE_BUSERR);
+					  return 1;
         }
         else
         {
             if ((I2CTimeout--) == 0)
+						{
                 CommTimeOut_CallBack(SLAVE_UNKNOW);
+							  return 1;
+						}
         }
     }
     
@@ -254,26 +274,30 @@ int main(void)
     log_info("\nthis is a i2c slave test demo\r\n");
     /* Initialize the I2C EEPROM driver ----------------------------------------*/
     i2c_slave_init();
-
-    /* Read data */
-    log_info("i2c slave recv data start...\r\n");
-    i2c_slave_recv(data_buf, TEST_BUFFER_SIZE);
-    log_info("recv = ");
-    for (i = 0; i < rxDataNum; i++)
+	
+	   while (1)
     {
-        log_info("%02x ", data_buf[i]);
-    }
-    log_info("\r\n");
-
-    /* Write data */
-    log_info("i2c slave send data start\r\n");
-    if (0 == i2c_slave_send(data_buf, TEST_BUFFER_SIZE))
-        log_info("i2c slave test pass\r\n");
-    else
-        log_info("i2c slave test fail\r\n");
-    
-    while (1)
-    {
+        for(; ;)
+        {
+            /* Read data */
+            if(i2c_slave_recv(data_buf, TEST_BUFFER_SIZE))
+            {
+							  log_info("i2c slave receive fail\r\n");
+                break;  /* receive fail, reaccept*/
+            }
+            
+            /* Write data*/
+            if(i2c_slave_send(data_buf, TEST_BUFFER_SIZE))
+            {
+							  log_info("i2c slave send fail\r\n");
+                break;  /* send fail, reaccept*/
+            }
+            for (i = 0; i < TEST_BUFFER_SIZE; i++)
+            {
+                data_buf[i] = 0;
+            }
+						log_info("i2c slave test pass\r\n");
+        }
     }
 }
 
@@ -298,31 +322,12 @@ void SystemNVICReset(void)
 **/
 void IIC_RCCReset(void)
 {
-    if (RCC_RESET_Flag >= 3)
-    {
-        SystemNVICReset();
-    }
-    else
-    {
-        RCC_RESET_Flag++;
         
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        RCC_EnableAPB1PeriphClk(I2Cx_RCC,DISABLE);
-			#if defined (N32H475)
-        GPIOD->PMODE &= 0xFF3FFFF3;
-			#else
-				GPIOB->PMODE &= 0xFFFFF33F;
-				GPIOC->PMODE &= 0xFFFFFFFC;
-			#endif
-        RCC_EnableAPB2PeriphClk( RCC_APB2_PERIPH_AFIO, DISABLE);
-        RCC_EnableAHB1PeriphClk (I2Cx_clk_en, DISABLE );
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        log_info("***** IIC module by RCC reset! *****\r\n");
-        i2c_slave_init();
-    }
+    RCC_EnableAPB1PeriphReset(I2Cx_RCC);
+    
+    log_info("***** IIC module by RCC reset! *****\r\n");
+    i2c_slave_init();
+    
 }
 
 /**

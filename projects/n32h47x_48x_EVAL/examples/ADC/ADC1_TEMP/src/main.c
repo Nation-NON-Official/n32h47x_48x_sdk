@@ -92,19 +92,22 @@ void DMA_Config(void);
 float TempratureCalculate(uint16_t TempAdVal)
 { 
     float Temperate,tempValue;
+    uint32_t NVR_VTS[2] = {0};
     FLASH_iCacheCmd(FLASH_iCache_DIS);
     FLASH_iCacheRST();
     if(*(uint32_t *)0x1FFFC2A0 == 0x53545446)
     {
         /* Get the voltage value , temperature sensor under 3.3V and 25 celsius */
         VTS_value = (uint16_t)(*(uint32_t *)0x1FFFC710>>16);
+		T_value = (uint16_t)(*(uint32_t *)0x1FFFC718);
     }
     else
     {
-        Get_NVR(0x1FFFC130,&VTS_value,4);
-        VTS_value = (uint16_t)(VTS_value>>16);
+        Get_NVR(0x1FFFC130,NVR_VTS,8);
+        VTS_value = (uint16_t)(NVR_VTS[0]>>16);
+		T_value = 3000;
     }
-    T_value = (uint16_t)(*(uint32_t *)0x1FFFC718);
+	
     FLASH_iCacheCmd(FLASH_iCache_EN);
     /* Voltage value of temperature sensor */
     tempValue=TempAdVal*(3.3/4095);
@@ -143,9 +146,9 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
 }
 

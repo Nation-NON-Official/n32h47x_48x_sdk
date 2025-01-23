@@ -79,6 +79,8 @@ void LED_On(GPIO_Module* GPIOx,uint16_t Pin);
 void LED_Off(GPIO_Module* GPIOx,uint16_t Pin);
 void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin);
 
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin);
+
 void USB_BSP_Init(void);
 void USB_BSP_uDelay(const uint32_t usec);
 void USB_BSP_mDelay(const uint32_t msec);

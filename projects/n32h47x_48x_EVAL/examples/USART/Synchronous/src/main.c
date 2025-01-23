@@ -90,12 +90,14 @@ int main(void)
     SPI_Configuration();
     
     /* USARTy configuration */
+	USART_ClockStructInit(&USART_ClockInitStructure);
     USART_ClockInitStructure.Clock    = USART_CLK_ENABLE;
     USART_ClockInitStructure.Polarity = USART_CLKPOL_LOW;
     USART_ClockInitStructure.Phase    = USART_CLKPHA_2EDGE;
     USART_ClockInitStructure.LastBit  = USART_CLKLB_ENABLE;
     USART_ClockInit(USARTy, &USART_ClockInitStructure);
     
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 115200;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;

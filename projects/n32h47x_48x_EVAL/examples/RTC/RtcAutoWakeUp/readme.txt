@@ -6,7 +6,7 @@
 
     软件开发环境：KEIL MDK-ARM V5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -25,7 +25,6 @@
     系统配置:
         1、周期性唤醒时钟源：RTCCLK（1HZ）
         2、唤醒输出口：PC13
-        3、串口配置：
         3、串口配置：
                     - 串口为USART1（TX：PA9  RX：PA10）:
                     - 数据位：8
@@ -48,7 +47,7 @@
 
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0

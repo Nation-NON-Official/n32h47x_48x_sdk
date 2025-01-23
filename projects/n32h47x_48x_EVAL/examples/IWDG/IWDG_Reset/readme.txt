@@ -17,7 +17,7 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 3、使用说明
@@ -25,7 +25,7 @@
     系统配置；
         1、IWDG时钟源：LSI/128
         2、超时时间值：250ms
-        3、指示灯：LED1(PA4) LED2(PA5)
+        3、指示灯：LED1(PA3) LED2(PA8)
             
 
     测试步骤及现象：
@@ -56,7 +56,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 
 3. Instructions for use
@@ -64,7 +64,7 @@
     System Configuration:
        1. IWDG clock source: LSI/128
        2. Timeout value: 250ms
-       3. light Indicator: LED1(PA4) LED2(PA5)
+       3. light Indicator: LED1(PA3) LED2(PA8)
 
     Test steps and phenomenon：
        1. Compile and download the code to reset and run.The indicator LED2 

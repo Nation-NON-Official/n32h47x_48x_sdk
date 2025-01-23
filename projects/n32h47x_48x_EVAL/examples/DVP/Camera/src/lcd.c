@@ -720,7 +720,18 @@ void LCD_GramScan(uint8_t ucOption)
     }
 
     LCD_Write_CMD(0x36);
-    LCD_Write_Data(0x08 | (ucOption << 5));
+    if(lcd_id==0x9341)
+    {
+        LCD_Write_Data(0x08 | (ucOption << 5));
+    }
+    else if(lcd_id==0x9806)
+    {
+        LCD_Write_Data(0x00 | (ucOption << 5));
+    }
+    else
+    {
+    
+    }
     LCD_Write_CMD(CMD_SetCoordinateX);
     LCD_Write_Data(0x00);
     LCD_Write_Data(0x00);

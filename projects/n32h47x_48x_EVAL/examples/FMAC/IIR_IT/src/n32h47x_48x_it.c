@@ -173,12 +173,12 @@ void SysTick_Handler(void)
 void FMAC_IRQ_IRQHandler(void)
 {
     int16_t tmpvalue;
-    if((FMAC_GetIntStatus(FMAC_INT_FLAG_YBUFEF)) == SET)
+    if(FMAC_GetIntStatus(FMAC_INT_FLAG_YBUFEF) == SET)
     {
         if(pOutput == NULL) 
         {
             /* the length of the data to be read is input_array_size +add_array_size - iir_coeffb_size +1 */
-            pOutputSize = 80;
+            pOutputSize = 98;
             /* pOutput pointer to calculated_data array*/
             pOutput = calculated_data;
         }
@@ -198,9 +198,8 @@ void FMAC_IRQ_IRQHandler(void)
                 break;
             }
         } while(FMAC_GetFlagStatus(FMAC_FLAG_YBUFEF) == RESET);
-           rd_complete = 1;
     }
-    if( (FMAC_GetIntStatus(FMAC_INT_FLAG_X1BUFFF)) == SET )
+    if(FMAC_GetIntStatus(FMAC_INT_FLAG_X1BUFFF) == SET)
     {
         if(pInput == NULL) 
         {

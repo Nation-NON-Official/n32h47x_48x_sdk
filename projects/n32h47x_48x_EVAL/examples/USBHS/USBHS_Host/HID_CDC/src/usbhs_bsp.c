@@ -75,7 +75,7 @@ void KEY_Init(void)
 
     GPIO_InitStructure.Pin            = KEY_BUTTON_PIN;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
-    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_DOWN;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_UP;
     GPIO_InitPeripheral(KEY_BUTTON_GPIO_PORT, &GPIO_InitStructure);
 
     GPIO_InitStructure.Pin            = KEY_BUTTON_UP_PIN ;
@@ -96,8 +96,43 @@ void KEY_Init(void)
     
     GPIO_InitStructure.Pin            = KEY_BUTTON_SEL_PIN ;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_DOWN;
     GPIO_InitPeripheral(KEY_BUTTON_SEL_PORT, &GPIO_InitStructure);
 
+}
+
+/**
+*\*\name   KEY_Press_Status_Get.
+*\*\fun    Get key pressed or not status.
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
+*\*\return none
+*/
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin)
+{
+    if((GPIOx == KEY_BUTTON_SEL_PORT) && (Pin == KEY_BUTTON_SEL_PIN))
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return SET;
+        }
+        else
+        {
+            return RESET;
+        }
+        
+    }
+    else
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return RESET;
+        }
+        else
+        {
+            return SET;
+        }
+    }
 }
 
 /**

@@ -67,19 +67,16 @@ void KEY_Init(void)
 {
     GPIO_InitType GPIO_InitStructure;
     
-    RCC_EnableAHB1PeriphClk(KEY_BUTTON_UP_CLK | KEY_BUTTON_DOWN_CLK |
-                            KEY_BUTTON_LEFT_CLK | KEY_BUTTON_RIGHT_CLK, ENABLE);
+    RCC_EnableAHB1PeriphClk(KEY_BUTTON_UP_CLK | KEY_BUTTON_DOWN_CLK | KEY_BUTTON_LEFT_CLK | KEY_BUTTON_RIGHT_CLK, ENABLE);
     
     GPIO_InitStruct(&GPIO_InitStructure);
 
+
     GPIO_InitStructure.Pin            = KEY_BUTTON_UP_PIN ;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_UP;
     GPIO_InitPeripheral(KEY_BUTTON_UP_PORT, &GPIO_InitStructure);
-    
-    GPIO_InitStructure.Pin            = KEY_BUTTON_DOWN_PIN ;
-    GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
-    GPIO_InitPeripheral(KEY_BUTTON_DOWN_PORT, &GPIO_InitStructure);
-    
+        
     GPIO_InitStructure.Pin            = KEY_BUTTON_LEFT_PIN ;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(KEY_BUTTON_LEFT_PORT, &GPIO_InitStructure);
@@ -87,6 +84,45 @@ void KEY_Init(void)
     GPIO_InitStructure.Pin            = KEY_BUTTON_RIGHT_PIN ;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(KEY_BUTTON_RIGHT_PORT, &GPIO_InitStructure);
+    
+    GPIO_InitStructure.Pin            = KEY_BUTTON_DOWN_PIN ;
+    GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_DOWN;
+    GPIO_InitPeripheral(KEY_BUTTON_DOWN_PORT, &GPIO_InitStructure);
+}
+
+/**
+*\*\name   KEY_Press_Status_Get.
+*\*\fun    Get key pressed or not status.
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
+*\*\return none
+*/
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin)
+{
+    if((GPIOx == KEY_BUTTON_DOWN_PORT) && (Pin == KEY_BUTTON_DOWN_PIN))
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return SET;
+        }
+        else
+        {
+            return RESET;
+        }
+        
+    }
+    else
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return RESET;
+        }
+        else
+        {
+            return SET;
+        }
+    }
 }
 
 /**
@@ -103,11 +139,11 @@ void USB_BSP_Init(void)
 
     GPIO_InitStruct(&GPIO_InitStructure);
     
-	// VBUS
+    // VBUS
     GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
-	
+
     // SOF
     GPIO_InitStructure.Pin              = GPIO_PIN_4;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_AF_PP;

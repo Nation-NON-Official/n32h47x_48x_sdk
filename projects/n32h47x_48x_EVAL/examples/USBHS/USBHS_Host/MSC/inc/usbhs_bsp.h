@@ -64,12 +64,13 @@ void USB_BSP_Init(void);
 void USB_BSP_uDelay(const uint32_t usec);
 void USB_BSP_mDelay(const uint32_t msec);
 void USB_BSP_EnableInterrupt(USB_CORE_MODULE *USBx);
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin);
 
 #ifdef USE_HOST_MODE
 
-#define USB_VBUS_DRIVER_PORT        GPIOB
-#define USB_VBUS_DRIVER_PIN         GPIO_PIN_3
-#define USB_VBUS_DRIVER_CLK         RCC_AHB_PERIPHEN_GPIOB
+#define USB_VBUS_DRIVER_PORT        GPIOE
+#define USB_VBUS_DRIVER_PIN         GPIO_PIN_1
+#define USB_VBUS_DRIVER_CLK         RCC_AHB_PERIPHEN_GPIOE
 
 void USB_BSP_ConfigVBUS(USB_CORE_MODULE *pdev);
 void USB_BSP_DriveVBUS(USB_CORE_MODULE *pdev,uint8_t state);

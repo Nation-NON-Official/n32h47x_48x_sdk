@@ -105,7 +105,7 @@ typedef enum
 #define MODULE_SELF_RESET       1
 #define MODULE_RCC_RESET        2
 #define SYSTEM_NVIC_RESET       3
-#define COMM_RECOVER_MODE       0
+#define COMM_RECOVER_MODE       MODULE_RCC_RESET
 
 #ifdef __cplusplus
 }

@@ -103,9 +103,6 @@ void ADC_Initial(void)
     /* Enable JENDC interrupt */
     ADC_ConfigInt(ADC1, ADC_INT_JENDC, ENABLE);
     
-    /* Enable ADC1 DMA */
-    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
-    
     ADC_ConfigRegularExtLineTrigSource(ADC1,Regular_ExtLine_TrigSource);
     ADC_ConfigInjectedExtLineTrigSource(ADC1,Injected_ExtLine_TrigSource);
 
@@ -115,10 +112,12 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
+	/* Enable ADC1 DMA */
+    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
 }
 
 int main(void)

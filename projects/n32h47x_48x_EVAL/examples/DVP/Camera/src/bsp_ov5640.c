@@ -51,12 +51,9 @@
 *\*\version v1.0.0
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
-#include "n32h47x_48x.h"
-#include "n32h47x_48x_rcc.h"
-#include "n32h47x_48x_gpio.h"
+
 #include "bsp_ov5640.h"
-#include "main.h"
-#include "log.h"
+
 
 #define SCCB_SDA_IN()  {GPIOB->PMODE&=~(3<<14);GPIOB->PMODE|=0<<14;}    
 #define SCCB_SDA_OUT() {GPIOB->PMODE&=~(3<<14);GPIOB->PMODE|=1<<14;}    
@@ -73,16 +70,30 @@
 
 const int16_t ov5640_init_reg_tb[][2]= 
 {   
+//    0x3008, 0x82, 
+//    0x3008, 0x42, // software power down, bit[6]
+//    0x3103, 0x01, ////0x03												//Input clk from Pad cloc, bit[1]
+//    0x3017, 0xff, 												// FREX, Vsync, HREF, PCLK, D[9:6] output enable
+//    0x3018, 0xff, 												// D[5:0], GPIO[1:0] output enable
+//    0x3034, 0x18,													//8 bit mode           //0x1a, // MIPI 10-bit
+//    0x3037, 0x14,////0x12,	//0x13,													// PLL root divider, bit[4], PLL pre-divider, bit[3:0]
+//    0x3108, 0x01, 												//PCLK root divider, bit[5:4], SCLK2x root divider, bit[3:2]
+
+//    0x460c,0x22, //0x20:auto;0x22:not auto
+    
+    // 24MHz input clock, 24MHz PCLK
+    0x3103, 0x01, // system clock from pad, bit[1]
+    0x3008, 0x82, // software reset, bit[7]
+    // delay 5ms
     0x3008, 0x42, // software power down, bit[6]
-    0x3103, 0x01, ////0x03												//Input clk from Pad cloc, bit[1]
-    0x3017, 0xff, 												// FREX, Vsync, HREF, PCLK, D[9:6] output enable
-    0x3018, 0xff, 												// D[5:0], GPIO[1:0] output enable
-    0x3034, 0x18,													//8 bit mode           //0x1a, // MIPI 10-bit
-    0x3037, 0x14,////0x12,	//0x13,													// PLL root divider, bit[4], PLL pre-divider, bit[3:0]
-    0x3108, 0x01, 												//PCLK root divider, bit[5:4], SCLK2x root divider, bit[3:2]
-
-    0x460c,0x20, //0x20:auto;0x22:not auto
-
+    0x3103, 0x03, // system clock from PLL, bit[1]
+    0x3017, 0xff, // FREX, Vsync, HREF, PCLK, D[9:6] output enable
+    0x3018, 0xff, // D[5:0], GPIO[1:0] output enable
+    0x3034, 0x1a, // MIPI 10-bit
+    0x3037, 0x13, // PLL root divider, bit[4], PLL pre-divider, bit[3:0]
+    0x3108, 0x01, // PCLK root divider, bit[5:4], SCLK2x root divider, bit[3:2]
+		
+		
     // SCLK root divider, bit[1:0]
     0x3630, 0x36,
     0x3631, 0x0e,
@@ -483,8 +494,8 @@ const int16_t ov5640_rgb565_reg_tb[][2]=
     // Input clock = 24Mhz
 //    0x3035, 0x11,//0x21, // PLL  
 //    0x3036, 0x50,//0x28,		//0x69, // PLL 
-    0x3035, 0x21,//0x21, // PLL  
-    0x3036, 0xac,//0x28,		//0x69, // PLL 
+    0x3035, 0x31,//0x21, // PLL  
+    0x3036, 0x72,//0x28,		//0x69, // PLL 
     0x3c07, 0x07, // lightmeter 1 threshold[7:0] 
     0x3820, 0x46, // flip
     ////0x3821, 0x20, // mirror				//JPEC enable								 
@@ -501,10 +512,10 @@ const int16_t ov5640_rgb565_reg_tb[][2]=
     0x3806, 0x06, //0x06,//0x07, // VH (VE)		 
     0x3807, 0xa9, //0xa9,//0x9f, // VH (VE) 
 
-    0x3808, 0x00,//0x00, //0x02, //0x00, // DVPHO 	   
-    0x3809, 0xf0,//DVP_IMAGE_WIDTH, //0x80, //0xc0,//0x10, // DVPHO								//Data output H_size = 192 
-    0x380a, 0x01,//0x00, //0x01, //0x00, // DVPVO 		
-    0x380b, 0x40,//DVP_IMAGE_HEIGHT, //0xE0, //0xc0, //0x10, // DVPVO							//Data output V_size = 192
+    0x3808, IMAGE_WIDTH_H,//0x00, //0x02, //0x00, // DVPHO 	   
+    0x3809, IMAGE_WIDTH_L,//DVP_IMAGE_WIDTH, //0x80, //0xc0,//0x10, // DVPHO								//Data output H_size = 192 
+    0x380a, IMAGE_HEIGHT_H,//0x00, //0x01, //0x00, // DVPVO 		
+    0x380b, IMAGE_HEIGHT_L,//DVP_IMAGE_HEIGHT, //0xE0, //0xc0, //0x10, // DVPVO							//Data output V_size = 192
 
     0x380c, 0x08, //08 NG:0x05,//OK:0x0b, // HTS high		
     0x380d, 0x00, //00   NG:0xF8,//OK:0x1C  // HTS low
@@ -527,7 +538,7 @@ const int16_t ov5640_rgb565_reg_tb[][2]=
     0x4713, 0x03, // JPEG mode 3
     0x4407, 0x04, // Quantization sacle 
     0x460b, 0x37,
-    ////	0x460c, 0x20,
+	0x460c, 0x20,
     0x4837, 0x16, // MIPI global timing 
     0x3824, 8, //0x04,0x02, //0x01, // PCLK manual divider 
     0x303b, 8, ////
@@ -819,7 +830,21 @@ const static uint8_t OV5640_SATURATION_TBL[7][6]=
 };
 
 
+void OV5640_Delay1( __IO uint32_t x)
+{
+    uint32_t j;	
+    uint32_t i;
+    for(j=0;j<x;j++)
+    {
+        for(i=0;i<50000;i++);       
+    }    
+}
 
+void OV5640_Delay(void)
+{
+    uint32_t i;
+    for(i=0;i<500;i++);
+}
 
 
 
@@ -828,9 +853,9 @@ static void SCCB_Start(void)
 {
     SCCB_SDA_H;     
     SCCB_SCL_H;    
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SDA_L;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SCL_L;    
 }
 
@@ -838,24 +863,24 @@ static void SCCB_Start(void)
 static void SCCB_Stop(void)
 {
     SCCB_SDA_L;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SCL_H;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SDA_H;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
 }
 
 
 static void SCCB_No_Ack(void)
 {
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SDA_H;
     SCCB_SCL_H;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SCL_L;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SDA_L;
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
 }
 
 
@@ -873,15 +898,15 @@ static uint8_t SCCB_WR_Byte(uint8_t dat)
             SCCB_SDA_L;
         }
         dat<<=1;
-        SysTick_Delay_Us(5);
+        OV5640_Delay();
         SCCB_SCL_H;
-        SysTick_Delay_Us(5);
+        OV5640_Delay();
         SCCB_SCL_L;
     } 
     SCCB_SDA_IN();    
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     SCCB_SCL_H;    
-    SysTick_Delay_Us(5);
+    OV5640_Delay();
     if(SCCB_READ_SDA)
     {
         res=1;  
@@ -902,11 +927,11 @@ static uint8_t SCCB_RD_Byte(void)
     SCCB_SDA_IN();     
     for(j=8;j>0;j--)    
     {
-        SysTick_Delay_Us(5);
+        OV5640_Delay();
         SCCB_SCL_H;
         temp=temp<<1;
         if(SCCB_READ_SDA)temp++;   
-        SysTick_Delay_Us(5);
+        OV5640_Delay();
         SCCB_SCL_L;
     }
     SCCB_SDA_OUT();     
@@ -951,16 +976,10 @@ uint8_t OV5640_Init(void)
     uint16_t reg=0;
     
     GPIO_ResetBits(CAMERA_RST_PORT, CAMERA_RST );   
-    SysTick_Delay_Ms(41);
+    OV5640_Delay1(41);
     
-    GPIO_SetBits(CAMERA_PWDN_PORT, CAMERA_PWDN );  
-    SysTick_Delay_Ms(41);
-
-    GPIO_ResetBits(CAMERA_PWDN_PORT, CAMERA_PWDN );
-    SysTick_Delay_Ms(41);
-
     GPIO_SetBits(CAMERA_RST_PORT, CAMERA_RST ); 
-    SysTick_Delay_Ms(41);
+    OV5640_Delay1(41);
 
     reg=OV5640_RD_Reg(OV5640_CHIPIDH);	
     reg<<=8;
@@ -973,13 +992,13 @@ uint8_t OV5640_Init(void)
     
     OV5640_WR_Reg(0x3103,0X11); //system clock from pad, bit[1]
     OV5640_WR_Reg(0X3008,0X82); //software reset, 
-    SysTick_Delay_Ms(10);
+    OV5640_Delay1(10);
    
     for(i=0;i<(sizeof(ov5640_init_reg_tb)/sizeof(ov5640_init_reg_tb[0]));i++)
     {
         OV5640_WR_Reg(ov5640_init_reg_tb[i][0],ov5640_init_reg_tb[i][1]);
     }    
-    SysTick_Delay_Ms(50);
+    OV5640_Delay1(50);
     
     return 0x00;         //ok    
     
@@ -1071,13 +1090,6 @@ void OV5640_InitPort(void)
     GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
     GPIO_InitPeripheral(CAMERA_RST_PORT, &GPIO_InitStructure);
 
-    /*POWER ON: PB3*/
-    GPIO_InitStructure.Pin = CAMERA_PWDN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
-    GPIO_InitPeripheral(CAMERA_PWDN_PORT, &GPIO_InitStructure);
-
-    GPIO_ConfigPinRemap(GPIOB_PORT_SOURCE,GPIO_PIN_SOURCE3,GPIO_RMP_SWJ_SWD);    
     GPIO_ConfigPinRemap(GPIOB_PORT_SOURCE,GPIO_PIN_SOURCE4,GPIO_RMP_SWJ_SWD);    
 
     /*SCCB Pin*/
@@ -1149,14 +1161,14 @@ uint8_t OV5640_Focus_Init(void)
     do
     {
         state=OV5640_RD_Reg(0x3029);    
-        SysTick_Delay_Us(4400);         //about 5ms
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
-        SysTick_Delay_Us(4400);
+        OV5640_Delay();         //about 5ms
+        OV5640_Delay();
+        OV5640_Delay();
+        OV5640_Delay();
+        OV5640_Delay();
+        OV5640_Delay();
+        OV5640_Delay();
+        OV5640_Delay();
         i++;
         if(i>1000)return 1;
     }while(state!=0x70); 
@@ -1274,7 +1286,7 @@ uint8_t OV5640_Focus_Constant(void)
         temp=OV5640_RD_Reg(0x3023); 
         retry++;
         if(retry>1000)return 2;
-        SysTick_Delay_Ms(5);
+        OV5640_Delay1(5);
     } while(temp!=0x00);   
     OV5640_WR_Reg(0x3023,0x01);
     OV5640_WR_Reg(0x3022,0x04);
@@ -1284,7 +1296,7 @@ uint8_t OV5640_Focus_Constant(void)
         temp=OV5640_RD_Reg(0x3023); 
         retry++;
         if(retry>1000)return 2;
-        SysTick_Delay_Ms(5);
+        OV5640_Delay1(5);
     }while(temp!=0x00);
     return 0;
 } 
@@ -1292,7 +1304,7 @@ uint8_t OV5640_Focus_Constant(void)
 void OV5640_RGB565_Config(void)
 {
     OV5640_Flash_Ctrl(1);
-    SysTick_Delay_Ms(500);
+    OV5640_Delay1(500);
     OV5640_Flash_Ctrl(0);
     OV5640_RGB565_Mode();        
     OV5640_Focus_Init();         
@@ -1303,7 +1315,7 @@ void OV5640_RGB565_Config(void)
     OV5640_Sharpness(33);       
     OV5640_Focus_Constant();    
     OV5640_Flash_Ctrl(1);
-    SysTick_Delay_Ms(500);
+    OV5640_Delay1(500);
     OV5640_Flash_Ctrl(0);
 }
 

@@ -398,7 +398,7 @@ USBH_USER_Status USBH_USER_UserInput(void)
     USBH_USER_status = USBH_USER_NO_RESP;
 
     /* Key button is in polling mode to detect user action */
-    if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET)
+    if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
     {
         CDC_SelectItem(CDC_MAIN_MENU, 0);
         USBH_USER_status = USBH_USER_RESP_OK;
@@ -443,23 +443,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
     Button_TypeDef enKey = BUTTON_NULL;
     Button_TypeDef present_key = BUTTON_NULL;
     
-    if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+    if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
     {
         enKey = BUTTON_UP;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
     {
         enKey = BUTTON_DOWN;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
     {
         enKey = BUTTON_LEFT;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
     {
         enKey = BUTTON_RIGHT;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
     {
         enKey = BUTTON_SEL;
     }
@@ -474,23 +474,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
         
         USB_BSP_mDelay(20);
         
-        if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+        if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
         {
             enKey = BUTTON_UP;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
         {
             enKey = BUTTON_DOWN;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
         {
             enKey = BUTTON_LEFT;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
         {
             enKey = BUTTON_RIGHT;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
         {
             enKey = BUTTON_SEL;
         }
@@ -508,23 +508,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
     {
         while(1)
         {
-            if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+            if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
             {
                 present_key = BUTTON_UP;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
             {
                 present_key = BUTTON_DOWN;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
             {
                 enKey = BUTTON_LEFT;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
             {
                 enKey = BUTTON_RIGHT;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
             {
                 present_key = BUTTON_SEL;
             }
@@ -535,7 +535,6 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
             }
         }
     }
-
     return enKey;
 }
 

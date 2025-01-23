@@ -61,7 +61,9 @@ extern "C" {
 
 #include "n32h47x_48x.h"
 
-#if     defined(N32H475)
+/* FDCAN and port define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
+
 #define NODE1               (FDCAN3)
 #define NODE1_PERIPH        (RCC_APB1_PERIPH_FDCAN3)
 
@@ -81,23 +83,38 @@ extern "C" {
 
 #endif
 
+/* User LED define */
 #define LED1_PORT   GPIOA
 #define LED1_PIN    GPIO_PIN_3
 #define LED1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
 #if     defined(N32H475)
+
 #define LED2_PORT   GPIOA
 #define LED2_PIN    GPIO_PIN_7
 #define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#else   //defined(N32H482) || defined(N32H487) || defined(N32H473) || defined(N32H474)
+
+#define LED2_PORT   GPIOA
+#define LED2_PIN    GPIO_PIN_8
+#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#endif
+
+#define LED3_PORT   GPIOB
+#define LED3_PIN    GPIO_PIN_4
+#define LED3_CLOCK  RCC_AHB_PERIPHEN_GPIOB
+
+
+/* User KEY define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
 
 #define KEY_PORT    GPIOA
 #define KEY_PIN     GPIO_PIN_2
 #define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
 
-#else
-#define LED2_PORT   GPIOA
-#define LED2_PIN    GPIO_PIN_8
-#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+#else   //defined(N32H482) || defined(N32H487)
 
 #define KEY_PORT    GPIOA
 #define KEY_PIN     GPIO_PIN_0
@@ -105,9 +122,6 @@ extern "C" {
 
 #endif
 
-#define LED3_PORT   GPIOB
-#define LED3_PIN    GPIO_PIN_4
-#define LED3_CLOCK  RCC_AHB_PERIPHEN_GPIOB
 
 
 

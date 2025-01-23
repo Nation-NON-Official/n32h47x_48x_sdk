@@ -28,10 +28,10 @@
         N32H475/482/487系列：
         240MHz
     3、唤醒源：
-	    N32H475系列：
-		WAKEUP按键-PA2
-		N32H473/474/482/487系列：
-		WAKEUP按键-PA0
+	N32H473/474/475系列：
+	    WAKEUP按键-PA2
+	N32H482/487系列：
+	    WAKEUP按键-PA0
     4、打印：PA9 - baud rate 115200
                
 
@@ -75,10 +75,10 @@
         N32H475/482/487 series:
         240MHz
      3. Wake-up source: 
-	    N32H475 Series:
-		WAKEUP button-PA2
-		N32H473/474/482/487 Series:
-		WAKEUP button-PA0
+	N32H473/474/475 Series:
+	    WAKEUP button-PA2
+	N32H482/487 Series:
+	    WAKEUP button-PA0
      4. printf: PA9 - baud rate 115200
 
     Instructions:

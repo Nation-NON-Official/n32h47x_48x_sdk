@@ -89,6 +89,7 @@ int main(void)
     ADVANCE_TIM_Init();
 
     /* USARTx configuration */
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 1200;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;

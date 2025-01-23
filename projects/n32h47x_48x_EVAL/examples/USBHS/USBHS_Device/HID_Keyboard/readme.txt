@@ -5,12 +5,12 @@
 
     软件开发环境：KEIL MDK-ARM 5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 3. 使用说明
@@ -26,7 +26,8 @@
          4. 用另外一个键盘开关Capslock和Numlock，可以看到D14和D6对应键盘灯亮灭
 
 4. 注意事项
-    无
+    可通过修改宏定义 USE_USB_HS_IN_FS 或 USE_USB_HS_IN_HS 切换设备为全速模式或者高速模式；
+    使用高速模式时，需要使用16MHz外部晶体。
 
 1. Function description
     USB Mouse device
@@ -34,12 +35,12 @@
 2. Use environment
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc.
@@ -55,4 +56,5 @@
         4. Using another keyboard to toggle Capslock and Numlock, D14 and D6 output corresponding ON and OFF.
         
 4. Matters needing attention
-    None.
+    The device can be switched to Full-Speed mode or High-Speed mode by modify the macro definition USE_USB_HS_IN_FS or USE_USB_HS_IN_HS;
+    When using the High-Speed mode, a 16MHz external cycstal is required.

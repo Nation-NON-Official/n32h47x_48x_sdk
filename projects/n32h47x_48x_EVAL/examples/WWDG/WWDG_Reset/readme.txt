@@ -28,11 +28,11 @@
             200MHz， PCLK1 = 100MHz 
             N32H475/482/487系列：
             240MHz,  PCLK1 = 120MHz 
-        3、指示灯：PA3(LED1)   PA8(LED3)
+        3、指示灯：PA3(LED1)   PA8(LED2)
              
     测试步骤与现象：
-        1、在KEIL下编译后烧录到评估板，上电后，指示灯LED3不停的闪烁。说明窗口值刷新正常，代码正常运行。
-        2、当把Delay()函数参数改成小于或者大于窗口值时，整个系统将一直处于复位状态。LED1亮。
+        1、在KEIL下编译后烧录到评估板，上电后，指示灯LED2不停的闪烁。说明窗口值刷新正常，代码正常运行。
+        2、当把systick_delay_ms()函数参数改成小于或者大于窗口时间时，整个系统将一直处于复位状态。LED1亮。
 
 
 4、注意事项
@@ -75,9 +75,9 @@
        3. light Indicator: PA3(LED1)   PA8(LED2)
 
     Test steps and phenomenon：
-       1. Compile and download the code to reset and run, the indicator LED3 keeps flashing.
+       1. Compile and download the code to reset and run, the indicator LED2 keeps flashing.
           It means that the window value is refreshed normally and the code is running normally.
-       2. When the parameter of the Delay() function is changed less than or greater than window value, 
+       2. When the parameter of the systick_delay_ms() function is changed less than or greater than window time, 
           the entire system will always be in the reset state. LED1 is on.
 
 4. Matters needing attention

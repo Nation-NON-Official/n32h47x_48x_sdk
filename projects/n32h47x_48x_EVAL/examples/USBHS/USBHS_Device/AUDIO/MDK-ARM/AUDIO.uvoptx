@@ -120,12 +120,12 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"CMSIS-DAP-NSLink" -U0001A0000002 -O206 -S0 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
+          <Name>-X"CMSIS-DAP-NSLink" -U0001A0000002 -O206 -S0 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>-UV0010M9E -O206 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7  -FN1 -FC1000 -FD20000000 -FF0N32H48x_512 -FL080000 -FS08000000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
+          <Name>-UV0010M9E -O206 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7  -FN1 -FC3000 -FD20000000 -FF0N32H48x_512 -FL080000 -FS08000000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -317,12 +317,12 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"CMSIS-DAP-NSLink" -U0001A0000002 -O198 -S0 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
+          <Name>-X"CMSIS-DAP-NSLink" -U0001A0000002 -O198 -S0 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>-UV0010M9E -O718 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
+          <Name>-UV0010M9E -O718 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512.FLM -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -349,18 +349,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>294</LineNumber>
+          <LineNumber>95</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134222210</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\src\bsp_wm8978.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\..\..\..\..\..\firmware\n32h47x_48x_usbhs_driver\device\class\audio\src\usbd_audio_out_if.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\AUDIO\../../../../../../../firmware/n32h47x_48x_usbhs_driver/device/class/audio/src/usbd_audio_out_if.c\95</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>116</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134229760</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\..\..\..\..\..\firmware\n32h47x_48x_usbhs_driver\device\core\src\usbd_core.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\AUDIO\../../../../../../../firmware/n32h47x_48x_usbhs_driver/device/core/src/usbd_core.c\116</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -434,7 +450,7 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>0x20001EF0</ItemText>
+          <ItemText>0x20001F20</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -745,7 +761,7 @@
 
   <Group>
     <GroupName>n32h47x_48x_usbhs_device</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

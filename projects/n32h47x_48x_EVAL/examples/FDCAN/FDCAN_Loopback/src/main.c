@@ -60,20 +60,22 @@
 
 
 #define MAX_KEY_CNT     (3000)  /*About 67ms*/
-#define TEST_BUF_SIZE   (20)
 
-uint8_t TxData0[TEST_BUF_SIZE] = {  0x01, 0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89, 0x9A, 
-                                    0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF0, 0x01, 0x12, 0x23, 0x34  };
-uint8_t TxData1[TEST_BUF_SIZE] = {  0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA,
-                                    0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA  };
-uint8_t TxData2[TEST_BUF_SIZE] = {  0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88, 0x77, 0x66, 
-                                    0x55, 0x44, 0x33, 0x22, 0x11, 0x00, 0xFF, 0xEE, 0xDD, 0xCC  };
+#define TEST_DATA_FRAME_SIZE    (20)   /* Data frame size,must not be greater than 64 */
+#define MSG_RAM_SIZE            (0x100) /* Message ram size,must not be greater than 4480 */
 
+uint8_t TxData0[TEST_DATA_FRAME_SIZE] = {   0x01, 0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89, 0x9A, 
+                                            0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF0, 0x01, 0x12, 0x23, 0x34  };
+uint8_t TxData1[TEST_DATA_FRAME_SIZE] = {   0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA,
+                                            0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA  };
+uint8_t TxData2[TEST_DATA_FRAME_SIZE] = {   0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88, 0x77, 0x66, 
+                                            0x55, 0x44, 0x33, 0x22, 0x11, 0x00, 0xFF, 0xEE, 0xDD, 0xCC  };
 
 FDCAN_RxHeaderType RxHeader;
 FDCAN_TxEventFifoType TxEvent;
-uint8_t RxBuf[TEST_BUF_SIZE];
-uint32_t FDCAN_ram[0x100];  /* Used for FDCAN message ram, shared by all FDCAN modules */
+                                    
+uint8_t RxBuf[64];
+uint32_t FDCAN_ram[MSG_RAM_SIZE];  /* Used for FDCAN message ram, shared by all FDCAN modules */
 FDCAN_MsgRamType Node1_msg;
 
 /**
@@ -133,7 +135,7 @@ int main(void)
             key_cnt = 0;
         }
 
-        if(FDCAN_CheckNewRxBufMsg(NODE1,FDCAN_RX_BUFFER0) == SUCCESS)
+        if(FDCAN_CheckNewRxBufMsg(NODE1,FDCAN_RX_BUFFER0) == SET)
         {
             LED_On(LED2_PORT,LED2_PIN);
             FDCAN_GetRxMsg(NODE1,FDCAN_RX_BUFFER0,&RxHeader,RxBuf);
@@ -436,6 +438,13 @@ void Node1_Config(void)
     /* Init NODE1 */
     FDCAN_Init(NODE1,&InitParam);
 
+    /* Check message ram size */
+    if(Node1_msg.EndAddress > ((uint32_t)FDCAN_ram + (MSG_RAM_SIZE*4U)))
+    {
+        log_info("\r\n NODE1 init error:message ram is too small!\r\n");
+        while(1);
+    }
+    
     /* Configure standard ID reception filter to Rx buffer 0 */
     FilterParam.IdType          = FDCAN_STANDARD_ID;
     FilterParam.FilterIndex     = 0;

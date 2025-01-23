@@ -24,7 +24,7 @@
             240MHz 
         3、端口配置：
             PA1选择为模拟功能
-            PA1选择为模拟功能
+            PA2选择为模拟功能
             PGA1 P端输出连接ADC1的内部通道1的INP端
             PGA1 N端输出连接ADC1的内部通道1的INN端
         4、ADC配置：
@@ -33,7 +33,8 @@
     使用方法：
         1、编译后打开调试模式，将PA1,PA2引脚接入一定的电压，从ADC端口读出的电压差大约是输入电压差的2倍
 4、注意事项
-    1. 经过PGA放大后的电压不能超过(VDDA-0.3)V,且不能低于0.3V.
+    1. 经过PGA放大后的电压不能超过(VDDA-0.3)V,且不能低于0.3V；
+    2. PA2 需要接入VDDA/2的偏置电压；
 
 
 1. Function description
@@ -71,3 +72,4 @@
         
 4. Matters needing attention
     1. The amplified voltage of the PGA should not exceed (VDDA-0.3)V，and could not below 0.3V.
+    2. PA2 pin requires a bias voltage of VDDA/2;

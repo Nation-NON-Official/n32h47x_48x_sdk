@@ -54,6 +54,7 @@
  */
 #include "main.h"
 #include "n32h47x_48x_dbg.h"
+#include "delay.h"
 
 
 /** @addtogroup n32h47x_48x_StdPeriph_Examples
@@ -66,10 +67,6 @@
 
 #define LED1 GPIO_PIN_3
 #define LED2 GPIO_PIN_8
-
-__IO uint32_t TimingDelay = 0;
-
-void Delay(__IO uint32_t nTime);
 
 /**
 *\*\name    LedInit.
@@ -277,7 +274,6 @@ int main(void)
     WWDG_ClrEWINTF();
     LedInit(GPIOA, LED1 | LED2);
     LedOff(GPIOA, LED1 | LED2);
-    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
     /* Enable PWR Clock */
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR, ENABLE);
     
@@ -298,21 +294,13 @@ int main(void)
         LedOff(GPIOA, LED1);
     }
 
-    /* Setup SysTick Timer for 1 msec interrupts  */
-    if (SysTick_Config(SystemCoreClock / 1000))
-    {
-        /* Capture error */
-        while (1)
-            ;
-    }
-
     /*
       When the window value is very small, the system is in a frequent reset state,
       at this time, easy to cause the program can not download normally.
       Add a delay of 1 second here to avoid this phenomenon. Of course,
       it can also be downloaded without delay, directly pull the pin of BOOT0 high.
     */
-    Delay(1000);
+    systick_delay_ms(1000);
     
     /* WWDG configuration */
     /* Enable WWDG clock */
@@ -336,21 +324,10 @@ int main(void)
     {
         /* Toggle LED2 */
         LedBlink(GPIOA, LED2);
-        Delay(16);
+        systick_delay_ms(16);
         /* Update WWDG counter */
         WWDG_SetCnt(127);
     }
 }
 
-/**
- * @brief  Inserts a delay time.
- * @param nTime specifies the delay time length, in milliseconds.
- */
-void Delay(__IO uint32_t nTime)
-{
-    TimingDelay = nTime;
-    while (TimingDelay != 0)
-    {
-    }
-}
 

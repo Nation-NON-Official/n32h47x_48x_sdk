@@ -242,7 +242,7 @@ void GPIO_Configuration(void)
 **/
 void SysTick_Configuration(void)
 {
-    /* Setup SysTick Timer for 10 msec interrupts  */
+    /* Setup SysTick Timer for 10 msec interrupts ,(SystemCoreClock) / 100) cannot be greater than 0xFFFFFF */
     if (SysTick_Config((SystemCoreClock) / 100))
     {
         /* Capture error */

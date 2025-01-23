@@ -10,13 +10,13 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 3. 使用说明
     描述相关模块配置方法；例如:时钟，I/O等 
     1. SystemClock：240MHz
-    2. GPIO: KEY2--PA15、VBUS驱动引脚-PB3
+    2. GPIO: KEY2--PA15、VBUS驱动引脚-PE1
     3. 串口配置：
             - 串口为USART1（TX：PA9  RX：PA10）:
             - 数据位：8
@@ -45,12 +45,12 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc. 
     1. SystemClock: 240MHz
-    2. GPIO: KEY2--PA15、VBUS driver pin(PB3)
+    2. GPIO: KEY2--PA15、VBUS driver pin(PE1)
     3. Serial port configuration:
             - Serial port: USART1 (TX: PA9 RX: PA10) :
             - Data bit: 8

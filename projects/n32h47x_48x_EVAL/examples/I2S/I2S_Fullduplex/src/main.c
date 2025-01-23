@@ -194,7 +194,7 @@ void GPIO_Configuration(void)
 
     GPIO_InitStruct(&GPIO_InitStructure);
     
-    /* Configure I2S2 pins: CK, WS, SD ---------------------------------*/
+	/* Configure I2S2 pins: CK:PC7, WS:PC6, SD:PC9 ---------------------------------*/
     GPIO_InitStructure.Pin            = I2S_SLAVE_PIN_CK;
     GPIO_InitStructure.GPIO_Pull      = GPIO_NO_PULL;
     GPIO_InitStructure.GPIO_Alternate = I2S_SLAVE_AF_CK;    
@@ -213,12 +213,12 @@ void GPIO_Configuration(void)
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_AF_PP;
     GPIO_InitPeripheral(GPIOx, &GPIO_InitStructure);
 
-    /* Configure I2S2_EXT pins: AUX_SD---------------------------------*/
+    /* Configure I2S2_EXT pins: AUX_SD:PC2---------------------------------*/
     GPIO_InitStructure.Pin            =  I2S_SLAVE_PIN_AUX_SD;
     GPIO_InitStructure.GPIO_Alternate = I2S_SLAVE_AF_AUX_SD;    
     GPIO_InitPeripheral(I2S_SLAVE_GPIO_AUX_SD, &GPIO_InitStructure);    
     
-    /* Configure I2S3 pins: CK SD ------------------------------------*/
+    /* Configure I2S3 pins: CK:PC3, SD:PC1, WS:PA4 ------------------------------------*/
     GPIO_InitStructure.Pin            = I2S_MASTER_PIN_CK;
     GPIO_InitStructure.GPIO_Alternate = I2S_MASTER_AF_CK;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_AF_PP;

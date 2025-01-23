@@ -61,7 +61,7 @@ __IO uint16_t ADCTempValue;
 
 void RCC_Configuration(void);
 void GPIO_Configuration(void);
-void PGA_Configuratoin(void);
+void PGA_Configuration(void);
 void ADC_Initial(void);
 
 /**
@@ -78,7 +78,7 @@ int main(void)
     GPIO_Configuration();
 
     /* PGA configuration ------------------------------------------------------*/
-    PGA_Configuratoin();
+    PGA_Configuration();
     
     /* ADC configuration ------------------------------------------------------*/
     ADC_Initial();
@@ -97,11 +97,11 @@ int main(void)
 }
 
 /**
-*\*\name    PGA_Configuratoin.
+*\*\name    PGA_Configuration.
 *\*\fun     Configures the PGA module.
 *\*\return  none
 **/
-void PGA_Configuratoin(void)
+void PGA_Configuration(void)
 {
     PGA_InitType PGA_Initial;
 
@@ -144,9 +144,9 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 single-ended calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
 }
 /**

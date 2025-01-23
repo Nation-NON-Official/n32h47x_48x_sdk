@@ -59,8 +59,8 @@
 
 extern uint32_t exti_int;
 extern uint32_t key_cnt;
-extern uint8_t PortSrc[MAX_LED_KEY_CNT];
-extern uint8_t PinSrc[MAX_LED_KEY_CNT];
+extern uint8_t KeyPortSrc[MAX_LED_KEY_CNT];
+extern uint8_t KeyPinSrc[MAX_LED_KEY_CNT];
 extern GPIO_Module* LedPort[MAX_LED_KEY_CNT];
 extern uint16_t     LedPin[MAX_LED_KEY_CNT];
 
@@ -180,7 +180,7 @@ void EXTI0_IRQHandler(void)
             key_cnt++;
         }
 
-        GPIO_ConfigEXTILine(EXTI_LINE_SOURCE0,PortSrc[key_cnt],PinSrc[key_cnt]);
+        GPIO_ConfigEXTILine(EXTI_LINE_SOURCE0,KeyPortSrc[key_cnt],KeyPinSrc[key_cnt]);
         exti_int = 1;
     }
     

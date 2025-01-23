@@ -53,7 +53,7 @@
 **/
 
 #include "usbd_desc.h"
-
+                                                
 #define USBD_VID                     0x19F5
 #define USBD_PID                     0x5760
 
@@ -191,7 +191,7 @@ uint8_t *USBD_USER_LangIDStrDescriptor(uint8_t speed, uint16_t * length)
 */
 uint8_t *USBD_USER_ProductStrDescriptor(uint8_t speed, uint16_t * length)
 {
-    if (speed == 0)
+    if (speed == USB_SPEED_HIGH)
     {
         USBD_GetString((uint8_t *) (uint8_t *) USBD_PRODUCT_HS_STRING, USBD_StrDesc, length);
     }

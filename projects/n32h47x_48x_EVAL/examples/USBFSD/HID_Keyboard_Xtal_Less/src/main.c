@@ -102,15 +102,15 @@ int main(void)
         {
             if (PrevXferComplete)
             {
-                if (GPIO_ReadInputDataBit(KEY_A_PORT, KEY_A_PIN))
+                if (!GPIO_ReadInputDataBit(KEY_A_PORT, KEY_A_PIN))
                 {
                     key_buffer[2] = 0x04;   // A
                 }
-                else if (GPIO_ReadInputDataBit(KEY_B_PORT, KEY_B_PIN))
+                else if (!GPIO_ReadInputDataBit(KEY_B_PORT, KEY_B_PIN))
                 {
                     key_buffer[2] = 0x05;   // B
                 }
-                else if (GPIO_ReadInputDataBit(KEY_C_PORT, KEY_C_PIN))
+                else if (!GPIO_ReadInputDataBit(KEY_C_PORT, KEY_C_PIN))
                 {
                     key_buffer[2] = 0x06;   // C
                 }

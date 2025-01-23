@@ -127,7 +127,7 @@ int main(void)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
 
     TIM_InitOc1(TIMx, &TIM_OCInitStructure);    
     

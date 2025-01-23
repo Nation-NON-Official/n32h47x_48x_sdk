@@ -14,7 +14,7 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 3、使用说明
     
@@ -38,14 +38,13 @@
                 A12:PG2     A13:PG3     A14:PG4     A15:PG5
                 A16:PD11    A17:PD12    A18:PD13
                 
-                NOE:PD4     NWE:PD5     NE:PG9
-                NBL0:PE0    NBL1:PE1
+                NOE:PD4     NWE:PD5     NE:PG8
                 
     使用方法：
         编译后烧录到评估板，上电，串口打印 PSRAM 读写结果
 
 4、注意事项
-    需要将NAND Flash的CS脚拉高，不然会影响PSRAM低8bit数据，在N32H487ZEL7_EVB V1.0开发板上，J20用跳线帽连接
+    J20需要用跳线帽连接
     
 
 1. Function description
@@ -64,7 +63,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
 
@@ -89,12 +88,11 @@
                A12:PG2     A13:PG3     A14:PG4     A15:PG5
                A17:PD12    A18:PD13
                
-               NOE:PD4     NWE:PD5     NE:PG9
-               NBL0:PE0    NBL1:PE1
+               NOE:PD4     NWE:PD5     NE:PG8
 
     Instructions:
         After compiling, burn it to the evaluation board, power it on, and print the PSRAM read-write results through the serial port
 
 4. Matters needing attention
-    The CS pin of the NAND Flash needs to be pulled up, otherwise the low 8bit data of the PSRAM will be affected, On N32H487ZEL7_EVB V1.0 board, J20 Connected with jumper cap
+    The J20 needs to be connected with a jumper cap
 

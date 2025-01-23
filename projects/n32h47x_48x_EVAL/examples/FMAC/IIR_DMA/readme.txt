@@ -6,7 +6,7 @@
 
     软件开发环境：KEIL MDK-ARM V5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -22,7 +22,7 @@
 
 3、使用说明
     系统配置：
-	1、时钟源：PLL
+    1、时钟源：PLL
     2、系统时钟频率：
         N32H473/474系列：
         200MHz
@@ -44,7 +44,7 @@
 2. Use environment
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0

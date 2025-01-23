@@ -1053,38 +1053,67 @@ void I2S_Stop(void)
 **/
 void I2S_Mode_Config(uint16_t Standard, uint16_t WordLen, uint32_t AudioFreq)
 {
+    uint32_t shrtpll_clock;
+    uint32_t timeout_value;
+    uint32_t counter_value = 0;
+    RCC_ClocksType sysclk_value;
+    FlagStatus status_value;
     I2S_InitType I2S_InitStructure;
+    
     /* SHRTPLL */
 #if defined (N32H473) || defined (N32H474)
-    RCC_ConfigSHRTPll(RCC_SHRTPLL_SRC_HSE, HSE_VALUE, 16000*32*8*47, ENABLE);
+    shrtpll_clock = 16000*32*8*47;
+    
 #elif defined (N32H482) || defined (N32H487)
-    RCC_ConfigSHRTPll(RCC_SHRTPLL_SRC_HSE, HSE_VALUE, 16000*32*8*59, ENABLE);
+    shrtpll_clock = 16000*32*8*59;
+
 #endif
-    /* Wait till SHRTPLL is ready */
-    while (!RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF));
+    RCC_GetClocksFreqValue(&sysclk_value);
+    timeout_value = (HSE_STARTUP_TIMEOUT/((uint32_t)240000000/sysclk_value.SysclkFreq));
     
-    RCC_ConfigI2S2Clk(RCC_I2S2_CLKSRC_SHRTPLL);
-    
-    /* Wait till SHRTPLL is ready */
-    while (!RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF));
+    if(RCC_ConfigSHRTPll(RCC_SHRTPLL_SRC_HSE, HSE_VALUE, shrtpll_clock, ENABLE) == SUCCESS)
+    {
+        /* Wait till SHRTPLL is ready */
+        do
+        {
+            status_value = RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF);
+            counter_value++;
+        } while ((counter_value != timeout_value) && (status_value == RESET));
+        
+        if (RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF) != RESET)
+        {
+            RCC_ConfigI2S2Clk(RCC_I2S2_CLKSRC_SHRTPLL);
+        }
+        else
+        {
+            RCC_ConfigI2S2Clk(RCC_I2S2_CLKSRC_SYSCLK);
+            shrtpll_clock = sysclk_value.SysclkFreq;
+        }
+    }
+    else
+    {
+        RCC_ConfigI2S2Clk(RCC_I2S2_CLKSRC_SYSCLK);
+        shrtpll_clock = sysclk_value.SysclkFreq;
+    }
     
     /*  I2S clocks enable */
     RCC_EnableAPB1PeriphClk(AUDIO_I2S_CLK, ENABLE);
-        
+
     SPI_I2S_DeInit(AUDIO_I2S);
     /* I2S peripheral configuration */
     I2S_InitStruct(&I2S_InitStructure);
-    I2S_InitStructure.Standard       = Standard;
-    I2S_InitStructure.DataFormat     = WordLen;
-    I2S_InitStructure.MCLKEnable     = I2S_MCLK_ENABLE;
-    I2S_InitStructure.AudioFrequency = AudioFreq;
-    I2S_InitStructure.CLKPOL         = I2S_CLKPOL_LOW;
+    I2S_InitStructure.Standard        = Standard;
+    I2S_InitStructure.DataFormat      = WordLen;
+    I2S_InitStructure.MCLKEnable      = I2S_MCLK_ENABLE;
+    I2S_InitStructure.AudioFrequency  = AudioFreq;
+    I2S_InitStructure.CLKPOL          = I2S_CLKPOL_LOW;
+    I2S_InitStructure.ClkSrcFrequency = shrtpll_clock;
 
     /* I2S configuration */
     I2S_InitStructure.I2sMode = I2S_MODE_MASTER_TX;
     I2S_Init(AUDIO_I2S, &I2S_InitStructure);
 
-    /* Enable the I2S2 */
+    /* Enable the I2S */
     I2S_Enable(AUDIO_I2S, ENABLE);
 }
 

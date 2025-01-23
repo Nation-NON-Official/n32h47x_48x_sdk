@@ -54,13 +54,19 @@
 #include "main.h"
 
 #define TxBufferSize2 (countof(TxBuffer2) - 1)
+#define RxBufferSize1 TxBufferSize2
+#define RxBufferSize2 TxBufferSize2
 
 #define countof(a) (sizeof(a) / sizeof(*(a)))
 
 USART_InitType USART_InitStructure;
 uint8_t TxBuffer2[] = "USART Interrupt Example: USARTz -> USARTy using Interrupt";
+uint8_t RxBuffer2[RxBufferSize2];
+__IO uint8_t RxCounter2         = 0x00;
 __IO uint8_t TxCounter2         = 0x00;
+uint8_t NbrOfDataToRead1        = RxBufferSize1;
 uint8_t NbrOfDataToTransfer2    = TxBufferSize2;
+__IO TestStatus TransferStatus2 = FAILED;
 
 /**
 *\*\name    main.
@@ -70,6 +76,7 @@ uint8_t NbrOfDataToTransfer2    = TxBufferSize2;
 **/
 int main(void)
 {
+    log_init();
     /* System Clocks Configuration */
     RCC_Configuration();
     
@@ -80,6 +87,7 @@ int main(void)
     GPIO_Configuration();
     
     /* USARTz configuration */
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 115200;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;
@@ -98,9 +106,28 @@ int main(void)
     
     /* Enable USARTz Receive and Transmit interrupts */
     USART_ConfigInt(USARTz, USART_INT_TXDE,ENABLE);
+    USART_ConfigInt(USARTz, USART_INT_RXDNE,ENABLE);
 
     /* Enable the USARTz */
     USART_Enable(USARTz, ENABLE);
+    log_info(" N32H487ZEL7_EVB 485 Master test START \r\n");
+
+    /* Wait until end of transmission from USARTy to USARTz */
+    while (RxCounter2 < RxBufferSize2)
+    {
+    }
+
+    TransferStatus2 = Buffercmp(TxBuffer2, RxBuffer2, TxBufferSize2);
+    /* TransferStatus = PASSED, if the data transmitted and received  are the same */
+    /* TransferStatus = FAILED, if the data transmitted and received are different */
+    if(TransferStatus2 == PASSED)
+    {
+        log_info(" N32H487ZEL7_EVB 485 Master test OK \r\n");
+    }
+    else
+    {
+        log_info(" N32H487ZEL7_EVB 485 Master test Fail \r\n");
+    }
 
     while (1)
     {
@@ -173,5 +200,29 @@ void NVIC_Configuration(void)
     NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
+}
+
+/**
+*\*\name    Buffercmp.
+*\*\fun     Compares two buffers.
+*\*\param   pBuffer1
+*\*\param   pBuffer2
+*\*\param   BufferLength
+*\*\return  PASSED or FAILED
+**/
+TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
+{
+    while (BufferLength--)
+    {
+        if (*pBuffer1 != *pBuffer2)
+        {
+            return FAILED;
+        }
+
+        pBuffer1++;
+        pBuffer2++;
+    }
+
+    return PASSED;
 }
 

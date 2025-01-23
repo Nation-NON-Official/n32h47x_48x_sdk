@@ -63,7 +63,7 @@ uint16_t lcd_width = 0;
 uint16_t lcd_height = 0;
 uint16_t lcd_x_length = 0;
 uint16_t lcd_y_length = 0;
-
+uint16_t lcd_id = 0;
 /**
 *\*\name    LCD_Configuration.
 *\*\fun     Configures the LCD.
@@ -78,6 +78,7 @@ void LCD_Configuration(void)
     printf("\n\r LCD ID : 0x%x\n\r", LCD_Get_ID());
     if((LCD_Get_ID())==0x9341)
     {
+        lcd_id = 0x9341;
         lcd_width = 240;
         lcd_height = 320;
         LCD_BL_Control(IO_STATE_LOW);
@@ -85,6 +86,7 @@ void LCD_Configuration(void)
     }
     else if((LCD_Get_ID())==0x9806)
     {
+        lcd_id = 0x9806;
         lcd_width = 480;
         lcd_height = 800;
         LCD_BL_Control(IO_STATE_HIGH);
@@ -717,7 +719,18 @@ void LCD_GramScan(uint8_t ucOption)
     }
 
     LCD_Write_CMD(0x36);
-    LCD_Write_Data(0x08 | (ucOption << 5));
+    if(lcd_id==0x9341)
+    {
+        LCD_Write_Data(0x08 | (ucOption << 5));
+    }
+    else if(lcd_id==0x9806)
+    {
+        LCD_Write_Data(0x00 | (ucOption << 5));
+    }
+    else
+    {
+    
+    }
     LCD_Write_CMD(CMD_SetCoordinateX);
     LCD_Write_Data(0x00);
     LCD_Write_Data(0x00);

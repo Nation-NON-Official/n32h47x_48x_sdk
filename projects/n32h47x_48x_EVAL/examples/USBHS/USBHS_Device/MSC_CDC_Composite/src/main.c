@@ -101,6 +101,13 @@ static void USBHS_ConfigPLL(void)
     
     /* Enables the USBHS peripheral clock*/
     RCC_EnableAHBPeriphClk(RCC_AHB_PERIPHEN_USBHS, ENABLE);
+
+#ifdef USE_USB_HS_IN_HS
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0xF << 4)))  | (0x5 << 4);  //TX vref TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 12))) | (0x3 << 12); //TX Rise TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 14))) | (0x3 << 14); //TX Res TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 16))) | (0x3 << 16); //TX preempamp TUNE
+#endif /* USE_USB_HS_IN_HS */
 }
 
 /**

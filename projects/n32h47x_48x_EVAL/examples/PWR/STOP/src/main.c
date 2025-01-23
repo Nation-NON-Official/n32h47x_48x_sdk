@@ -202,7 +202,7 @@ void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
     
     if(ClockStatus != SUCCESS)
     {
-        /* clock source fails to start-up */
+        /* clock source fails to start-up, user can add here some code to deal with this error */
         while (1)
         {
         }
@@ -252,11 +252,14 @@ void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
      /* Wait till PLL is ready */
     while (RCC_GetFlagStatus(RCC_FLAG_PLLRDF) != SET)
     {
+        /* if this bit always not set, user can add here some code to deal with this error */
     }
+
     /* Select PLL as system clock source */
     RCC_ConfigSysclk(RCC_SYSCLK_SRC_PLL);
 
     /* Wait till PLL is used as system clock source */
     while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_PLL);
+    /* if this bit always not set, user can add here some code to deal with this error */
 }
 

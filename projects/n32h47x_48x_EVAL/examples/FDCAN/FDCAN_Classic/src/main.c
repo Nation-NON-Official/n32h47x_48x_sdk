@@ -57,18 +57,25 @@
 #include "n32h47x_48x_gpio.h"
 #include "n32h47x_48x_fdcan.h"
 #include "log.h"
+#include "misc.h"
 
-
-#define TEST_BUF_SIZE   (8)
+#define TEST_DATA_FRAME_SIZE    (8)     /* Data frame size,must not be greater than 64 */
+#define MSG_RAM_SIZE            (0x100) /* Message ram size,must not be greater than 4480 */
 
 FDCAN_TxHeaderType TxHeader1,TxHeader2;
-uint8_t TxData1[TEST_BUF_SIZE] = {  0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF };
-uint8_t TxData2[TEST_BUF_SIZE] = {  0x55, 0xAA, 0x11, 0x22, 0x33, 0xBB, 0xDD, 0xEE };
+uint8_t TxData1[TEST_DATA_FRAME_SIZE] = {  0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF };
+uint8_t TxData2[TEST_DATA_FRAME_SIZE] = {  0x55, 0xAA, 0x11, 0x22, 0x33, 0xBB, 0xDD, 0xEE };
 
 FDCAN_RxHeaderType RxHeader;
-uint8_t RxBuf[TEST_BUF_SIZE];
-uint32_t FDCAN_ram[0x100];  /* Used for FDCAN message ram, shared by all FDCAN modules */
+uint8_t RxBuf[64];
+
+uint32_t FDCAN_ram[MSG_RAM_SIZE];  /* Used for FDCAN message ram, shared by all FDCAN modules */
 FDCAN_MsgRamType Node1_msg,Node2_msg;
+
+uint32_t RxFlag[2] = {0,0};
+uint32_t DataFlag[2] = {0,0};
+uint32_t TxFlag[2] = {0,0};
+uint32_t IntFlag = 0;
 
 /**
  *\*\name   main.
@@ -111,40 +118,124 @@ int main(void)
             key_cnt = 0;
         }
         
-        if(key_cnt >= (SystemCoreClock/3000))
+        if(key_cnt >= (SystemCoreClock/1000))
         {
             key_cnt = 0;
+            IntFlag++;
+            
+            /* Node1 send */
+            if(IntFlag & 0x01UL)
+            {
+                FDCAN_EnableInt(NODE1,FDCAN_INT_RX_FIFO0_NEW_MESSAGE);
+            }
+            else
+            {
+                FDCAN_DisableInt(NODE1,FDCAN_INT_RX_FIFO0_NEW_MESSAGE);
+            }
             
             FDCAN_AddMsgToTxFifoQ(NODE1, &TxHeader1, TxData1);
             log_info("\r\n NODE1 send!\r\n");
+            
+            /* Node2 send */
+            if(IntFlag & 0x01UL)
+            {
+                FDCAN_EnableInt(NODE2,FDCAN_INT_RX_FIFO1_NEW_MESSAGE);
+            }
+            else
+            {
+                FDCAN_DisableInt(NODE2,FDCAN_INT_RX_FIFO1_NEW_MESSAGE);
+            }
             
             FDCAN_AddMsgToTxFifoQ(NODE2, &TxHeader2, TxData2);
             log_info("\r\n NODE2 send!\r\n");
         }
        
-        if(FDCAN_GetRxFifoFillLevel(NODE1,FDCAN_RX_FIFO0) > 0)
+        if(TxFlag[0])
         {
-            buf_clear(RxBuf,TEST_BUF_SIZE,0xFF);
+            log_info("\r\n NODE1 transmit conpleted!\r\n");
+            TxFlag[0]--;
+        }
+        
+        if(TxFlag[1])
+        {
+            log_info("\r\n NODE2 transmit conpleted!\r\n");
+            TxFlag[1]--;
+        }
+        
+        if(IntFlag & 0x01UL)    /* Recieve by interrupt */
+        {
+            if(RxFlag[0])
+            {
+                RxFlag[0]--;
+                DataFlag[0]++;
+            }
             
-            LED_On(LED1_PORT,LED1_PIN);
-            FDCAN_GetRxMsg(NODE1,FDCAN_RX_FIFO0,&RxHeader,RxBuf);
+            if(RxFlag[1])
+            {
+                RxFlag[1]--;
+                DataFlag[1]++;
+            }
+        }
+        else    /* Recieve by polling RX FIFO */
+        {
+            if(FDCAN_GetRxFifoFillLevel(NODE1,FDCAN_RX_FIFO0) > 0)
+            {
+                DataFlag[0]++;
+            }
             
-            log_info("\r\n NODE1 Rx FIFO0 recieved,ID=0x%03x,RXTS=0x%04x,data:\r\n",RxHeader.ID,RxHeader.RxTimestamp);
-            log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[0], RxBuf[1], RxBuf[2], RxBuf[3]);
-            log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[4], RxBuf[5], RxBuf[6], RxBuf[7]);
+            if(FDCAN_GetRxFifoFillLevel(NODE2,FDCAN_RX_FIFO1) > 0)
+            {
+                DataFlag[1]++;
+            }
+        }
+        
+        if(DataFlag[0])
+        {
+            DataFlag[0]--;
+            
+            buf_clear(RxBuf,TEST_DATA_FRAME_SIZE,0xFF);
+            
+            LED_On(LED1_PORT,LED1_PIN); 
+            if(FDCAN_GetRxMsg(NODE1,FDCAN_RX_FIFO0,&RxHeader,RxBuf) != ERROR)
+            {
+                if(IntFlag & 0x01UL)
+                {
+                    log_info("\r\n NODE1 Rx FIFO0 recieved by interrupt,");
+                }
+                else
+                {
+                    log_info("\r\n NODE1 Rx FIFO0 recieved by polling,");
+                }
+                log_info("ID=0x%03x,RXTS=0x%04x,data:\r\n",RxHeader.ID,RxHeader.RxTimestamp);
+                log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[0], RxBuf[1], RxBuf[2], RxBuf[3]);
+                log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[4], RxBuf[5], RxBuf[6], RxBuf[7]);
+            }
+            
             LED_Off(LED1_PORT,LED1_PIN);
         }
 
-        if(FDCAN_GetRxFifoFillLevel(NODE2,FDCAN_RX_FIFO1) > 0)
+        if(DataFlag[1])
         {
-            buf_clear(RxBuf,TEST_BUF_SIZE,0xEE);
+            DataFlag[1]--;
+            
+            buf_clear(RxBuf,TEST_DATA_FRAME_SIZE,0xEE);
             
             LED_On(LED2_PORT,LED2_PIN);
-            FDCAN_GetRxMsg(NODE2,FDCAN_RX_FIFO1,&RxHeader,RxBuf);
+            if(FDCAN_GetRxMsg(NODE2,FDCAN_RX_FIFO1,&RxHeader,RxBuf) != ERROR)
+            {
+                if(IntFlag & 0x01UL)
+                {
+                    log_info("\r\n NODE2 Rx FIFO1 recieved by interrupt,");
+                }
+                else
+                {
+                    log_info("\r\n NODE2 Rx FIFO1 recieved by polling,");
+                }
+                log_info("ID=0x%03x,RXTS=0x%04x,data:\r\n",RxHeader.ID,RxHeader.RxTimestamp);
+                log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[0], RxBuf[1], RxBuf[2], RxBuf[3]);
+                log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[4], RxBuf[5], RxBuf[6], RxBuf[7]);
+            }
             
-            log_info("\r\n NODE2 Rx FIFO1 recieved,ID=0x%03x,RXTS=0x%04x,data:\r\n",RxHeader.ID,RxHeader.RxTimestamp);
-            log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[0], RxBuf[1], RxBuf[2], RxBuf[3]);
-            log_info("\t 0x%02x,0x%02x,0x%02x,0x%02x\r\n",RxBuf[4], RxBuf[5], RxBuf[6], RxBuf[7]);
             LED_Off(LED2_PORT,LED2_PIN);
         }
     }
@@ -335,6 +426,7 @@ void buf_clear(uint8_t *buf, uint32_t len,uint8_t data)
  *\*\fun    Config the clock source of all FDCAN module.
  *\*\param  none
  *\*\return none
+ *\*\note   FDCAN clock source should be set to one of the following values: 20M,40M,80M.
  */
 void FDCAN_clock_src_config(void)
 {
@@ -419,6 +511,7 @@ void Node1_Config(void)
 {
     FDCAN_InitType InitParam;
     FDCAN_FilterType FilterParam;
+    NVIC_InitType NVIC_Struct;
     
     /* Enable NODE1 clock */
     RCC_EnableAPB1PeriphClk(NODE1_PERIPH,ENABLE);
@@ -456,6 +549,13 @@ void Node1_Config(void)
     /* Init NODE1 */
     FDCAN_Init(NODE1,&InitParam);
 
+    /* Check message ram size */
+    if(Node1_msg.EndAddress > ((uint32_t)FDCAN_ram + (MSG_RAM_SIZE*4U)))
+    {
+        log_info("\r\n NODE1 init error:message ram is too small!\r\n");
+        while(1);
+    }
+    
     /* Configure standard ID reception filter to Rx buffer 0 */
     FilterParam.IdType          = FDCAN_STANDARD_ID;
     FilterParam.FilterIndex     = 0;
@@ -474,6 +574,12 @@ void Node1_Config(void)
     FDCAN_ConfigTSPrescaler(NODE1,FDCAN_TIMESTAMP_PRESC_16);
     FDCAN_Config_TS(NODE1,FDCAN_TIMESTAMP_INTERNAL);
     
+    FDCAN_ConfigIntLine(NODE1,FDCAN_INT_TX_COMPLETE,FDCAN_INTERRUPT_LINE1);
+    FDCAN_ActivateInt(NODE1,FDCAN_INT_TX_COMPLETE,FDCAN_TX_BUFFER0|FDCAN_TX_BUFFER1);
+    
+    FDCAN_ConfigIntLine(NODE1,FDCAN_FLAG_RX_FIFO0_NEW_MESSAGE,FDCAN_INTERRUPT_LINE1);
+    FDCAN_ActivateInt(NODE1,FDCAN_FLAG_RX_FIFO0_NEW_MESSAGE,FDCAN_TX_BUFFER0);
+    
     /* Start the FDCAN module */
     FDCAN_Start(NODE1);
     
@@ -486,6 +592,12 @@ void Node1_Config(void)
     TxHeader1.FDFormat       = FDCAN_CLASSIC_CAN;
     TxHeader1.TxEventFifo    = FDCAN_NO_TX_EVENTS;
     TxHeader1.MsgMarker      = 0x55;
+    
+    NVIC_Struct.NVIC_IRQChannel = NODE1_IRQN;
+    NVIC_Struct.NVIC_IRQChannelSubPriority = NVIC_SUB_PRIORITY_0;
+    NVIC_Struct.NVIC_IRQChannelPreemptionPriority = NVIC_PRE_PRIORITY_0;
+    NVIC_Struct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_Struct);
 }
 
 /**
@@ -498,6 +610,7 @@ void Node2_Config(void)
 {
     FDCAN_InitType InitParam;
     FDCAN_FilterType FilterParam;
+    NVIC_InitType NVIC_Struct;
     
     /* Enable NODE2 clock */
     RCC_EnableAPB1PeriphClk(NODE2_PERIPH,ENABLE);
@@ -535,6 +648,13 @@ void Node2_Config(void)
     /* Init NODE2 */
     FDCAN_Init(NODE2,&InitParam);
 
+    /* Check message ram size */
+    if(Node2_msg.EndAddress > ((uint32_t)FDCAN_ram + (MSG_RAM_SIZE*4U)))
+    {
+        log_info("\r\n NODE2 init error:message ram is too small!\r\n");
+        while(1);
+    }
+    
     /* Configure standard ID reception filter to Rx buffer 0 */
     FilterParam.IdType          = FDCAN_STANDARD_ID;
     FilterParam.FilterIndex     = 0;
@@ -553,6 +673,12 @@ void Node2_Config(void)
     FDCAN_ConfigTSPrescaler(NODE2,FDCAN_TIMESTAMP_PRESC_16);
     FDCAN_Config_TS(NODE2,FDCAN_TIMESTAMP_INTERNAL);
     
+    FDCAN_ConfigIntLine(NODE2,FDCAN_INT_TX_COMPLETE,FDCAN_INTERRUPT_LINE1);
+    FDCAN_ActivateInt(NODE2,FDCAN_INT_TX_COMPLETE,FDCAN_TX_BUFFER0|FDCAN_TX_BUFFER1);
+    
+    FDCAN_ConfigIntLine(NODE2,FDCAN_FLAG_RX_FIFO1_NEW_MESSAGE,FDCAN_INTERRUPT_LINE1);
+    FDCAN_ActivateInt(NODE2,FDCAN_FLAG_RX_FIFO1_NEW_MESSAGE,FDCAN_TX_BUFFER0);
+    
     /* Start the FDCAN module */
     FDCAN_Start(NODE2);
 
@@ -565,4 +691,10 @@ void Node2_Config(void)
     TxHeader2.FDFormat       = FDCAN_CLASSIC_CAN;
     TxHeader2.TxEventFifo    = FDCAN_NO_TX_EVENTS;
     TxHeader2.MsgMarker      = 0xAA;
+    
+    NVIC_Struct.NVIC_IRQChannel = NODE2_IRQN;
+    NVIC_Struct.NVIC_IRQChannelSubPriority = NVIC_SUB_PRIORITY_0;
+    NVIC_Struct.NVIC_IRQChannelPreemptionPriority = NVIC_PRE_PRIORITY_0;
+    NVIC_Struct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_Struct);
 }

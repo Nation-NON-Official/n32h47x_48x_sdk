@@ -51,76 +51,18 @@
 *\*\version v1.0.0
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
-#include "n32h47x_48x.h"
-#include "n32h47x_48x_rcc.h"
-#include "n32h47x_48x_dvp.h"
-#include "bsp_dvp.h"
+
 #include "main.h"
-#include "log.h"
-#include "lcd.h"
 
-extern uint16_t lcd_width;
-extern uint16_t lcd_height;
-extern uint16_t lcd_id;
-extern const image_t pic_logo1;
-extern const image_t pic_logo2;
 
-static uint32_t DBG_SysTick_Config(uint32_t ticks)
-{ 
-  if (ticks > SysTick_LOAD_RELOAD_Msk)  return (1);            /* Reload value impossible */
-                                                               
-  SysTick->LOAD  = (ticks & SysTick_LOAD_RELOAD_Msk) - 1;      /* set reload register */
-  NVIC_SetPriority (SysTick_IRQn, (1<<__NVIC_PRIO_BITS) - 1);  /* set Priority for Cortex-M4 System Interrupts */
-  SysTick->VAL   = 0;                                          /* Load the SysTick Counter Value */
-  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk | 
-                   SysTick_CTRL_ENABLE_Msk;                    /* Enable SysTick IRQ and SysTick Timer */
-  SysTick->CTRL  &= ~SysTick_CTRL_TICKINT_Msk;
-  return (0);                                                  /* Function successful */
-}
 
-void SysTick_Delay_Ms( __IO uint32_t ms)
-{
-    uint32_t i;	
-    RCC_ClocksType RCC_Clocks;
 
-    RCC_GetClocksFreqValue(&RCC_Clocks);
 
-    DBG_SysTick_Config(RCC_Clocks.SysclkFreq / 1000);
-
-    for(i=0;i<ms;i++)
-    {
-        while( !((SysTick->CTRL)&(1<<16)) );
-    }
-    SysTick->CTRL &=~ SysTick_CTRL_ENABLE_Msk;
-}
-
-void SysTick_Delay_Us( __IO uint32_t us)
-{
-    uint32_t i;
-    RCC_ClocksType RCC_Clocks;
-
-    RCC_GetClocksFreqValue(&RCC_Clocks);
-    DBG_SysTick_Config(RCC_Clocks.SysclkFreq / 1000000);
-
-    for(i=0;i<us;i++)
-    {
-        while( !((SysTick->CTRL)&(1<<16)) );
-    }
-    SysTick->CTRL &=~SysTick_CTRL_ENABLE_Msk;
-}
 
 int main(void)
 {
-    log_init();
-    /* LCD configuration */
-    LCD_Configuration();
-    LCD_GramScan(6);
-    LCD_SetColors(RED,BLACK);
-    LCD_Clear(0,0,lcd_width,lcd_height);  
-    LCD_Logo_init();
-    /* DVP configuration */    
-    DVPDemo_Init();
-    DVP_EnablePort(ENABLE);
+
+    dvp_demo();
         
     while (1)
     {
@@ -130,22 +72,4 @@ int main(void)
 }
 
 
-void LCD_Logo_init(void)
-{
-    LCD_SetFont(&Font8x16);
-    LCD_SetColors(RED,BLACK);
-    LCD_Clear(0,0,lcd_width,lcd_height); 
-    if(lcd_id==0x9341)
-    {
-        lcd_draw_image((lcd_width - pic_logo1.width) / 2, lcd_height / 4, &pic_logo1);
-        lcd_draw_image((lcd_width - pic_logo2.width) / 2, lcd_height / 3 * 2, &pic_logo2);
-    }
-    else if(lcd_id==0x9806)
-    {
-        lcd_draw_image((lcd_width - pic_logo1.width) / 2, lcd_height / 8, &pic_logo1);
-        lcd_draw_image((lcd_width - pic_logo2.width) / 2, lcd_height / 5 * 4, &pic_logo2);
-    }
-    else
-    {
-    }    
-}
+

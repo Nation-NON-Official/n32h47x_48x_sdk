@@ -54,7 +54,7 @@
 */
 
 #include "main.h"
-
+#include "log.h"
 /** n32h47x_48x_StdPeriph_Examples **/
 
 /* SPI_DMA */
@@ -96,7 +96,9 @@ int main(void)
         To reconfigure the default setting of SystemInit() function, refer to
         system_n32h47x_48x.c file
       */
-
+    log_init();
+    log_info("\r\n This is SPI DMA demo!!\r\n");
+	
     /* System clocks configuration ---------------------------------------------*/
     RCC_Configuration();
 
@@ -129,6 +131,7 @@ int main(void)
 		DMA_RequestRemap(SPI_MASTER_Tx_DMA_Remap,SPI_MASTER_Tx_DMA_Channel,ENABLE);
 		
     /* SPI_MASTER configuration ------------------------------------------------------*/
+		SPI_InitStruct(&SPI_InitStructure);
     SPI_InitStructure.DataDirection = SPI_DIR_SINGLELINE_TX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;
     SPI_InitStructure.DataLen       = SPI_DATA_SIZE_8BITS;
@@ -176,6 +179,12 @@ int main(void)
     /* TransferStatus = FAILED, if the transmitted and received data
        are different */
 
+		if(TransferStatus == PASSED) {
+        log_info("\r\n Test PASS!!\r\n");
+    } else {
+        log_info("\r\n Test fail!!\r\n");
+    }
+		
     while (1)
     {
     }

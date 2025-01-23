@@ -63,25 +63,25 @@
 uint32_t exti_int = 1;
 uint32_t key_cnt = 0;
 
-#if     defined(N32H475)
-uint8_t PortSrc[MAX_LED_KEY_CNT]={  GPIOA_PORT_SOURCE,
-                                GPIOA_PORT_SOURCE,
-                                GPIOA_PORT_SOURCE   };
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
+uint8_t KeyPortSrc[MAX_LED_KEY_CNT]={   GPIOA_PORT_SOURCE,
+                                        GPIOA_PORT_SOURCE,
+                                        GPIOA_PORT_SOURCE   };
 
-uint8_t PinSrc[MAX_LED_KEY_CNT]={   GPIO_PIN_SOURCE4,
-                                GPIO_PIN_SOURCE5,
-                                GPIO_PIN_SOURCE6   };
+uint8_t KeyPinSrc[MAX_LED_KEY_CNT]={    GPIO_PIN_SOURCE4,
+                                        GPIO_PIN_SOURCE5,
+                                        GPIO_PIN_SOURCE6   };
 
 char *str[MAX_LED_KEY_CNT]={"PA4","PA5","PA6"};
 
 #else
-uint8_t PortSrc[MAX_LED_KEY_CNT]={  GPIOC_PORT_SOURCE,
-                                GPIOA_PORT_SOURCE,
-                                GPIOC_PORT_SOURCE   };
+uint8_t KeyPortSrc[MAX_LED_KEY_CNT]={   GPIOC_PORT_SOURCE,
+                                        GPIOA_PORT_SOURCE,
+                                        GPIOC_PORT_SOURCE   };
 
-uint8_t PinSrc[MAX_LED_KEY_CNT]={   GPIO_PIN_SOURCE13,
-                                GPIO_PIN_SOURCE15,
-                                GPIO_PIN_SOURCE8   };
+uint8_t KeyPinSrc[MAX_LED_KEY_CNT]={    GPIO_PIN_SOURCE13,
+                                        GPIO_PIN_SOURCE15,
+                                        GPIO_PIN_SOURCE8   };
 
 char *str[MAX_LED_KEY_CNT]={"PC13","PA15","PC8"};
 
@@ -247,6 +247,6 @@ void EXTI0_Init(void)
     NVIC_Struct.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_Struct);
 
-    GPIO_ConfigEXTILine(EXTI_LINE_SOURCE0,PortSrc[0],PinSrc[0]);
+    GPIO_ConfigEXTILine(EXTI_LINE_SOURCE0,KeyPortSrc[0],KeyPinSrc[0]);
 }
 

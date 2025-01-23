@@ -54,60 +54,49 @@
 
 #include "delay.h"
 
-static uint32_t  fac_us=0;   //us延时倍乘数
-static uint32_t  fac_ms=0;   //ms延时倍乘数
+static uint32_t  fac_us=0; 
+static uint32_t  fac_ms=0; 
 static uint8_t   max_ms=116;
 
-//初始化延迟函数
-//SYSTICK的时钟固定为HCLK时钟
-//SYSCLK:系统时钟
 void delay_init(void)
 {
-    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);   //选择外部时钟HCLK
-    fac_us=SystemCoreClock/1000000;                     //为系统时钟
-    fac_ms=fac_us*1000;                                 //代表每个ms需要的systick时钟数   
+    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);  
+    fac_us=SystemCoreClock/1000000;                    
+    fac_ms=fac_us*1000;                                 
 }
 
 
-//延时nus
-//nus为要延时的us数.
 void delay_us(uint32_t nus)
 {
     uint32_t temp;
-    SysTick->LOAD=nus*fac_us;                   //时间加载
-    SysTick->VAL=0x00;                          //清空计数器
-    SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;    //开始倒数
+    SysTick->LOAD=nus*fac_us;                 
+    SysTick->VAL=0x00;                         
+    SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;   
     do
     {
         temp = SysTick->CTRL;
     }
-    while((temp&0x01) && !(temp&(1<<16)));      //等待时间到达
+    while((temp&0x01) && !(temp&(1<<16)));    
 
-    SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;    //关闭计数器
-    SysTick->VAL =0X00;                         //清空计数器
+    SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;  
+    SysTick->VAL =0X00;                      
 }
 
-//延时nms
-//注意nms的范围
-//SysTick->LOAD为24位寄存器,所以,最大延时为:
-//nms<=(0xffffff/SYSCLK)*1000
-//SYSCLK单位为Hz,nms单位为ms
-//对144M条件下,nms<=116
+
 void delay_ms(uint32_t nms)
 {
     uint32_t temp;
-    SysTick->LOAD=(uint32_t)nms*fac_ms;         //时间加载(SysTick->LOAD为24bit)
-    SysTick->VAL =0x00;                         //清空计数器
-    SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;    //开始倒数
+    SysTick->LOAD=(uint32_t)nms*fac_ms;      
+    SysTick->VAL =0x00;                     
+    SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;   
     do
     {
         temp=SysTick->CTRL;
-    }while((temp&0x01)&&!(temp&(1<<16)));       //等待时间到达
-    SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;    //关闭计数器
-    SysTick->VAL =0X00;                         //清空计数器
+    }while((temp&0x01)&&!(temp&(1<<16)));     
+    SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;  
+    SysTick->VAL =0X00;                      
 }
 
-//ms级别延时函数使用这个
 void delay_xms(uint32_t nms)
 {
     uint16_t i;

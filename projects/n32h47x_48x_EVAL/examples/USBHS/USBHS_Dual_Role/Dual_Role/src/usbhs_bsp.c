@@ -121,8 +121,8 @@ void LED_Init(GPIO_Module* GPIOx,uint16_t Pin, uint32_t clock)
 /**
 *\*\name   LED_On.
 *\*\fun    Turn on LED by set GPIO pin.
-*\*\param  none
-*\*\return none
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
 */
 void LED_On(GPIO_Module* GPIOx,uint16_t Pin)
 {
@@ -132,7 +132,8 @@ void LED_On(GPIO_Module* GPIOx,uint16_t Pin)
 /**
 *\*\name   LED_Off.
 *\*\fun    Turn off LED by reset GPIO pin.
-*\*\param  none
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
 *\*\return none
 */
 void LED_Off(GPIO_Module* GPIOx,uint16_t Pin)
@@ -143,7 +144,8 @@ void LED_Off(GPIO_Module* GPIOx,uint16_t Pin)
 /**
 *\*\name   LED_Blink.
 *\*\fun    Blink LED by toggle GPIO pin.
-*\*\param  none
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
 *\*\return none
 */
 void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin)
@@ -168,7 +170,7 @@ void KEY_Init(void)
 
     GPIO_InitStructure.Pin            = KEY_BUTTON_PIN;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
-    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_DOWN;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_UP;
     GPIO_InitPeripheral(KEY_BUTTON_GPIO_PORT, &GPIO_InitStructure);
 
     GPIO_InitStructure.Pin            = KEY_BUTTON_UP_PIN ;
@@ -189,7 +191,42 @@ void KEY_Init(void)
     
     GPIO_InitStructure.Pin            = KEY_BUTTON_SEL_PIN ;
     GPIO_InitStructure.GPIO_Mode      = GPIO_MODE_INPUT;
+    GPIO_InitStructure.GPIO_Pull      = GPIO_PULL_DOWN;
     GPIO_InitPeripheral(KEY_BUTTON_SEL_PORT, &GPIO_InitStructure);
+}
+
+/**
+*\*\name   KEY_Press_Status_Get.
+*\*\fun    Get key pressed or not status.
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
+*\*\return none
+*/
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin)
+{
+    if((GPIOx == KEY_BUTTON_SEL_PORT) && (Pin == KEY_BUTTON_SEL_PIN))
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return SET;
+        }
+        else
+        {
+            return RESET;
+        }
+        
+    }
+    else
+    {
+        if(GPIO_ReadInputDataBit(GPIOx, Pin))
+        {
+            return RESET;
+        }
+        else
+        {
+            return SET;
+        }
+    }
 }
 
 /**
@@ -306,8 +343,6 @@ void USB_BSP_ConfigVBUS(USB_CORE_MODULE * pdev)
 {
     GPIO_InitType GPIO_InitStructure;
     RCC_EnableAHB1PeriphClk(USB_VBUS_DRIVER_CLK, ENABLE);
-
-    GPIO_ConfigPinRemap(0, 0, GPIO_RMP_SWJ_SWD);
     
     /* Configure VBUS driver Pin */
     GPIO_InitStruct(&GPIO_InitStructure);

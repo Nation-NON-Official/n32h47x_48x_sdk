@@ -156,9 +156,8 @@ void SHRTIM1_MspInit(void)
 
     /* Configure SHRTIM input: FAULT1 (PA12) */
     GPIO_InitStructure.Pin = GPIO_PIN_12;
-    GPIO_InitStructure.GPIO_Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
-    GPIO_InitStructure.GPIO_Slew_Rate  = GPIO_SLEW_RATE_FAST;
+    GPIO_InitStructure.GPIO_Mode = GPIO_MODE_INPUT;
+    GPIO_InitStructure.GPIO_Pull = GPIO_PULL_DOWN;
     GPIO_InitStructure.GPIO_Alternate = GPIO_AF12;
     GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);
 

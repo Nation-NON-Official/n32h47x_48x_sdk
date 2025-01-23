@@ -162,7 +162,7 @@ void SysTick_Handler(void)
 /* N32H47x Peripherals Interrupt Handlers, interrupt handler's name please refer to the startup file (startup_n32h4xx.s). */
 
 /**
-*\*\name    USART2_IRQHandler.
+*\*\name    UART5_IRQHandler.
 *\*\fun     This function handles USART2 global interrupt request.
 *\*\param   none
 *\*\return  none 
@@ -179,6 +179,19 @@ void UART5_IRQHandler(void)
             /* Disable the USART2 Receive interrupt */
             USART_ConfigInt(UART5, USART_INT_RXDNE,DISABLE);
         }
+    }
+	
+	/* Determine if an error flag still exists and clear the error flag */
+    if ((USART_GetFlagStatus(UART5, USART_FLAG_OREF) != RESET)  || \
+        (USART_GetFlagStatus(UART5, USART_FLAG_NEF) != RESET)  || \
+        (USART_GetFlagStatus(UART5, USART_FLAG_PEF) != RESET)  || \
+        (USART_GetFlagStatus(UART5, USART_FLAG_FEF) != RESET))
+    {
+        /*Read the sts register first,and the read the DAT register to clear the all error flag*/
+        (void)UART5->STS;
+        (void)UART5->DAT;
+        /* Under normal circumstances, all error flags will be cleared when the upper data is read and will not be executed here; 
+           users can add their own processing according to the actual scenario. */
     }
 }
 

@@ -641,7 +641,8 @@ void EXTI_PA7_Configuration(void)
     NVIC_InitType NVIC_InitStructure;
     GPIO_InitStruct(&GPIO_InitStructure);
     /* Enable the AFIO Clock */
-    RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOA | RCC_APB2_PERIPH_AFIO, ENABLE);
+    RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOA, ENABLE);
+    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     /* Select the GPIO - configuration used for floating in */
     GPIO_InitStructure.Pin        = GPIO_PIN_7;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_INPUT;

@@ -81,6 +81,7 @@ int main(void)
     EXTI_Key_Config();
     
     /* USARTy and USARTz configuration */
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 115200;
     USART_InitStructure.WordLength          = USART_WL_9B;
     USART_InitStructure.StopBits            = USART_STPB_1;

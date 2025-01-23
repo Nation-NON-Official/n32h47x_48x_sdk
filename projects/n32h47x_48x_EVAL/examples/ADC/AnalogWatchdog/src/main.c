@@ -100,9 +100,9 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
 }
 

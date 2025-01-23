@@ -161,9 +161,9 @@ enum
 #define      LCD_FEMC_RD_AF                 GPIO_AF10
 
 /* RST pin */
-#define      LCD_RST_CLK                    RCC_AHB_PERIPHEN_GPIOA  
-#define      LCD_RST_PORT                   GPIOA
-#define      LCD_RST_PIN                    GPIO_PIN_1
+#define      LCD_RST_CLK                    RCC_AHB_PERIPHEN_GPIOH  
+#define      LCD_RST_PORT                   GPIOH
+#define      LCD_RST_PIN                    GPIO_PIN_5
 #define      LCD_RST_AF                     GPIO_NO_AF
 
 /* BL pin */

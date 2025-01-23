@@ -104,7 +104,6 @@ static uint8_t rx_buf[TEST_BUFFER_SIZE] = {0};
 volatile Status test_status      = FAILED;
 static __IO uint32_t I2CTimeout;
 static CommCtrl_t Comm_Flag = C_READY;
-static uint8_t RCC_RESET_Flag = 0;
 
 Status Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 void CommTimeOut_CallBack(ErrCode_t errcode);
@@ -123,6 +122,8 @@ int i2c_master_init(void)
     RCC_EnableAPB1PeriphClk(I2Cx_RCC, ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
 
 	/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
@@ -142,6 +143,7 @@ int i2c_master_init(void)
     GPIO_InitPeripheral(I2Cx_SDA_GPIO, &i2cx_gpio);
 
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&i2cx_master); 
     i2cx_master.BusMode     = I2C_BUSMODE_I2C;
     i2cx_master.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     i2cx_master.OwnAddr1    = I2C_MASTER_ADDR;
@@ -152,10 +154,7 @@ int i2c_master_init(void)
     I2C_Init(I2Cx, &i2cx_master);
     I2C_Enable(I2Cx, ENABLE);
 		
-    //scl enable digital filter:2*Pclk
-    I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-    //sda enable digital filter:2*Pclk
-    I2C_SetSDADigitalFilterWidth(I2Cx, 2);
+
     return 0;
 }
 
@@ -183,6 +182,7 @@ int i2c_master_send(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_BUSY);
+					  return 1;
         }
     }
     
@@ -198,6 +198,7 @@ int i2c_master_send(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_MODE);
+					  return 1;
         }
     }
     
@@ -208,6 +209,7 @@ int i2c_master_send(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_TXMODE);
+					  return 1;
         }
     }
     Comm_Flag = C_READY;
@@ -222,6 +224,7 @@ int i2c_master_send(uint8_t* data, int len)
             if ((I2CTimeout--) == 0)
             {
                 CommTimeOut_CallBack(MASTER_SENDING);
+							  return 1;
             }
         }
     }
@@ -232,6 +235,7 @@ int i2c_master_send(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_SENDED);
+					  return 1;
         }
     }
     
@@ -246,6 +250,7 @@ int i2c_master_send(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_BUSY);
+					  return 1;
         }
     }
     Comm_Flag = C_READY;
@@ -285,6 +290,7 @@ int i2c_master_recv(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_BUSY);
+					  return 1;
         }
     }
     I2C_ConfigAck(I2Cx, ENABLE);
@@ -302,6 +308,7 @@ int i2c_master_recv(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_MODE);
+					  return 1;
         }
     }
     // send addr
@@ -312,6 +319,7 @@ int i2c_master_recv(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_RXMODE);
+					  return 1;
         }
     }
     Comm_Flag = C_READY;
@@ -333,6 +341,7 @@ int i2c_master_recv(uint8_t* data, int len)
             if ((I2CTimeout--) == 0)
             {
                 CommTimeOut_CallBack(MASTER_RECVD);
+							  return 1;
             }
         }
         *recvBufferPtr++ = I2C_RecvData(I2Cx);
@@ -351,6 +360,7 @@ int i2c_master_recv(uint8_t* data, int len)
             if ((I2CTimeout--) == 0)
             {
                 CommTimeOut_CallBack(MASTER_BYTEF);
+							  return 1;
             }
         }
         
@@ -381,6 +391,7 @@ int i2c_master_recv(uint8_t* data, int len)
                     if ((I2CTimeout--) == 0)
                     {
                         CommTimeOut_CallBack(MASTER_BYTEF);
+											  return 1;
                     }
                 }
                 I2C_ConfigAck(I2Cx, DISABLE);
@@ -393,6 +404,7 @@ int i2c_master_recv(uint8_t* data, int len)
                     if ((I2CTimeout--) == 0)
                     {
                         CommTimeOut_CallBack(MASTER_BYTEF);
+											  return 1;
                     }
                 }
                 
@@ -419,6 +431,7 @@ int i2c_master_recv(uint8_t* data, int len)
                 if ((I2CTimeout--) == 0)
                 {
                     CommTimeOut_CallBack(MASTER_RECVD);
+									  return 1;
                 }
             }
             *recvBufferPtr++ = I2C_RecvData(I2Cx);
@@ -432,6 +445,7 @@ int i2c_master_recv(uint8_t* data, int len)
         if ((I2CTimeout--) == 0)
         {
             CommTimeOut_CallBack(MASTER_BUSY);
+					  return 1;
         }
     }
     Comm_Flag = C_READY;
@@ -466,26 +480,40 @@ int main(void)
     {
         tx_buf[i] = i;
     }
-    /* First write in the memory followed by a read of the written data --------*/
-    /* Write data*/
-    i2c_master_send(tx_buf, TEST_BUFFER_SIZE);
-
-    /* Read data */
-    i2c_master_recv(rx_buf, TEST_BUFFER_SIZE);
-
-    /* Check if the data written to the memory is read correctly */
-    test_status = Buffercmp(tx_buf, rx_buf, TEST_BUFFER_SIZE);
-    if (test_status == PASSED)
-    {
-        log_info("i2c master test pass!\r\n");
-    }
-    else
-    {
-        log_info("i2c master test fail!\r\n");
-    }
-
+		
     while (1)
     {
+        for(; ;)
+        {
+            /* First write in the memory followed by a read of the written data --------*/
+            /* Write data*/
+            if(i2c_master_send(tx_buf, TEST_BUFFER_SIZE))
+            {
+                break;  /* send fail, resend*/
+            }
+
+            /* Read data */
+            if(i2c_master_recv(rx_buf, TEST_BUFFER_SIZE))
+            {
+                break; /* receive fail, resend*/
+            }
+
+            /* Check if the data written to the memory is read correctly */
+            test_status = Buffercmp(tx_buf, rx_buf, TEST_BUFFER_SIZE);
+            if (test_status == PASSED)
+            {
+                log_info("write and read data are same, i2c master test pass\r\n");
+            }
+            else
+            {
+                log_info("write and read data are different, i2c master test fail\r\n");
+            }
+            for (i = 0; i < TEST_BUFFER_SIZE; i++)
+            {
+                rx_buf[i] = 0;
+            }
+            systick_delay_ms(50);
+        }
     }
 }
 
@@ -524,9 +552,11 @@ void IIC_RestoreSlaveByClock(void)
     uint8_t i;
     GPIO_InitType i2cx_gpio;
     
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
     RCC_EnableAPB2PeriphClk(I2Cx_clk_en, ENABLE);
-    GPIO_AFIOInitDefault();
-    GPIO_DeInit(I2Cx_SCL_GPIO);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
     
 	/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
@@ -567,33 +597,15 @@ void SystemNVICReset(void)
 **/
 void IIC_RCCReset(void)
 {
-    if (RCC_RESET_Flag >= 3)
-    {
-        SystemNVICReset();
-    }
-    else
-    {
-        RCC_RESET_Flag++;
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        RCC_EnableAPB1PeriphClk(I2Cx_RCC,DISABLE);
-        #if defined (N32H475)
-        GPIOD->PMODE &= 0xFF3FFFF3;
-        #else
-        GPIOB->PMODE &= 0xFFFFF33F;
-        GPIOC->PMODE &= 0xFFFFFFFC;
-        #endif
-        RCC_EnableAPB2PeriphClk( RCC_APB2_PERIPH_AFIO, DISABLE);
-        RCC_EnableAHB1PeriphClk (I2Cx_clk_en, DISABLE );
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        IIC_RestoreSlaveByClock();
-        
-        log_info("***** IIC module by RCC reset! *****\r\n");
-        i2c_master_init();
-    }
+       
+    RCC_EnableAPB1PeriphReset(I2Cx_RCC);
+    
+    
+    IIC_RestoreSlaveByClock();
+    
+    i2c_master_init();
+    log_info("***** IIC module by RCC reset! *****\r\n");
+    
 }
 
 /**
@@ -656,6 +668,8 @@ void IIC_SWReset(void)
 void CommTimeOut_CallBack(ErrCode_t errcode)
 {
     log_info("...ErrCode:%d\r\n", errcode);
+	  Mutex_Flag = 0;
+    Comm_Flag = C_READY;
     
 #if (COMM_RECOVER_MODE == MODULE_SELF_RESET)
     IIC_SWReset();

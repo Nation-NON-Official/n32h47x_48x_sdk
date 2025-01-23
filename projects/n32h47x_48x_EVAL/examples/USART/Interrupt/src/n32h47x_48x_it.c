@@ -201,6 +201,19 @@ void USARTy_IRQHandler(void)
             USART_ConfigInt(USARTy, USART_INT_TXDE,DISABLE);
         }
     }
+	
+	/* Determine if an error flag still exists and clear the error flag */
+    if ((USART_GetFlagStatus(USARTy, USART_FLAG_OREF) != RESET)  || \
+        (USART_GetFlagStatus(USARTy, USART_FLAG_NEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTy, USART_FLAG_PEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTy, USART_FLAG_FEF) != RESET))
+    {
+        /*Read the sts register first,and the read the DAT register to clear the all error flag*/
+        (void)USARTy->STS;
+        (void)USARTy->DAT;
+        /* Under normal circumstances, all error flags will be cleared when the upper data is read and will not be executed here; 
+           users can add their own processing according to the actual scenario. */
+    }
 }
 
 
@@ -234,6 +247,19 @@ void USARTz_IRQHandler(void)
             /* Disable the USARTz Transmit interrupt */
             USART_ConfigInt(USARTz, USART_INT_TXDE,DISABLE);
         }
+    }
+	
+	/* Determine if an error flag still exists and clear the error flag */
+    if ((USART_GetFlagStatus(USARTz, USART_FLAG_OREF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_NEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_PEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_FEF) != RESET))
+    {
+        /*Read the sts register first,and the read the DAT register to clear the all error flag*/
+        (void)USARTz->STS;
+        (void)USARTz->DAT;
+        /* Under normal circumstances, all error flags will be cleared when the upper data is read and will not be executed here; 
+           users can add their own processing according to the actual scenario. */
     }
 }
 

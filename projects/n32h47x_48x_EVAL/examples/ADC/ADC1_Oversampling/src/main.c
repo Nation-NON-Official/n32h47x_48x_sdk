@@ -85,8 +85,7 @@ void ADC_Initial(void)
     ADC_ConfigRegularChannel(ADC1, ADC1_Channel_14_PB11, 1, ADC_SAMP_TIME_CYCLES_13_5);
     /* ADC1 regular channel12 configuration */
     ADC_ConfigRegularChannel(ADC1, ADC1_Channel_12_PB1, 2, ADC_SAMP_TIME_CYCLES_13_5);
-    /* Enable ADC1 DMA */
-    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
+    
     /* Enable ADC1 oversamping, x4 and no shift*/
     ADC_ConfigOverSamplingRatioAndShift(ADC1,ADC_OVERSAMPE_RATE_TIMES_2,ADC_OVERSAMPE_DATA_SHIFT_0);
     /* Config ADC1 oversamping, scope */
@@ -97,10 +96,12 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
+	/* Enable ADC1 DMA */
+    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
 }
 
 int main(void)

@@ -6,7 +6,7 @@
 
     软件开发环境：KEIL MDK-ARM V5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -34,8 +34,8 @@
 
 
     使用方法：
-    编译后烧录到评估板，上电后，RTC闹钟每隔1s产生闹钟中断
-    串口会打印:1s Alarm Wakeup  并且LED1 闪烁。
+    编译后烧录到评估板，上电后，RTC闹钟每隔500ms产生闹钟中断，并且在PC13口会出现翻转电平。
+    串口会打印:500ms Alarm Wakeup。
 
 
 4、注意事项
@@ -50,7 +50,7 @@
 
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0
@@ -78,8 +78,8 @@
                             - Baud rate: 115200
 
     Instructions:
-        After compiling, it is burned to the evaluation board. After powering on, the RTC alarm clock generates alarm interruption every 1s.
-        The serial port will print: 1s Alarm Wakeup, and LED1 blinking.
+        After compiling, it is burned to the evaluation board. After powering on, the RTC alarm clock generates alarm interruption every 500ms.
+        The serial port will print: 500ms Alarm Wakeup, , and the flipped level will appear at PC13, and LED1 blinking.
 
 4. Matters needing attention
     None

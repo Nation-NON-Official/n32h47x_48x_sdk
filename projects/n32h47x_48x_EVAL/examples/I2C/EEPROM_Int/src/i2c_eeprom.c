@@ -91,13 +91,11 @@ volatile I2C_STATE i2c_comm_state;
 *\*\param   none
 *\*\return  none 
 **/
-u8 sEE_TIMEOUT_UserCallback(void)
+void sEE_TIMEOUT_UserCallback(void)
 {
     printf("error!!!\r\n");
     /* Block communication and all processes */
-    while (1)
-    {
-    }
+    IIC_RCCReset();
 }
 
 /**
@@ -118,26 +116,27 @@ void I2C_EE_Init(void)
     I2C_DeInit(I2Cx);
     I2Cx_scl_clk_en();
     I2Cx_sda_clk_en();
-
+    I2C_GPIO->POD |= (I2Cx_SCL_PIN | I2Cx_SDA_PIN);
 		/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&GPIO_InitStructure);
 	
     GPIO_InitStructure.Pin        = I2Cx_SCL_PIN ;
     GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
-		GPIO_InitStructure.GPIO_Alternate = I2Cx_SCL_AF;
+	GPIO_InitStructure.GPIO_Alternate = I2Cx_SCL_AF;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_OD;
-	  GPIO_InitStructure.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;
+	GPIO_InitStructure.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;
     GPIO_InitPeripheral(I2C_GPIO, &GPIO_InitStructure);
 	
-		GPIO_InitStructure.Pin        = I2Cx_SDA_PIN;
+	GPIO_InitStructure.Pin        = I2Cx_SDA_PIN;
     GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
-		GPIO_InitStructure.GPIO_Alternate = I2Cx_SDA_AF;
+	GPIO_InitStructure.GPIO_Alternate = I2Cx_SDA_AF;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_OD;
-		GPIO_InitStructure.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;
+	GPIO_InitStructure.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;
     GPIO_InitPeripheral(I2C_GPIO, &GPIO_InitStructure);
 
     /** I2C periphral configuration */
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&I2C_InitStructure); 
     I2C_InitStructure.BusMode     = I2C_BUSMODE_I2C;
     I2C_InitStructure.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     I2C_InitStructure.OwnAddr1    = 0xff;
@@ -146,11 +145,7 @@ void I2C_EE_Init(void)
     I2C_InitStructure.ClkSpeed    = I2C_Speed;
     I2C_Init(I2Cx, &I2C_InitStructure);
     
-		//scl enable digital filter:2*Pclk
-		I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-		//sda enable digital filter:2*Pclk
-		I2C_SetSDADigitalFilterWidth(I2Cx, 2);
-		
+			
     /** I2C NVIC configuration */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     NVIC_InitStructure.NVIC_IRQChannel                   = I2C1_EV_IRQn;
@@ -274,7 +269,10 @@ void I2C_EE_PageWrite(u8* pBuffer, u16 WriteAddr, u16 NumByteToWrite)
     while (I2C_GetFlag(I2Cx, I2C_FLAG_BSF))
     {
         if ((sEETimeout--) == 0)
+				{
             sEE_TIMEOUT_UserCallback();
+					  return;
+				}
     }
     I2C_GenerateStart(I2Cx, ENABLE);
     I2C_EE_WaitOperationIsCompleted();
@@ -321,7 +319,10 @@ void I2C_EE_ReadBuffer(u8* pBuffer, u16 ReadAddr, u16 NumByteToRead)
     while (I2C_GetFlag(I2Cx, I2C_FLAG_BSF))
     {
         if ((sEETimeout--) == 0)
+				{
             sEE_TIMEOUT_UserCallback();
+					  return;
+				}
     }
     I2C_GenerateStart(I2Cx, ENABLE);
     I2C_EE_WaitOperationIsCompleted();
@@ -339,7 +340,10 @@ void I2C_EE_WaitOperationIsCompleted(void)
     while (i2c_comm_state != COMM_DONE)
     {
         if ((sEETimeout--) == 0)
+				{
             sEE_TIMEOUT_UserCallback();
+					  return;
+				}
     }
 }
 /**
@@ -437,7 +441,10 @@ void I2C1_EV_IRQHandler(void)
                 while (I2C_GetFlag(I2Cx, I2C_FLAG_BUSY))
                 {
                     if ((sEETimeout--) == 0)
+										{
                         sEE_TIMEOUT_UserCallback();
+											  return;
+										}
                 }
                 check_begin = TRUE;
                 I2C_GenerateStart(I2C1, ENABLE);
@@ -501,7 +508,10 @@ void I2C_EE_WaitEepromStandbyState(void)
     while (I2C_GetFlag(I2Cx, I2C_FLAG_BUSY))
     {
         if ((sEETimeout--) == 0)
+				{
             sEE_TIMEOUT_UserCallback();
+					  return;
+				}
     }
 
     /** Keep looping till the slave acknowledge his address or maximum number
@@ -516,7 +526,10 @@ void I2C_EE_WaitEepromStandbyState(void)
         while (!I2C_CheckEvent(I2Cx, I2C_EVT_MASTER_MODE_FLAG))
         {
             if ((sEETimeout--) == 0)
+						{
                 sEE_TIMEOUT_UserCallback();
+							  return;
+						}
         }
 
         /** Send EEPROM address for write */
@@ -530,7 +543,10 @@ void I2C_EE_WaitEepromStandbyState(void)
 
             /** Update the timeout value and exit if it reach 0 */
             if ((sEETimeout--) == 0)
+						{
                 sEE_TIMEOUT_UserCallback();
+							  return;
+						}
         }
         /** Keep looping till the Address is acknowledged or the AF flag is
            set (address not acknowledged at time) */
@@ -560,6 +576,7 @@ void I2C_EE_WaitEepromStandbyState(void)
         {
             /** If the maximum number of trials has been reached, exit the function */
             sEE_TIMEOUT_UserCallback();
+					  return;
         }
     }
 }

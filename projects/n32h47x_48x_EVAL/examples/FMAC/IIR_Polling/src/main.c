@@ -67,7 +67,7 @@
     the sampling frequency is 16KHz and the cut-off frequency is 500Hz
 */
 static int16_t iir_coeffa[iir_coeffa_size] = {
-    28242, -12412,
+    -12412, 28242,
 };
 
 /*

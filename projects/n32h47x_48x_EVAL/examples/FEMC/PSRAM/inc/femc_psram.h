@@ -256,7 +256,7 @@
 /* NE pin */
 #define FEMC_NE_CLK               RCC_AHB_PERIPHEN_GPIOG
 #define FEMC_NE_PORT              GPIOG
-#define FEMC_NE_PIN               GPIO_PIN_9                //NE2
+#define FEMC_NE_PIN               GPIO_PIN_8                //NE3
 #define FEMC_NE_AF                GPIO_AF10
 
 /* NBL0 pin */

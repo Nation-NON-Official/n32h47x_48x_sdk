@@ -74,13 +74,28 @@ void KEY_Init(void)
     GPIO_InitStruct(&InitStruct);
 
     InitStruct.Pin            = KEY_BUTTON_PIN;
-    InitStruct.GPIO_Slew_Rate = GPIO_SLEW_RATE_FAST;
     InitStruct.GPIO_Mode      = GPIO_MODE_INPUT;
-    InitStruct.GPIO_Alternate = GPIO_NO_AF;
     InitStruct.GPIO_Pull      = GPIO_PULL_UP;
-    InitStruct.GPIO_Current   = GPIO_DS_8mA;
     GPIO_InitPeripheral(KEY_BUTTON_GPIO_PORT, &InitStruct);
+}
 
+/**
+*\*\name   KEY_Press_Status_Get.
+*\*\fun    Get key pressed or not status.
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
+*\*\return SET or RESET
+*/
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin)
+{
+    if(GPIO_ReadInputDataBit(GPIOx, Pin))
+    {
+        return RESET;
+    }
+    else
+    {
+        return SET;
+    }
 }
 
 /**
@@ -100,7 +115,7 @@ void USB_BSP_Init(void)
     GPIO_InitStruct(&GPIO_InitStructure);
     
     //set vbus
-	GPIO_InitStructure.Pin              = GPIO_PIN_13;
+    GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
     

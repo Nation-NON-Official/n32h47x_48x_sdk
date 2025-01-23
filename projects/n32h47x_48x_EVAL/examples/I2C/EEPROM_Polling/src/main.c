@@ -54,6 +54,8 @@
 **/
 #include "n32h47x_48x.h"
 #include "i2c_eeprom.h"
+#include "n32h47x_48x_gpio.h"
+#include "n32h47x_48x_rcc.h"
 #include "log.h"
 /** n32h47x_48x_StdPeriph_Examples **/
 
@@ -71,6 +73,15 @@ volatile Status test_status      = FAILED;
 
 Status Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 
+void Delay_us(uint32_t nCount)
+{
+    uint32_t tcnt;
+    while (nCount--)
+    {
+        tcnt = 144 / 5;
+        while (tcnt--){;}
+    }
+}
 /**
 *\*\name    main.
 *\*\fun     main function.
@@ -96,22 +107,19 @@ int main(void)
     /* Write to I2C EEPROM from TEST_EEPROM_ADDR */
     I2C_EE_WriteBuffer(tx_buf, TEST_EEPROM_ADDR, TEST_EEPROM_SIZE);
     
-		log_info("Read %d byte data from I2C EEPROM\r\n", i);
-    for(i = 1; i < TEST_EEPROM_SIZE+1; i++)
-    {
-       I2C_EE_ReadBuffer(rx_buf, TEST_EEPROM_ADDR, i);
-    }
+    log_info("Read %d byte data from I2C EEPROM\r\n", i);
+    I2C_EE_ReadBuffer(rx_buf, TEST_EEPROM_ADDR, TEST_EEPROM_SIZE);
 		
-		/* Check if the data written to the memory is read correctly */
-	  test_status = Buffercmp(tx_buf, rx_buf, TEST_EEPROM_SIZE);
-	  if (test_status == PASSED)
-	  {
-			log_info("The write and read data are the same,I2C EEPROM test pass\r\n");
-	  }
-	  else
-	  {
-			log_info("The write and read data are different,I2C EEPROM test fail\r\n");
-	  }
+    /* Check if the data written to the memory is read correctly */
+    test_status = Buffercmp(tx_buf, rx_buf, TEST_EEPROM_SIZE);
+    if (test_status == PASSED)
+    {
+        log_info("The write and read data are the same,I2C EEPROM test pass\r\n");
+    }
+    else
+    {
+        log_info("The write and read data are different,I2C EEPROM test fail\r\n");
+    }
 		
     while (1)
     {
@@ -141,5 +149,38 @@ Status Buffercmp(uint8_t* pBuffer, uint8_t* pBuffer1, uint16_t BufferLength)
     return PASSED;
 }
 
+void IIC_RestoreSlaveByClock(void)
+{
+    uint8_t i;
+    GPIO_InitType i2cx_gpio;
+    
+    I2C_GPIO->POD |= (I2Cx_SCL_PIN | I2Cx_SDA_PIN);//pull up
+	  RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOB, ENABLE);
+    I2C_GPIO->POD |= (I2Cx_SCL_PIN | I2Cx_SDA_PIN);//pull up
+    
+    GPIO_InitStruct(&i2cx_gpio);
+    i2cx_gpio.Pin        = I2Cx_SCL_PIN;
+    i2cx_gpio.GPIO_Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitPeripheral(I2C_GPIO, &i2cx_gpio);
+    
+    for (i = 0; i < 9; i++)
+    {
+        GPIO_SetBits(I2C_GPIO, I2Cx_SCL_PIN);
+        Delay_us(5);
+        GPIO_ResetBits(I2C_GPIO, I2Cx_SCL_PIN);
+        Delay_us(5);
+    }
+}
+    
 
+void IIC_RCCReset(void)
+{   
+    RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_I2C1);
+  
+    IIC_RestoreSlaveByClock();
+        
+    I2C_EE_Init();
+    
+    log_info("***** IIC module by RCC reset! *****\r\n");
+}
 

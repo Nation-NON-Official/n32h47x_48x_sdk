@@ -341,7 +341,7 @@ USBH_USER_Status USBH_USER_UserInput(void)
     USBH_USER_status = USBH_USER_NO_RESP;
 
     /* Key button is in polling mode to detect user action */
-    if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == RESET)
+    if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
     {
         USBH_USER_status = USBH_USER_RESP_OK;
     }

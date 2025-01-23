@@ -72,7 +72,7 @@ int main(void)
 
     log_init();
     log_info("this is a femc external 16bit psram demo\r\n");
-    block_index = 2; // 1:Block1; 2:Block2; 3:Block3; 4:Block4
+    block_index = 3; // 1:Block1; 2:Block2; 3:Block3; 4:Block4
 
     /*config femc ,external 16bit sram*/
     FEMC_Psram_Init(block_index);

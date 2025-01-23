@@ -72,11 +72,11 @@ void USB_BSP_Init(void)
 
     GPIO_InitStruct(&GPIO_InitStructure);
 
-	// VBUS
+    // VBUS
     GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
-	
+
     // SOF
     GPIO_InitStructure.Pin              = GPIO_PIN_4;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_AF_PP;

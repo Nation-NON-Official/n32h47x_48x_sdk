@@ -107,11 +107,12 @@ void KeyInputExtiInit(GPIO_Module* GPIOx, uint16_t Pin)
     NVIC_InitType NVIC_InitStructure;
 
     /* Enable the GPIO Clock */
-    RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOA,ENABLE);
+    RCC_EnableAHB1PeriphClk(KEY_INPUT_PORT_CLK,ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO,ENABLE);
 
 
     /*Configure the GPIO pin as input floating*/
+	GPIO_InitStruct(&GPIO_InitStructure);
     GPIO_InitStructure.Pin        = Pin;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_INPUT;
     GPIO_InitStructure.GPIO_Pull  = GPIO_PULL_UP;
@@ -119,9 +120,10 @@ void KeyInputExtiInit(GPIO_Module* GPIOx, uint16_t Pin)
     GPIO_InitPeripheral(GPIOx, &GPIO_InitStructure);
 
     /*Configure key EXTI Line to key input Pin*/
-    GPIO_ConfigEXTILine(KEY_INPUT_PORT_SOURCE, KEY_INPUT_PIN_SOURCE,GPIO_PIN_SOURCE4);
+    GPIO_ConfigEXTILine(KEY_INPUT_LIN_SOURCE, KEY_INPUT_PORT_SOURCE,KEY_INPUT_PIN_SOURCE);
 
     /*Configure key EXTI line*/
+	EXTI_InitStruct(&EXTI_InitStructure);
     EXTI_InitStructure.EXTI_Line    = KEY_INPUT_EXTI_LINE;
     EXTI_InitStructure.EXTI_Mode    = EXTI_Mode_Interrupt;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling; // EXTI_Trigger_Rising;
@@ -140,7 +142,32 @@ void KeyInputExtiInit(GPIO_Module* GPIOx, uint16_t Pin)
 }
 
 
-
+/**
+*\*\name    EXTIx_IRQHandler.
+*\*\fun     This function handles EXTIx exception.
+*\*\param   none
+*\*\return  none 
+**/
+#ifdef N32H487
+void EXTI15_10_IRQHandler(void)
+{
+    printf("EXTI15 IRQHandler Start \r\n");
+    if (EXTI_GetITStatus(KEY_INPUT_EXTI_LINE) != RESET)
+    {
+#ifdef VECT_TAB_SRAM
+        log_info("EXTI15 IRQHandler is executed(SRAM) \r\n");
+#else
+        /* Key_Status */
+        Key_Status = ENABLE;
+        log_info("EXTI15 IRQHandler is executed(FLASH) \r\n");
+#endif
+        /* Clears the SEL Button EXTI line pending bits */
+        EXTI_ClrStatusFlag(KEY_INPUT_EXTI_LINE);
+    }
+    log_info("EXTI15 IRQHandler End \r\n");
+    
+}
+#else
 void EXTI4_IRQHandler(void)
 {
     printf("EXTI4 IRQHandler Start \r\n");
@@ -159,4 +186,5 @@ void EXTI4_IRQHandler(void)
     log_info("EXTI4 IRQHandler End \r\n");
     
 }
+#endif
 

@@ -59,154 +59,6 @@
 
 
 /**
-*\*\name   LED_Init.
-*\*\fun    Initialize a GPIO as LED port.
-*\*\param  GPIOx
-*\*\         - GPIOA
-*\*\         - GPIOB
-*\*\         - GPIOC
-*\*\         - GPIOD
-*\*\         - GPIOE
-*\*\         - GPIOF
-*\*\         - GPIOG
-*\*\         - GPIOH
-*\*\param  Pin
-*\*\         - GPIO_PIN_0
-*\*\         - GPIO_PIN_1
-*\*\         - GPIO_PIN_2
-*\*\         - GPIO_PIN_3
-*\*\         - GPIO_PIN_4
-*\*\         - GPIO_PIN_5
-*\*\         - GPIO_PIN_6
-*\*\         - GPIO_PIN_7
-*\*\         - GPIO_PIN_8
-*\*\         - GPIO_PIN_9
-*\*\         - GPIO_PIN_10
-*\*\         - GPIO_PIN_11
-*\*\         - GPIO_PIN_12
-*\*\         - GPIO_PIN_13
-*\*\         - GPIO_PIN_14
-*\*\         - GPIO_PIN_15
-*\*\         - GPIO_PIN_ALL
-*\*\param  clock
-*\*\         - RCC_AHB_PERIPHEN_GPIOA
-*\*\         - RCC_AHB_PERIPHEN_GPIOB
-*\*\         - RCC_AHB_PERIPHEN_GPIOC
-*\*\         - RCC_AHB_PERIPHEN_GPIOD
-*\*\         - RCC_AHB_PERIPHEN_GPIOE
-*\*\         - RCC_AHB_PERIPHEN_GPIOF
-*\*\         - RCC_AHB_PERIPHEN_GPIOG
-*\*\         - RCC_AHB_PERIPHEN_GPIOH
-*\*\return none
-*/
-void LED_Init(GPIO_Module* GPIOx,uint16_t Pin, uint32_t clock)
-{
-    GPIO_InitType InitStruct;
-    
-    /* Enable GPIO clock */
-    RCC_EnableAHB1PeriphClk(clock,ENABLE);
-    
-    /* Init GPIO as output push-pull mode */
-    InitStruct.Pin            = Pin;
-    InitStruct.GPIO_Slew_Rate = GPIO_SLEW_RATE_FAST;
-    InitStruct.GPIO_Mode      = GPIO_MODE_OUTPUT_PP;
-    InitStruct.GPIO_Alternate = GPIO_AF0;
-    InitStruct.GPIO_Pull      = GPIO_NO_PULL;
-    InitStruct.GPIO_Current   = GPIO_DS_8mA;
-    
-    GPIO_InitPeripheral(GPIOx, &InitStruct);
-}
-
-/**
-*\*\name   LED_On.
-*\*\fun    Turn on LED by set GPIO pin.
-*\*\param  none
-*\*\return none
-*/
-void LED_On(GPIO_Module* GPIOx,uint16_t Pin)
-{
-    GPIO_SetBits(GPIOx,Pin);
-}
-
-/**
-*\*\name   LED_Off.
-*\*\fun    Turn off LED by reset GPIO pin.
-*\*\param  none
-*\*\return none
-*/
-void LED_Off(GPIO_Module* GPIOx,uint16_t Pin)
-{
-    GPIO_ResetBits(GPIOx,Pin);
-}
-
-/**
-*\*\name   LED_Blink.
-*\*\fun    Blink LED by toggle GPIO pin.
-*\*\param  none
-*\*\return none
-*/
-void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin)
-{
-    GPIO_TogglePin(GPIOx,Pin);
-}
-
-
-/**
-*\*\name   KEY_EXTI_Init.
-*\*\fun    Blink LED.
-*\*\param  none
-*\*\return none
-*/
-void KEY_EXTI_Init(void)
-{
-    EXTI_InitType EXTI_Struct;
-    NVIC_InitType NVIC_Struct;
-
-    EXTI_Struct.EXTI_Line    = KEY_BUTTON_EXTI_LINE;
-    EXTI_Struct.EXTI_Mode    = EXTI_Mode_Interrupt;
-    EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-    EXTI_Struct.EXTI_LineCmd = ENABLE;
-    EXTI_InitPeripheral(&EXTI_Struct);
-    
-    
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    NVIC_Struct.NVIC_IRQChannel = KEY_BUTTON_EXTI_IRQn;
-    NVIC_Struct.NVIC_IRQChannelSubPriority = NVIC_SUB_PRIORITY_0;
-    NVIC_Struct.NVIC_IRQChannelPreemptionPriority = NVIC_PRE_PRIORITY_0;
-    NVIC_Struct.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_Struct);
-
-    GPIO_ConfigEXTILine(KEY_BUTTON_EXTI_LINE_SOURCE, KEY_BUTTON_EXTI_PORT_SOURCE, KEY_BUTTON_EXTI_PIN_SOURCE);
-}
-
-/**
-*\*\name   KEY_Init.
-*\*\fun    Initialize a GPIO as KEY port.
-*\*\param  none
-*\*\return none
-*/
-void KEY_Init(GPIO_Module* GPIOx,uint16_t Pin, uint32_t clock)
-{
-    GPIO_InitType InitStruct;
-    
-    RCC_EnableAHB1PeriphClk(clock, ENABLE);
-    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO,ENABLE);
-    
-    GPIO_InitStruct(&InitStruct);
-    
-    InitStruct.Pin            = Pin;
-    InitStruct.GPIO_Slew_Rate = GPIO_SLEW_RATE_FAST;
-    InitStruct.GPIO_Mode      = GPIO_MODE_INPUT;
-    InitStruct.GPIO_Alternate = GPIO_NO_AF;
-    InitStruct.GPIO_Pull      = GPIO_PULL_UP;
-    InitStruct.GPIO_Current   = GPIO_DS_8mA;
-    GPIO_InitPeripheral(GPIOx, &InitStruct);
-    
-    KEY_EXTI_Init();
-}
-
-
-/**
 *\*\name   USB_BSP_Init.
 *\*\fun    Initializes BSP configurations.
 *\*\param  none
@@ -217,11 +69,10 @@ void USB_BSP_Init(void)
     GPIO_InitType GPIO_InitStructure;
 
     RCC_EnableAHB1PeriphClk(RCC_AHB_PERIPHEN_GPIOA | RCC_AHB_PERIPHEN_GPIOB | RCC_AHB_PERIPHEN_GPIOC, ENABLE);
-    RCC_EnableAHB1PeriphClk(KEY_BUTTON_GPIO_CLK, ENABLE);
 
     GPIO_InitStruct(&GPIO_InitStructure);
-	
-	// VBUS
+
+    // VBUS
     GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
@@ -237,13 +88,6 @@ void USB_BSP_Init(void)
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_AF_PP;
     GPIO_InitStructure.GPIO_Alternate   = 14;  //ID
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
-
-    LED_Init(LED1_PORT, LED1_PIN, LED1_CLOCK);
-    LED_Init(LED2_PORT, LED2_PIN, LED2_CLOCK);
-    LED_Init(LED3_PORT, LED3_PIN, LED3_CLOCK);
-    LED_Init(LED4_PORT, LED3_PIN, LED4_CLOCK);
-    
-    KEY_Init(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN, KEY_BUTTON_GPIO_CLK);
 }
 
 /**

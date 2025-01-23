@@ -145,12 +145,14 @@ static void SC_Init(SC_InitStructure *SC_InitCfg)
     USART_SetPrescaler(SC_USART, SC_InitCfg->Clk_Div >> 1);
     /* USART Guard Time set to 16 Bit */
     USART_SetGuardTime(SC_USART, SC_InitCfg->GT);
+	USART_ClockStructInit(&USART_ClockInitStructure);
     USART_ClockInitStructure.Clock      = USART_CLK_ENABLE;
     USART_ClockInitStructure.Polarity   = USART_CLKPOL_LOW;
     USART_ClockInitStructure.Phase      = USART_CLKPHA_1EDGE;
     USART_ClockInitStructure.LastBit    = USART_CLKLB_ENABLE;
     USART_ClockInit(SC_USART, &USART_ClockInitStructure);
     RCC_GetClocksFreqValue(&RCC_ClocksStatus);
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate = RCC_ClocksStatus.Pclk1Freq / (372 * ((SC_USART->GTP & (uint16_t)0x00FF) * 2));
     log_info(" Pclk1 =%d,Clk_Div = %d,bps =%d\r\n", RCC_ClocksStatus.Pclk1Freq, (372 * ((SC_USART->GTP & (uint16_t)0x00FF) *2)),USART_InitStructure.BaudRate);
     USART_InitStructure.WordLength = USART_WL_9B;
@@ -203,7 +205,7 @@ static void SC_Init(SC_InitStructure *SC_InitCfg)
     }
     /* Enable the Smartcard Interface */
     USART_EnableSmartCard(SC_USART,ENABLE);
-    /* Set RSTIN HIGH 卡激活*/
+    /* Set RSTIN HIGH */
     SC_Reset(Bit_SET);
 }
 
@@ -401,12 +403,14 @@ void SC_PPSConfig(void)
                 USART_Enable(SC_USART,DISABLE);
                 workingbaudrate = apbclock * D_Table[(SC_A2R.T[0] & (uint8_t)0x0F)];
                 workingbaudrate /= F_Table[((SC_A2R.T[0] >> 4) & (uint8_t)0x0F)];
+				USART_ClockStructInit(&USART_ClockInitStructure);
                 USART_ClockInitStructure.Clock          = USART_CLK_ENABLE;
                 USART_ClockInitStructure.Polarity       = USART_CLKPOL_LOW;
                 USART_ClockInitStructure.Phase          = USART_CLKPHA_1EDGE;
                 USART_ClockInitStructure.LastBit        = USART_CLKLB_ENABLE;
                 USART_ClockInit(SC_USART, &USART_ClockInitStructure);
                 log_info(" bps =%d\r\n", workingbaudrate);
+				USART_StructInit(&USART_InitStructure);
                 USART_InitStructure.BaudRate            = workingbaudrate;
                 USART_InitStructure.WordLength          = USART_WL_9B;
                 USART_InitStructure.StopBits            = USART_STPB_1_5;
@@ -506,7 +510,7 @@ static void SC_SendData(SC_ADPU_Commands *SC_ADPU, SC_ADPU_Responce *SC_Responce
     {
         if((USART_ByteReceive(&locData, SC_RECEIVE_TIMEOUT)) == SUCCESS)
         {
-            if(locData != 0x60) //空操作的过程字节NULL(0x60),不进行超时处理，继续等待
+            if(locData != 0x60) 
             {
                 if(((locData & (uint8_t)0xFE) == (((uint8_t)~(SC_ADPU->Header.INS)) & \
                                                   (uint8_t)0xFE)) || ((locData & (uint8_t)0xFE) == (SC_ADPU->Header.INS & (uint8_t)0xFE)))
@@ -514,7 +518,7 @@ static void SC_SendData(SC_ADPU_Commands *SC_ADPU, SC_ADPU_Responce *SC_Responce
                     SC_ResponceStatus->Data[0] = locData;/* ACK received */
                     break;
                 }
-                else if(((locData & (uint8_t)0xF0) == 0x60) || ((locData & (uint8_t)0xF0) == 0x90))//状态字第一个字节SW1，no ation
+                else if(((locData & (uint8_t)0xF0) == 0x60) || ((locData & (uint8_t)0xF0) == 0x90))//SW1，no ation
                 {
                     SC_ResponceStatus->SW1 = locData;
                     if((USART_ByteReceive(&locData, SC_RECEIVE_TIMEOUT)) == SUCCESS)
@@ -759,11 +763,11 @@ static void atr_TS(unsigned char ch)
 
     if(ch == 0x3B)
     {
-        printf("\t LSB \r\n");//正向约定
+        printf("\t LSB \r\n");
     }
     else if(ch == 0x3F)
     {
-        printf("\t MSB\r\n");//反向约定
+        printf("\t MSB\r\n");
     }
     else
     {
@@ -791,15 +795,15 @@ static void atr_T0(unsigned char ch)
     {
         printf("\tTD1 \r\n");
     }
-    printf("\t Historical char: %d\r\n", ch & 0x0f);//历史字符数    
+    printf("\t Historical char: %d\r\n", ch & 0x0f);
 }
 static void atr_TA1(unsigned char ch)
 {
     printf("TA1: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\tFi: %d\r\n", (ch >> 4) & 0x0f);//时钟速率转换因子
-    printf("\tDi: %d\r\n", (ch & 0x0f));//位速率调节因子
+    printf("\tFi: %d\r\n", (ch >> 4) & 0x0f);
+    printf("\tDi: %d\r\n", (ch & 0x0f));
     printf("\tFi/Di: %f\r\n", (F_Table[(ch>>4)&0x0f]!=0 && D_Table[ch&0x0f]!=0) ? (float)F_Table[(ch>>4)&0x0f]/(float)D_Table[ch&0x0f] : 0);
 }
 static void atr_TB1(unsigned char ch)
@@ -807,15 +811,15 @@ static void atr_TB1(unsigned char ch)
     printf("TB1: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\t P: %d\r\n", ch & 0x1f);//编程电压 P 值
-    printf("\t I: %d\r\n", (ch >> 5) & 0x03); //最大编程电流 I 值
+    printf("\t P: %d\r\n", ch & 0x1f);
+    printf("\t I: %d\r\n", (ch >> 5) & 0x03); 
 }
 static void atr_TC1(unsigned char ch)
 {
     printf("TC1: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\t time: %d\r\n", ch);//额外保护时间
+    printf("\t time: %d\r\n", ch);
 }
 static void atr_TD1(unsigned char ch)
 {
@@ -838,30 +842,30 @@ static void atr_TD1(unsigned char ch)
     {
         printf("\tTD2 \r\n");
     }
-    printf("\t after massage: %d\r\n", ch & 0x0f);//后续信息交换所使用的协议类型    
+    printf("\t after massage: %d\r\n", ch & 0x0f);
 }
 static void atr_TA2(unsigned char ch)
 {
     printf("TA2: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\t change operation mode: %s\r\n",(ch & 0x80) ? "Yes(0)" : "No(1)");//是否有能力改变它的操作模式
-    printf("\t mode is %s\r\n",(ch & 0x80) ? "consult(0)" : "fixed(1)");//协商模式 or 特定模式
-    printf("\t after massage: %d\r\n", ch & 0x0f);//后续信息交换所使用的协议类型    
+    printf("\t change operation mode: %s\r\n",(ch & 0x80) ? "Yes(0)" : "No(1)");
+    printf("\t mode is %s\r\n",(ch & 0x80) ? "consult(0)" : "fixed(1)");
+    printf("\t after massage: %d\r\n", ch & 0x0f); 
 }
 static void atr_TB2(unsigned char ch)
 {
     printf("TB2: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\tPI2: %d\r\n", ch);//IC卡所需的编程电压P的值PI2
+    printf("\tPI2: %d\r\n", ch);
 }
 static void atr_TC2(unsigned char ch)
 {
     printf("TC2: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\tT=0, WI: %d\r\n", ch);//传输工作等待时间整数
+    printf("\tT=0, WI: %d\r\n", ch);
 }
 static void atr_TD2(unsigned char ch)
 {
@@ -885,14 +889,14 @@ static void atr_TD2(unsigned char ch)
     {
         printf("\tTD3 \r\n");
     }
-    printf("\t after massage: %d\r\n", ch & 0x0f);//后续信息交换所使用的协议类型    
+    printf("\t after massage: %d\r\n", ch & 0x0f); 
 }
 static void atr_TA3(unsigned char ch)
 {
     printf("TA3: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\tT=1, IFSI: %d\r\n", ch);//IC卡的信息域大小整数
+    printf("\tT=1, IFSI: %d\r\n", ch);
 }
 static void atr_TB3(unsigned char ch)
 {
@@ -907,7 +911,7 @@ static void atr_TC3(unsigned char ch)
     printf("TC3: %02X\r\n", ch);
     SC_A2R.T[T_lenght_count] = ch;
     T_lenght_count++;
-    printf("\tT=1, block error Parity tpye: %d\r\n", ch & 0x01);//块错误校验码的类型
+    printf("\tT=1, block error Parity tpye: %d\r\n", ch & 0x01);
 }
 static void atr_history(unsigned char *ch, int len)
 {

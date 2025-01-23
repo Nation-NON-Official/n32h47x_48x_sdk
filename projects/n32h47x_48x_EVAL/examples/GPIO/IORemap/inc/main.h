@@ -61,6 +61,7 @@ extern "C" {
 
 #include "n32h47x_48x.h"
 
+/* User LED define */
 #define LED1_PORT   GPIOA
 #define LED1_PIN    GPIO_PIN_3
 #define LED1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
@@ -71,23 +72,28 @@ extern "C" {
 #define LED2_PIN    GPIO_PIN_7
 #define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
-#define KEY_PORT    GPIOA
-#define KEY_PIN     GPIO_PIN_2
-#define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
-
-#else
+#else   //defined(N32H482) || defined(N32H487) || defined(N32H473) || defined(N32H474)
 
 #define LED2_PORT   GPIOA
 #define LED2_PIN    GPIO_PIN_8
 #define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#endif
+
+/* User KEY define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
+
+#define KEY_PORT    GPIOA
+#define KEY_PIN     GPIO_PIN_2
+#define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
+
+#else   //defined(N32H482) || defined(N32H487)
 
 #define KEY_PORT    GPIOA
 #define KEY_PIN     GPIO_PIN_0
 #define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
 
 #endif
-
-
 
 void LED_Init(GPIO_Module* GPIOx,uint16_t Pin,uint32_t clock);
 void LED_On(GPIO_Module* GPIOx,uint16_t Pin);

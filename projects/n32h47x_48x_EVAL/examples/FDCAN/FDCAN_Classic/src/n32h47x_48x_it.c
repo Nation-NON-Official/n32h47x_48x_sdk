@@ -55,6 +55,10 @@
 #include "n32h47x_48x_it.h"
 #include "n32h47x_48x.h"
 #include "main.h"
+#include "n32h47x_48x_fdcan.h"
+
+extern uint32_t RxFlag[2];
+extern uint32_t TxFlag[2];
 
 /***  Cortex-M4 Processor Exceptions Handlers ***/
 
@@ -157,7 +161,36 @@ void SysTick_Handler(void)
 
 /*** N32H47x_48x Peripherals Interrupt Handlers,available peripheral interrupt 
     handler's name please refer to the startup file (startup_n32h47x_48x.s)***/
+void NODE1_IRQ_FUNCTION(void)
+{
+    if(FDCAN_GetIntFlag(NODE1,FDCAN_FLAG_TX_COMPLETE) == SET)
+    {
+        FDCAN_ClearFlag(NODE1,FDCAN_FLAG_TX_COMPLETE);
+        TxFlag[0]++;
+    }
+    
+    if(FDCAN_GetIntFlag(NODE1,FDCAN_FLAG_RX_FIFO0_NEW_MESSAGE) == SET)
+    {
+        FDCAN_ClearFlag(NODE1,FDCAN_FLAG_RX_FIFO0_NEW_MESSAGE);
+        RxFlag[0]++;
+    }
+}
 
+
+void NODE2_IRQ_FUNCTION(void)
+{
+    if(FDCAN_GetIntFlag(NODE2,FDCAN_FLAG_TX_COMPLETE) == SET)
+    {
+        FDCAN_ClearFlag(NODE2,FDCAN_FLAG_TX_COMPLETE);
+        TxFlag[1]++;
+    }
+    
+    if(FDCAN_GetIntFlag(NODE2,FDCAN_FLAG_RX_FIFO1_NEW_MESSAGE) == SET)
+    {
+        FDCAN_ClearFlag(NODE2,FDCAN_FLAG_RX_FIFO1_NEW_MESSAGE);
+        RxFlag[1]++;
+    }
+}
 
 
 

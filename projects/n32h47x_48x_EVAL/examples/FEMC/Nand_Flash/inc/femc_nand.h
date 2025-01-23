@@ -191,10 +191,10 @@ typedef struct
 #define FEMC_ALE_AF                GPIO_AF11
 
 /* NCE pin */
-#define FEMC_NCE_CLK               RCC_AHB_PERIPHEN_GPIOD
-#define FEMC_NCE_PORT              GPIOD
-#define FEMC_NCE_PIN               GPIO_PIN_7               // NCE2
-#define FEMC_NCE_AF                GPIO_AF10
+#define FEMC_NCE_CLK               RCC_AHB_PERIPHEN_GPIOG
+#define FEMC_NCE_PORT              GPIOG
+#define FEMC_NCE_PIN               GPIO_PIN_9               // NCE3
+#define FEMC_NCE_AF                GPIO_AF11
 
 /* NWAIT pin */
 #define FEMC_NWAIT_CLK             RCC_AHB_PERIPHEN_GPIOD

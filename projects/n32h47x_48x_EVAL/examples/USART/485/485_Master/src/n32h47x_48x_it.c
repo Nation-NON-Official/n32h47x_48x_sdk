@@ -57,6 +57,9 @@
 #include "main.h"
 
 extern uint8_t TxBuffer2[];
+extern uint8_t RxBuffer2[];
+extern __IO uint8_t RxCounter2;
+extern uint8_t NbrOfDataToRead1;
 extern __IO uint8_t TxCounter2;
 extern uint8_t NbrOfDataToTransfer2;
 
@@ -169,6 +172,18 @@ void SysTick_Handler(void)
 **/
 void USARTz_IRQHandler(void)
 {
+    if ((USART_GetFlagStatus(USARTz, USART_FLAG_RXDNE) != RESET)  && (USART_GetIntStatus(USARTz, USART_INT_RXDNE) != RESET))
+    {
+        /* Read one byte from the receive data register */
+        RxBuffer2[RxCounter2++] = USART_ReceiveData(USARTz);
+
+        if (RxCounter2 == NbrOfDataToRead1)
+        {
+            /* Disable the USARTz Receive interrupt */
+            USART_ConfigInt(USARTz, USART_INT_RXDNE,DISABLE);
+        }
+    }
+    
     if ((USART_GetFlagStatus(USARTz, USART_FLAG_TXDE) != RESET) && (USART_GetIntStatus(USARTz, USART_INT_TXDE) != RESET))
     {
         /* Write one byte to the transmit data register */
@@ -179,6 +194,19 @@ void USARTz_IRQHandler(void)
             /* Disable the USARTz Transmit interrupt */
             USART_ConfigInt(USARTz, USART_INT_TXDE,DISABLE);
         }
+    }
+	
+	/* Determine if an error flag still exists and clear the error flag */
+    if ((USART_GetFlagStatus(USARTz, USART_FLAG_OREF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_NEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_PEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTz, USART_FLAG_FEF) != RESET))
+    {
+        /*Read the sts register first,and the read the DAT register to clear the all error flag*/
+        (void)USARTz->STS;
+        (void)USARTz->DAT;
+        /* Under normal circumstances, all error flags will be cleared when the upper data is read and will not be executed here; 
+           users can add their own processing according to the actual scenario. */
     }
 }
 

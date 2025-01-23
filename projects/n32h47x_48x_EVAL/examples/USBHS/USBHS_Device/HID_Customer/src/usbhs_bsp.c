@@ -163,6 +163,7 @@ void KEY_Init(GPIO_Module* GPIOx,uint16_t Pin, uint32_t clock)
     
     InitStruct.Pin            = Pin;
     InitStruct.GPIO_Mode      = GPIO_MODE_INPUT;
+    InitStruct.GPIO_Pull      = GPIO_PULL_UP;
     GPIO_InitPeripheral(GPIOx, &InitStruct);
 }
 
@@ -183,11 +184,11 @@ void USB_BSP_Init(void)
 
     GPIO_InitStruct(&GPIO_InitStructure);
 
-	// VBUS
+    // VBUS
     GPIO_InitStructure.Pin              = GPIO_PIN_13;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(GPIOB, &GPIO_InitStructure);
-	
+
     // SOF
     GPIO_InitStructure.Pin              = GPIO_PIN_4;
     GPIO_InitStructure.GPIO_Mode        = GPIO_MODE_AF_PP;
@@ -205,6 +206,10 @@ void USB_BSP_Init(void)
     LED_Init(LED1_PORT, LED1_PIN, LED1_CLOCK);
     LED_Init(LED2_PORT, LED2_PIN, LED2_CLOCK);
     LED_Init(LED3_PORT, LED3_PIN, LED3_CLOCK);
+    
+    LED_Off(LED1_PORT, LED1_PIN);
+    LED_Off(LED2_PORT, LED2_PIN);
+    LED_Off(LED3_PORT, LED3_PIN);
     
     KEY_Init(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN, KEY_BUTTON_GPIO_CLK);
 }

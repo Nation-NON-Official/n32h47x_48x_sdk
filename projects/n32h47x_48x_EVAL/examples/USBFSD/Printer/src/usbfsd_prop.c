@@ -63,14 +63,6 @@ __IO uint8_t EXTI_Enable;
 __IO uint8_t Request = 0;
 uint8_t Report_Buf[2];
 
-
-
-
-/**---------- CDC REQUESTS FUNCTION ----------*/
-uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length);
-uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length);
-
-
 typedef struct
 {
     uint32_t    bitrate;
@@ -307,7 +299,7 @@ USB_Result Printer_Data_Setup(uint8_t RequestNo)
 
     CopyRoutine = NULL;
 
-    if(Type_Recipient == (CLASS_REQUEST & (REQUEST_TYPE | RECIPIENT)) )
+    if(Type_Recipient == ((CLASS_REQUEST & (REQUEST_TYPE | RECIPIENT)) | INTERFACE_RECIPIENT))
     {
         if(RequestNo == GET_DEVICE_ID)
         {
@@ -491,42 +483,14 @@ uint8_t* Printer_GetProtocolValue(uint16_t Length)
 **/
 uint8_t *USB_Printer_ID(uint16_t Length)
 {
+    uint32_t wOffset;
+
+    wOffset = pInformation->Ctrl_Info.Usb_wOffset;
     if (Length == 0)
     {
-        pInformation->Ctrl_Info.Usb_wLength = sizeof(USB_Printer_IDString);
+        pInformation->Ctrl_Info.Usb_wLength = sizeof(USB_Printer_IDString) - wOffset;
         return NULL;
     }
-    return(uint8_t *)&USB_Printer_IDString;
+    return(uint8_t *)&USB_Printer_IDString + wOffset;
 }
 
-/**
-*\*\name    Virtual_Com_Port_GetLineCoding.
-*\*\fun     send the linecoding structure to the PC host.
-*\*\param   Length: LineCoding length
-*\*\return  linecodeing address pointer
-**/
-uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
-{
-    if (Length == 0)
-    {
-        pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
-        return NULL;
-    }
-    return(uint8_t *)&linecoding;
-}
-
-/**
-*\*\name    Virtual_Com_Port_SetLineCoding.
-*\*\fun     Set the linecoding structure fields.
-*\*\param   Length: LineCoding length
-*\*\return  linecodeing address pointer
-**/
-uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length)
-{
-    if (Length == 0)
-    {
-        pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
-        return NULL;
-    }
-    return(uint8_t *)&linecoding;
-}

@@ -1,4 +1,4 @@
-1、功能说明
+﻿1、功能说明
     1、PGA4的用户模式下的手动校准.
     
 2、使用环境
@@ -35,10 +35,10 @@
 
     使用方法：
         1、编译后打开调试模式，串口下发“0xAA 0x01”确认并开启PGA校准流程；
-        2、将PB11引脚接入0.3v电压,使用USART2 串口下发“0xAA 0x01”确认并经如下一步；
-        3、将PB11引脚接入3.3v电压,使用USART2 串口下发“0xAA 0x01”确认并经如下一步；
-        4、将PB1引脚接入0.3v电压,使用USART2 串口下发“0xAA 0x01”确认并经如下一步；
-        5、将PB1引脚接入3.3v电压,使用USART2 串口下发“0xAA 0x01”确认并完成校准；
+        2、将PB11引脚接入0.3v电压,使用USART2 串口下发“0xAA 0x01”确认并进入下一步；
+        3、将PB11引脚接入3.0v电压,使用USART2 串口下发“0xAA 0x01”确认并进入下一步；
+        4、将PB1引脚接入0.3v电压,使用USART2 串口下发“0xAA 0x01”确认并进入下一步；
+        5、将PB1引脚接入3.0v电压,使用USART2 串口下发“0xAA 0x01”确认并完成校准；
         6、再次使用USART2 串口下发“0xAA 0x01”保存校准的数据并通过LOG打印；
 4、注意事项
     无
@@ -80,10 +80,10 @@
             PB11、PB1 is selected as input, user calibration mode
     Usage:
         1, after compiling, open the debug mode, the serial port sends 0xAA 0x01 to confirm and open the PGA calibration process;
-        2, connecting PB11 pin to the 0.3v voltage, using the USART2 serial port to send “0xAA 0x01” to confirm and the following step;
-        3, connecting PB11 pin to the 3.3v voltage, using the USART2 serial port to send the “0xAA 0x01” confirmation and the following step;
-        4, connecting PB1 pin to the 0.3v voltage,  using the USART2 serial port to send the “0xAA 0x01” confirmation and the following step;
-        5, connecting PB1 pin to the 3.3v voltage,  using the USART2 serial port to send the “0xAA 0x01” to confirm and complete the calibration;
+        2, connecting PB11 pin to the 0.3v voltage, using the USART2 serial port to send “0xAA 0x01” to confirm and enter next step;
+        3, connecting PB11 pin to the 3.0v voltage, using the USART2 serial port to send the “0xAA 0x01” confirmation and enter next step;
+        4, connecting PB1 pin to the 0.3v voltage,  using the USART2 serial port to send the “0xAA 0x01” confirmation and enter next step;
+        5, connecting PB1 pin to the 3.0v voltage,  using the USART2 serial port to send the “0xAA 0x01” to confirm and complete the calibration;
         6、using USART2 serial port to send “0xAA 0x01” to save the calibrated data and print through LOG; 
                 
 4. Matters needing attention

@@ -60,11 +60,11 @@
 /** Define the GPIO port to which the LED is connected **/
 #define LED1_GPIO_PORT      GPIOA                       /* GPIO port */
 #define LED1_GPIO_CLK       RCC_AHB_PERIPH_GPIOA        /* GPIO port clock */
-#define LED1_GPIO_PIN       GPIO_PIN_4                  /* GPIO connected to the SCL clock line */
+#define LED1_GPIO_PIN       GPIO_PIN_3                  /* GPIO pin */
 
 #define LED2_GPIO_PORT      GPIOA                       /* GPIO port */
 #define LED2_GPIO_CLK       RCC_AHB_PERIPH_GPIOA        /* GPIO port clock */
-#define LED2_GPIO_PIN       GPIO_PIN_5                  /* GPIO connected to the SCL clock line */
+#define LED2_GPIO_PIN       GPIO_PIN_8                  /* GPIO pin */
 
 
 __IO uint32_t TimingDelay = 0;

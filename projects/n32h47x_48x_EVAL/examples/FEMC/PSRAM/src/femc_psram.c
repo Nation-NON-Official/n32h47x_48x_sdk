@@ -248,17 +248,6 @@ void FEMC_GPIO_Init(uint8_t block_index)
     GPIO_InitStructure.Pin = FEMC_NE_PIN;
     GPIO_InitStructure.GPIO_Alternate = FEMC_NE_AF;
     GPIO_InitPeripheral(FEMC_NE_PORT, &GPIO_InitStructure);
-
-    /* NBL0 pin configuration*/
-    GPIO_InitStructure.Pin = FEMC_NBL0_PIN;
-    GPIO_InitStructure.GPIO_Alternate = FEMC_NBL1_AF;
-    GPIO_InitPeripheral(FEMC_NBL1_PORT, &GPIO_InitStructure);
-    
-    /* NBL1 pin configuration*/
-    GPIO_InitStructure.Pin = FEMC_NBL1_PIN;
-    GPIO_InitStructure.GPIO_Alternate = FEMC_NBL1_AF;
-    GPIO_InitPeripheral(FEMC_NBL1_PORT, &GPIO_InitStructure);
-
 }
 
 /**

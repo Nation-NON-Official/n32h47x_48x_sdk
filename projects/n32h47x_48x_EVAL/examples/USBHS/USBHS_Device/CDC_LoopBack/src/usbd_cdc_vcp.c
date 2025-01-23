@@ -63,6 +63,8 @@ __IO uint32_t data_sent;
 __IO uint32_t receive_flag = 0;
 extern __IO uint32_t receive_count;
 
+#define USB_SEND_TIMEOUT        0x20000
+
 /* Private function prototypes ----------------------------------------------- */
 static uint16_t VCP_DataTx(void);
 static uint16_t VCP_DataRx(uint32_t Len);
@@ -109,8 +111,33 @@ static uint16_t VCP_DataRx(uint32_t Len)
 **/
 void VCP_SendData(USB_CORE_MODULE * pdev, uint8_t * pbuf, uint32_t buf_len)
 {
-    data_sent = 0;
-    USBDEV_EP_Tx(pdev, CDC_IN_EP, pbuf, buf_len);
+    uint32_t temp_value = 0;
+    uint32_t max_packet_size = 0;
+#ifdef USE_USB_HS_IN_HS
+    max_packet_size = USB_HS_MAX_PACKET_SIZE;
+#else
+    max_packet_size = USB_FS_MAX_PACKET_SIZE;
+#endif
+    
+    if(buf_len < max_packet_size)
+    {
+        data_sent = 0;
+        USBDEV_EP_Tx(pdev, CDC_IN_EP, pbuf, buf_len);
+    }
+    else if(buf_len == max_packet_size)
+    {
+        data_sent = 0;
+        USBDEV_EP_Tx(pdev, CDC_IN_EP, pbuf, buf_len);
+        while(data_sent != 1 && temp_value < USB_SEND_TIMEOUT)
+        {
+            temp_value++;
+        }
+        data_sent = 0;
+        USBDEV_EP_Tx(pdev, CDC_IN_EP, pbuf, 0);
+    }
+    else
+    {
+    }
 }
 
 /**

@@ -124,7 +124,7 @@ int main(void)
         while(FMAC_GetFlagStatus(FMAC_FLAG_YBUFEF) != RESET);
         
         calculated_data[i] = FMAC_ReadData();
-        error[i] = calculated_data[i] - reference_data[i];
+        error[i] = reference_data[i] - calculated_data[i];
     }
     /* finish calculation */
     FMAC_FinishCalculate();

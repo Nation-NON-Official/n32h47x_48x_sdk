@@ -4,7 +4,7 @@
 2、使用环境
 
     软件开发环境：KEIL MDK-ARM V5.25
-	              IAR EWARM 8.50.1
+                  IAR EWARM 8.50.1
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -13,7 +13,7 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 3、使用说明
     
@@ -29,13 +29,13 @@
                 D0:PD14     D1:PD15     D2:PD0      D3:PD1
                 D4:PE7      D5:PE8      D6:PE9      D7:PE10
                 NOE:PD4     NWE:PD5     CLE:PD11    ALE:PD12
-                NCE:PD7     NWAIT:PD6
+                NCE:PG9     NWAIT:PD6
         
     使用方法：
         编译后烧录到评估板，上电，串口打印NAND Flash ID和读写擦结果
 
 4、注意事项
-    #CE需要跳线到PD7引脚上，RY/#BY引脚需要跳线到PD6引脚上
+    J78需要用跳线帽连接
     
 
 1. Function description
@@ -44,8 +44,8 @@
 2. Use environment
 
     Software development environment: KEIL MDK-ARM V5.25
-	                                  IAR EWARM 8.50.1
-									  
+                                      IAR EWARM 8.50.1
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0
@@ -54,7 +54,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
 
@@ -70,11 +70,11 @@
                 D0:PD14     D1:PD15     D2:PD0      D3:PD1
                 D4:PE7      D5:PE8      D6:PE9      D7:PE10
                 NOE:PD4     NWE:PD5     CLE:PD11    ALE:PD12
-                NCE:PD7     NWAIT:PD6
+                NCE:PG9     NWAIT:PD6
 
     Instructions:
         After compiling, burn it to the evaluation board, power it on, and print the NAND Flash read-write-erase results through the serial port
 
 4. Matters needing attention
-    Pin #CE needs a jumper to pin PD7 and pin RY/#BY needs a jumper to pin PD6
+    The J78 needs to be connected with a jumper cap
 

@@ -115,6 +115,7 @@ int main(void)
     /* GPIO configuration ------------------------------------------------------*/
     GPIO_Configuration();
 
+	  SPI_InitStruct(&SPI_InitStructure);
     /* SPI_Master configuration ------------------------------------------------------*/
     SPI_InitStructure.DataDirection = SPI_DIR_DOUBLELINE_FULLDUPLEX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;

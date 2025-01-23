@@ -143,10 +143,10 @@ int main(void)
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR, ENABLE);
     /* Allow access to RTC */
     PWR_BackupAccessEnable(ENABLE);
-    if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1) )
+    /* RTC clock source select */
+    if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
     {
-        /* RTC clock source select */
-        if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
+        if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1))
         {
            RTC_PrescalerConfig();
            /* Adjust time by values entered by the user on the hyperterminal */
@@ -155,10 +155,10 @@ int main(void)
            RTC_BKUPRgWrite(1, USER_WRITE_BKP_DAT1_DATA);
            log_info("\r\n RTC Init Success\r\n");
         }
-        else
-        {
-           log_info("\r\n RTC Init Faile\r\n");
-        }
+    }
+    else
+    {
+        log_info("\r\n RTC Init Failed\r\n");
     }
     /* Adjust time by values entered by the user on the hyperterminal */
     RTC_ConfigCalibOutput(RTC_CALIB_OUTPUT_1HZ);

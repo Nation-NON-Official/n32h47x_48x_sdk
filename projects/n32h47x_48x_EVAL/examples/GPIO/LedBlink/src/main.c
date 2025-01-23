@@ -77,7 +77,6 @@ int main(void)
     {
         LED_Blink(LED1_PORT, LED1_PIN);
         LED_Blink(LED2_PORT, LED2_PIN);
-        LED_Blink(LED3_PORT, LED3_PIN);
         systick_delay_ms(500);
     }
     

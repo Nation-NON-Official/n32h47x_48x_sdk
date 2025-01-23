@@ -31,9 +31,7 @@
                     - 奇偶校验：无
                     - 波特率： 115200 
     使用方法：
-        编译后烧录到评估板，上电，串口按照闹钟设定时间(间隔1min)打印输出。
-        设置#define RTC_ALARM_TEST_TYPE RTC_ALARM_TEST_TYPE_OUTPUT，编译后烧录到评估板，
-        此时会切换到闹钟输出，在PC13口会出现翻转电平。
+        编译后烧录到评估板，上电，串口按照闹钟设定时间(间隔1min)打印输出，并且在PC13口会出现翻转电平。
 
 4、注意事项
     无
@@ -74,8 +72,7 @@
                             - Baud rate: 115200
 
     Instructions:
-        After compiling, it is burned to the evaluation board, powered on, and the serial port prints the output according to the time set by the alarm clock (1 minute by default).
-        When set "#define RTC_ALARM_TEST_TYPE RTC_ALARM_TEST_TYPE_OUTPUT", at this time, the alarm clock output will be switched, and the flipped level will appear at port PC13.
+        After compiling, it is burned to the evaluation board, powered on, and the serial port prints the output according to the time set by the alarm clock (1 minute by default), and the flipped level will appear at PC13.
 
 4. Matters needing attention
     None

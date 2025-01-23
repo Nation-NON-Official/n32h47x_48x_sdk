@@ -112,7 +112,6 @@ static uint8_t rx_buf[TEST_BUFFER_SIZE] = {0};
 volatile Status test_status      = FAILED;
 static __IO uint32_t I2CTimeout;
 static CommCtrl_t Comm_Flag = C_READY;
-static uint8_t RCC_RESET_Flag = 0;
 
 static uint8_t rx_num = 0;
 static uint8_t tx_num = 0;
@@ -163,12 +162,14 @@ int i2c_master_init(void)
     RCC_EnableAPB1PeriphClk(I2Cx_RCC, ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
 	
 		/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
 	
     i2cx_gpio.Pin        = I2Cx_SCL_PIN ;
-    i2cx_gpio.GPIO_Pull = GPIO_PULL_UP;
+    i2cx_gpio.GPIO_Pull  = GPIO_PULL_UP;
     i2cx_gpio.GPIO_Alternate = I2Cx_SCL_AF;
     i2cx_gpio.GPIO_Mode  = GPIO_MODE_AF_OD;
     i2cx_gpio.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;
@@ -182,6 +183,7 @@ int i2c_master_init(void)
     GPIO_InitPeripheral(I2Cx_SDA_GPIO, &i2cx_gpio);
 
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&i2cx_master); 
     i2cx_master.BusMode     = I2C_BUSMODE_I2C;
     i2cx_master.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     i2cx_master.OwnAddr1    = I2C_MASTER_ADDR;
@@ -191,11 +193,7 @@ int i2c_master_init(void)
 
     I2C_Init(I2Cx, &i2cx_master);
 		
-    //scl enable digital filter:2*Pclk
-    I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-    //sda enable digital filter:2*Pclk
-    I2C_SetSDADigitalFilterWidth(I2Cx, 2);
-		
+    
     // int enable
     I2C_ConfigInt(I2Cx, I2C_INT_EVENT | I2C_INT_BUF | I2C_INT_ERR, ENABLE);
     NVIC_Configuration();
@@ -469,12 +467,14 @@ void IIC_RestoreSlaveByClock(void)
     uint8_t i;
     GPIO_InitType i2cx_gpio;
 	
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
-    GPIO_AFIOInitDefault();
-    GPIO_DeInit(I2Cx_SCL_GPIO);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
 	
     /* Initialize GPIO_InitStructure */
-	GPIO_InitStruct(&i2cx_gpio);
+	  GPIO_InitStruct(&i2cx_gpio);
 
     i2cx_gpio.Pin        = I2Cx_SCL_PIN;
     i2cx_gpio.GPIO_Pull  = GPIO_PULL_UP;
@@ -511,34 +511,13 @@ void SystemNVICReset(void)
 *\*\return  none 
 **/
 void IIC_RCCReset(void)
-{
-    if (RCC_RESET_Flag >= 3)
-    {
-        SystemNVICReset();
-    }
-    else
-    {
-        RCC_RESET_Flag++;
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        RCC_EnableAPB1PeriphClk(I2Cx_RCC,DISABLE);
-        #if defined (N32H475)
-        GPIOD->PMODE &= 0xFF3FFFF3;
-        #else
-        GPIOB->PMODE &= 0xFFFFF33F;
-        GPIOC->PMODE &= 0xFFFFFFFC;
-        #endif
-        RCC_EnableAPB2PeriphClk( RCC_APB2_PERIPH_AFIO, DISABLE);
-        RCC_EnableAHB1PeriphClk (I2Cx_clk_en, DISABLE );
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        IIC_RestoreSlaveByClock();
-        
-        log_info("***** IIC module by RCC reset! *****\r\n");
-        i2c_master_init();
-    }
+{	
+	RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_I2C1);
+    
+    IIC_RestoreSlaveByClock();
+    
+    i2c_master_init();
+    log_info("***** IIC module by RCC reset! *****\r\n");
 }
 
 /**

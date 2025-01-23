@@ -8,11 +8,11 @@
                  IAR EWARM 8.50.1
 
     硬件开发环境：
-        N32H473系列：基于评估板N32H487ZEL7_EVB V1.0开发
-        N32H474系列：基于评估板N32H487ZEL7_EVB V1.0开发
+        N32H473系列：基于评估板N32H473VEL7_STB V1.0开发
+        N32H474系列：基于评估板N32H474VEL7_STB V1.0开发
         N32H475系列：基于评估板N32H475UEQ7_STB V1.0开发
-        N32H482系列：基于评估板N32H487ZEL7_EVB V1.0开发
-        N32H487系列：基于评估板N32H487ZEL7_EVB V1.0开发
+        N32H482系列：基于评估板N32H482ZEL7_EVB V1.0开发
+        N32H487系列：基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 3、使用说明
@@ -23,8 +23,10 @@
             N32H473/474系列：    200MHz
             N32H475/482/487系列：240MHz
         3、GPIO：
-            N32H473/474/482/487系列: PA3-D14,PA8-D6,PA0-KEY
-            N32H475系列: PA3-D1,PA7-D2,PA2-KEY
+            N32H473/474系列: PA3-D1, PA8-D2, PA2-KEY
+            N32482/487系列:  PA3-D13,PA8-D15,PA0-KEY
+            N32H475系列:     PA3-D1, PA7-D2, PA2-KEY
+
         4、打印：PA9 - baud rate 115200
         5、JTAG IO
             PB4   PA15    PA14   PA13
@@ -51,11 +53,11 @@
                                       IAR EWARM 8.50.1
 
     Hardware development environment:
-        N32H473 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
-        N32H474 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        N32H473 series: Developed based on the evaluation board N32H473VEL7_STB V1.0
+        N32H474 series: Developed based on the evaluation board N32H474VEL7_STB V1.0
         N32H475 series: Developed based on the evaluation board N32H475UEQ7_STB V1.0
-        N32H482 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
-        N32H487 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        N32H482 series: Developed based on the evaluation board N32H482ZEL7_EVB V1.0
+        N32H487 series: Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 
 3. Instructions for use
@@ -65,9 +67,11 @@
         2. System Clock frequency: 
             N32H473/474 series:     200MHz
             N32H475/482/487 series: 240MHz
-        3. GPIO: 
-            N32H473/474/482/487 series: PA3-D14,PA8-D6,PA0-KEY
-            N32H475 series: PA3-D1,PA7-D2,PA2-KEY
+        3. GPIO:
+            N32H473/474 series: PA3-D1, PA8-D2, PA2-KEY
+            N32482/487 series:  PA3-D13,PA8-D15,PA0-KEY
+            N32H475 series:     PA3-D1, PA7-D2, PA2-KEY
+
         4. printf: PA9 - baud rate 115200
         5. JTAG port:PB4   PA15    PA14   PA13
 

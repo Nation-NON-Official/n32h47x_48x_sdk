@@ -59,6 +59,13 @@ extern "C" {
 #endif
 
 #include "n32h47x_48x.h"
+#include "n32h47x_48x_rcc.h"
+#include "n32h47x_48x_gpio.h"
+#include "n32h47x_48x_dvp.h"
+#include "misc.h"
+#include "bsp_ov5640.h"
+#include "n32h47x_48x_dma.h"
+#include "lcd.h"
 
 #define DVP_IMAGE_FORMAT_GRAY   (1)
 #define DVP_IMAGE_FORMAT_RGB565 (2)
@@ -66,6 +73,10 @@ extern "C" {
 #define DVP_IMAGE_PIXEL_SIZE  (DVP_IMAGE_FORMAT_RGB565)
 #define DVP_IMAGE_WIDTH  240
 #define DVP_IMAGE_HEIGHT 320
+#define IMAGE_WIDTH_H          0x00
+#define IMAGE_WIDTH_L          0xF0  
+#define IMAGE_HEIGHT_H         0x01
+#define IMAGE_HEIGHT_L         0x40
 
 #define DVP_IMAGE_SIZE      (DVP_IMAGE_WIDTH * DVP_IMAGE_HEIGHT * DVP_IMAGE_PIXEL_SIZE)
 #define DVP_IMAGE_BUFF_SIZE (DVP_IMAGE_SIZE)

@@ -86,6 +86,7 @@ void SC__HotReset_handle(void)
     SC_APDU_Init(&SC_ADPU, 0x00, SC_GET_A2R, 0x00, 0x00, 0x00, NULL, NULL);
     RCC_GetClocksFreqValue(&RCC_ClocksStatus);
     /*reset BaudRate*/
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = RCC_ClocksStatus.Pclk1Freq / (372 * ((SC_USART->GTP & (uint16_t)0x00FF) * 2));
     USART_InitStructure.WordLength          = USART_WL_9B;
     USART_InitStructure.StopBits            = USART_STPB_1_5;

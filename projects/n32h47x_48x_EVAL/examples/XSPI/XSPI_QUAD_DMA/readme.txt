@@ -29,7 +29,7 @@
     3、打印：PA9 - baud rate 115200
     4、XSPI配置：
           时钟：系统时钟6分频
-          引脚：NSS0--PD3、CLK--PA5、IO0--PA6、IO1--PA7、IO2--PC4、IO3--PC5
+          引脚：NSS0--PD3(CS)、CLK--PA5(SCLK)、IO0--PA6(SI)、IO1--PA7(SO)、IO2--PC4(WP)、IO3--PC5(HOLD)
           外部Spi_Flash设备：W25Q128或P25Q40
 
 
@@ -39,7 +39,7 @@
              再往Spi_Flash设备写256字节，然后读取确认数据是否为写入的内容，有错误则打印报错。
 
 4、注意事项
-    需连接全功能板的跳线帽J1\J12
+    需连接全功能板的跳线帽J1\J31
 
 
 
@@ -74,7 +74,7 @@
     3、Printing: PA9 - baud rate 115200
     4、XSPI Configuration:
           Clock: System clock 6 divisions;
-          Pin: NSS0 - PD3, CLK - PA5, IO0 - PA6, IO1 - PA7, IO2 - PC4, IO3 - PC5
+          Pin: NSS0--PD3(CS), CLK--PA5(SCLK), IO0--PA6(SI), IO1--PA7(SO), IO2--PC4(WP), IO3--PC5(HOLD)
           External Spi_Flash device: W25Q128 or P25Q40
 
 
@@ -84,5 +84,5 @@
              Then write 256 bytes to the Spi_Flash device, then read to confirm whether the data is what is written, and if there is an error, print an error report.
 
 4. Matters needing attention
-     Jumper caps J1\J12 required to connect full function boards
+     Jumper caps J1\J31 required to connect full function boards
 	 

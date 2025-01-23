@@ -110,7 +110,10 @@ void Set_System(void)
 
     /*Enable HSE*/
     RCC->CTRL |= RCC_CTRL_HSEEN;
-    while((RCC->CTRL & RCC_CTRL_HSERDF) != RCC_CTRL_HSERDF);
+    while(RCC_WaitHseStable() == ERROR)
+    {
+        /* if HSE clock failed, User can add here some code to deal with this error */
+    }
 
 #if defined (N32H473) || defined (N32H474)
     /*Set PLL MUL 192MHz */
@@ -122,7 +125,10 @@ void Set_System(void)
     
     /*Enable PLL*/
     RCC->CTRL |= RCC_CTRL_PLLEN;
-    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF); 
+    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF)
+    {
+        /* if PLL clock failed, User can add here some code to deal with this error */
+    }
 
     /*Set AHB/APB1/APB2*/
     RCC->CFG |= RCC_CFG_AHBPRES_DIV1;
@@ -137,6 +143,7 @@ void Set_System(void)
     RCC->CFG |= (uint32_t)RCC_CFG_SCLKSW_PLL;
     while ((RCC->CFG & RCC_CFG_SCLKSTS) != RCC_CFG_SCLKSTS_PLL) 
     {
+        /* if system clock select failed , User can add here some code to deal with this error */
     }
 }
 

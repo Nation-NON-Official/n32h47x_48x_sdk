@@ -28,7 +28,7 @@
         3、端口配置：
             PB1选择为模拟功能
         4、DMA：
-            突发长度 = 6, 正常模式, 使能DMA突发， DMA1_CH1通道回环模式搬运8个半字的ADC1转换结果到ADCConvertedValue[60]变量
+            突发长度 = 6, 正常模式, 使能DMA突发， DMA1_CH1通道回环模式搬运6个半字的ADC1转换结果到ADCConvertedValue[60]变量
         5、ADC：
             ADC1独立工作模式、单次转换、单通道模式、软件触发、12位数据右对齐，FIFO长度为6,转换结果就是PB1的模拟电压数据.
     使用方法：
@@ -69,7 +69,7 @@
         3. Port configuration:
             PB1 selected as analog function 
         4. DMA:
-            burstlen = 6, Normal mode, Enable DMA_BURST. DMA1_CH1 channel loopback mode to transfer 8 half-word ADC1 conversion results to the ADCConvertedValue[60] variable
+            burstlen = 6, Normal mode, Enable DMA_BURST. DMA1_CH1 channel loopback mode to transfer 6 half-word ADC1 conversion results to the ADCConvertedValue[60] variable
         5. ADC:
             ADC1 independent working mode, one-shot conversion, single-channel mode, software trigger, 12-bit data is right-aligned, FIFO length is 6 .
             conversion result is the analog voltage data of PB1.

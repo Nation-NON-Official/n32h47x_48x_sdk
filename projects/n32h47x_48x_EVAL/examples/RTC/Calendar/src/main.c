@@ -124,11 +124,12 @@ int main(void)
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR, ENABLE);
     /* Allow access to RTC */
     PWR_BackupAccessEnable(ENABLE);
-    if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1))
+    /* RTC clock source select */
+    if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
     {
-       /* RTC clock source select */
-       if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
-       {
+        if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1))
+        {
+           RTC_DeInit();
            RTC_PrescalerConfig();
            log_info("\r\n RTC configured....");
            /* Adjust time by values entered by the user on the hyperterminal */
@@ -137,10 +138,10 @@ int main(void)
            RTC_BKUPRgWrite(1, USER_WRITE_BKP_DAT1_DATA);
            log_info("\r\n RTC Init Success\r\n");
        }
-       else
-       {
-           log_info("\r\n RTC Init Faile\r\n");
-       }
+    }
+    else
+    {
+        log_info("\r\n RTC Init Failed\r\n");
     }
     /* Configure the PA11 pin to generate an EXTI interrupt
        in which the calendar value is printed (externally feed

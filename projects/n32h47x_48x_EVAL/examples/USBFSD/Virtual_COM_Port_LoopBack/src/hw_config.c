@@ -66,6 +66,8 @@ extern __IO uint8_t Send_Buffer[VIRTUAL_COM_PORT_DATA_SIZE];
 extern __IO  uint32_t packet_receive;
 extern __IO uint8_t Receive_length;
 
+#define USB_SEND_TIMEOUT        0x20000
+
 uint8_t Receive_Buffer[64];
 uint32_t Send_length;
 
@@ -106,7 +108,10 @@ void Set_System(void)
 
     /*Enable HSE*/
     RCC->CTRL |= RCC_CTRL_HSEEN;
-    while((RCC->CTRL & RCC_CTRL_HSERDF) != RCC_CTRL_HSERDF);
+    while(RCC_WaitHseStable() == ERROR)
+    {
+        /* if HSE clock failed, User can add here some code to deal with this error */
+    }
 
 #if defined (N32H473) || defined (N32H474)
     /*Set PLL MUL 192MHz */
@@ -115,9 +120,13 @@ void Set_System(void)
     /*Set PLL MUL 240MHz */
     RCC_ConfigPll(RCC_PLL_SRC_HSE, RCC_PLL_PRE_1, RCC_PLL_MUL_30, RCC_PLLOUT_DIV_1);
 #endif
+    
     /*Enable PLL*/
     RCC->CTRL |= RCC_CTRL_PLLEN;
-    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF); 
+    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF)
+    {
+        /* if PLL clock failed, User can add here some code to deal with this error */
+    }
 
     /*Set AHB/APB1/APB2*/
     RCC->CFG |= RCC_CFG_AHBPRES_DIV1;
@@ -132,6 +141,7 @@ void Set_System(void)
     RCC->CFG |= (uint32_t)RCC_CFG_SCLKSW_PLL;
     while ((RCC->CFG & RCC_CFG_SCLKSTS) != RCC_CFG_SCLKSTS_PLL) 
     {
+        /* if system clock select failed , User can add here some code to deal with this error */
     }
 }
 
@@ -301,6 +311,7 @@ ErrorStatus USB_Config(uint32_t sysclk)
 **/
 void CDC_Send_DATA (uint8_t *ptrBuffer, uint8_t Send_length)
 {
+    uint32_t temp_value = 0;
     /*if max buffer is Not reached*/
     if(Send_length < VIRTUAL_COM_PORT_DATA_SIZE)     
     {
@@ -310,6 +321,26 @@ void CDC_Send_DATA (uint8_t *ptrBuffer, uint8_t Send_length)
         USB_CopyUserToPMABuf((unsigned char*)ptrBuffer, ENDP1_TXADDR, Send_length);
         USB_SetEpTxCnt(ENDP1, Send_length);
         USB_SetEpTxValid(ENDP1);
+    }
+    else if(Send_length == VIRTUAL_COM_PORT_DATA_SIZE)
+    {
+        /*Sent flag*/
+        packet_sent = 0;
+        /* send  packet to PMA*/
+        USB_CopyUserToPMABuf((unsigned char*)ptrBuffer, ENDP1_TXADDR, Send_length);
+        USB_SetEpTxCnt(ENDP1, Send_length);
+        USB_SetEpTxValid(ENDP1);
+        while(packet_sent != 1 && temp_value < USB_SEND_TIMEOUT)
+        {
+            temp_value++;
+        };
+        packet_sent = 0;
+        USB_SetEpTxCnt(ENDP1, 0);
+        USB_SetEpTxValid(ENDP1);
+    }
+    else
+    {
+        
     }
 }
 

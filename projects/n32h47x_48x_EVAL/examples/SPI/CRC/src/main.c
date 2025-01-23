@@ -115,6 +115,7 @@ int main(void)
     /* GPIO configuration ------------------------------------------------------*/
     GPIO_Configuration();
 
+	  SPI_InitStruct(&SPI_InitStructure);
     /* SPI_Master configuration ------------------------------------------------------*/
     SPI_InitStructure.DataDirection = SPI_DIR_DOUBLELINE_FULLDUPLEX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;
@@ -305,7 +306,7 @@ void GPIO_Configuration(void)
 	
 		/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&GPIO_InitStructure);
-    /* Configure SPI5 pins: SCK, MISO and MOSI ---------------------------------*/
+    /* Configure SPI5 pins: SCK：PF7, MISO:PF8 and MOSI:PF9 ---------------------------------*/
     /* Confugure SCK and MOSI pins as Alternate Function Push Pull */
     GPIO_InitStructure.Pin        = GPIO_PIN_7 | GPIO_PIN_9;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_PP;
@@ -319,7 +320,7 @@ void GPIO_Configuration(void)
 		GPIO_InitStructure.GPIO_Alternate = GPIO_AF11;
     GPIO_InitPeripheral(GPIOF, &GPIO_InitStructure);
 
-    /* Configure SPI2 pins: SCK, MISO and MOSI ---------------------------------*/
+/* Configure SPI2 pins: SCK：PC7, MISO:PC2 and MOSI:PD2 ---------------------------------*/
     /* Confugure SCK pins as Input Floating */
     GPIO_InitStructure.Pin       = GPIO_PIN_7;
 		GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;

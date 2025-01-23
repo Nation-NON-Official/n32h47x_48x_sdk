@@ -53,6 +53,7 @@
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved. 
 **/
 #include "main.h"
+#include "log.h"
 
 /** n32h47x_48x_StdPeriph_Examples **/
 
@@ -99,6 +100,9 @@ int main(void)
        To reconfigure the default setting of SystemInit() function, refer to
        system_n32h47x_48x.c file
      */
+	
+	  log_init();
+    log_info("\r\n This is SPI simplex Interrupt demo!!\r\n");
 
     /* System clocks configuration ---------------------------------------------*/
     RCC_Configuration();
@@ -109,6 +113,7 @@ int main(void)
     /* GPIO configuration ------------------------------------------------------*/
     GPIO_Configuration();
 
+	  SPI_InitStruct(&SPI_InitStructure);
     /* SPI_Master configuration ------------------------------------------------*/
     SPI_InitStructure.DataDirection = SPI_DIR_SINGLELINE_TX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;
@@ -147,6 +152,13 @@ int main(void)
        are equal */
     /* TransferStatus = FAILED, if the transmitted and received data
        are different */
+		if(TransferStatus == PASSED) 
+		{
+        log_info("\r\n Test PASS!!\r\n");
+    } else
+		{
+        log_info("\r\n Test fail!!\r\n");
+    }
 
     while (1)
     {
@@ -205,7 +217,7 @@ void GPIO_Configuration(void)
     /* SPI2 Periph clock enable */
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_SPI2, ENABLE);
 		
-    /* Configure SPI5 pins: SCK and MOSI ---------------------------------*/
+    /* Configure SPI5 pins: SCK:PF7 and MOSI:PF9 ---------------------------------*/
     /* Confugure SCK and MOSI pins as Alternate Function Push Pull */
     GPIO_InitStructure.Pin        = GPIO_PIN_7 | GPIO_PIN_9;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_PP;
@@ -215,7 +227,7 @@ void GPIO_Configuration(void)
 
 #endif
 
-    /* Configure SPI2 pins: SCK and MISO*/
+    /* Configure SPI2 pins: SCK:PC7 and MISO:PC2*/
     GPIO_InitStructure.Pin       = GPIO_PIN_7;
 		GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
 		GPIO_InitStructure.GPIO_Alternate = GPIO_AF13;

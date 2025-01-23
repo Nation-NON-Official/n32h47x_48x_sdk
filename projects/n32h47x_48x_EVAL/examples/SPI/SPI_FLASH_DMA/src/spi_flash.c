@@ -178,6 +178,7 @@ void sFLASH_Init(void)
     sFLASH_CS_HIGH();
 
     /*!< SPI configuration */
+	  SPI_InitStruct(&SPI_InitStructure);
     SPI_InitStructure.DataDirection = SPI_DIR_DOUBLELINE_FULLDUPLEX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;
     SPI_InitStructure.DataLen       = SPI_DATA_SIZE_8BITS;

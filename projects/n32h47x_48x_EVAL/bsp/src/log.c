@@ -69,8 +69,8 @@
 #define LOG_PERIPH_GPIO RCC_AHB_PERIPHEN_GPIOA
 #define LOG_TX_PIN      GPIO_PIN_9
 #define LOG_RX_PIN      GPIO_PIN_15
-#define LOG_TX_AF       ((uint32_t)17)
-#define LOG_RX_AF       ((uint32_t)18)
+#define LOG_TX_AF       (GPIO_AF17)
+#define LOG_RX_AF       (GPIO_AF18)
 
 #else
 
@@ -80,8 +80,8 @@
 #define LOG_PERIPH_GPIO RCC_AHB_PERIPHEN_GPIOA
 #define LOG_TX_PIN      GPIO_PIN_9
 #define LOG_RX_PIN      GPIO_PIN_10
-#define LOG_TX_AF       ((uint32_t)5)
-#define LOG_RX_AF       ((uint32_t)5)
+#define LOG_TX_AF       (GPIO_AF5)
+#define LOG_RX_AF       (GPIO_AF5)
 
 #endif
 void log_init(void)

@@ -89,8 +89,8 @@ extern "C" {
 #define TIMx_CH4_GPIO_PIN      GPIO_PIN_3
 #define TIMx_CH4_GPIO_AF       GPIO_AF3
 
-#define TIMx_IRQn              GTIM3_IRQn
-#define TIMx_IRQHandler        GTIM3_IRQHandler
+#define TIMx_IRQn              GTIM1_IRQn
+#define TIMx_IRQHandler        GTIM1_IRQHandler
 
 
 void RCC_Configuration(void);

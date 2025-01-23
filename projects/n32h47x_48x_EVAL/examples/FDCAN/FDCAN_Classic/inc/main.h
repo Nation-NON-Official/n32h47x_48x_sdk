@@ -61,7 +61,9 @@ extern "C" {
 
 #include "n32h47x_48x.h"
 
-#if     defined(N32H475)
+/* FDCAN and port define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
+
 #define NODE1               (FDCAN3)
 #define NODE1_PERIPH        (RCC_APB1_PERIPH_FDCAN3)
 
@@ -87,6 +89,12 @@ extern "C" {
 #define NODE2_RX_PORT_CLK   (RCC_AHB_PERIPHEN_GPIOB)
 #define NODE2_RX_PIN        (GPIO_PIN_1)
 #define NODE2_RX_PIN_AF     (GPIO_AF28)
+
+#define NODE1_IRQN          (FDCAN3_INT1_IRQn)
+#define NODE2_IRQN          (FDCAN2_INT1_IRQn)
+
+#define NODE1_IRQ_FUNCTION  (FDCAN3_INT1_IRQHandler)
+#define NODE2_IRQ_FUNCTION  (FDCAN2_INT1_IRQHandler)
 
 #else
 #define NODE1               (FDCAN1)
@@ -115,33 +123,47 @@ extern "C" {
 #define NODE2_RX_PIN        (GPIO_PIN_3)
 #define NODE2_RX_PIN_AF     (GPIO_AF28)
 
+#define NODE1_IRQN          (FDCAN1_INT1_IRQn)
+#define NODE2_IRQN          (FDCAN2_INT1_IRQn)
+
+#define NODE1_IRQ_FUNCTION  (FDCAN1_INT1_IRQHandler)
+#define NODE2_IRQ_FUNCTION  (FDCAN2_INT1_IRQHandler)
+
 #endif
 
+/* User LED define */
 #define LED1_PORT   GPIOA
 #define LED1_PIN    GPIO_PIN_3
 #define LED1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
 #if     defined(N32H475)
+
 #define LED2_PORT   GPIOA
 #define LED2_PIN    GPIO_PIN_7
 #define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#else   //defined(N32H482) || defined(N32H487) || defined(N32H473) || defined(N32H474)
+
+#define LED2_PORT   GPIOA
+#define LED2_PIN    GPIO_PIN_8
+#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#endif
+
+/* User KEY define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
 
 #define KEY_PORT    GPIOA
 #define KEY_PIN     GPIO_PIN_2
 #define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
 
-#else
-#define LED2_PORT   GPIOA
-#define LED2_PIN    GPIO_PIN_8
-#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+#else   //defined(N32H482) || defined(N32H487)
 
 #define KEY_PORT    GPIOA
 #define KEY_PIN     GPIO_PIN_0
 #define KEY_CLOCK   RCC_AHB_PERIPHEN_GPIOA
 
 #endif
-
-
 
 void LED_Init(GPIO_Module* GPIOx,uint16_t Pin,uint32_t clock);
 void LED_On(GPIO_Module* GPIOx,uint16_t Pin);

@@ -335,6 +335,7 @@ void USBH_USER_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc, USBH_
     {
         log_info((void *)MSG_MSC_CLASS);
         USB_Host.class_cb = &USBH_MSC_cb;
+        USB_HOST_USER_AppState = USH_USER_FS_INIT;
     }
     else
     {
@@ -431,7 +432,7 @@ USBH_USER_Status USBH_USER_UserInput(void)
     USBH_USER_status = USBH_USER_NO_RESP;
 
     /* Key button is in polling mode to detect user action */
-    if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET)
+    if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
     {
         if(USB_Host.device_prop.Itf_Desc->bInterfaceClass == COMMUNICATION_DEVICE_CLASS_CODE)
         {
@@ -478,23 +479,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
     Button_TypeDef enKey = BUTTON_NULL;
     Button_TypeDef present_key = BUTTON_NULL;
     
-    if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+    if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
     {
         enKey = BUTTON_UP;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
     {
         enKey = BUTTON_DOWN;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
     {
         enKey = BUTTON_LEFT;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
     {
         enKey = BUTTON_RIGHT;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
     {
         enKey = BUTTON_SEL;
     }
@@ -509,23 +510,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
         
         USB_BSP_mDelay(20);
         
-        if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+        if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
         {
             enKey = BUTTON_UP;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
         {
             enKey = BUTTON_DOWN;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
         {
             enKey = BUTTON_LEFT;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
         {
             enKey = BUTTON_RIGHT;
         }
-        else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+        else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
         {
             enKey = BUTTON_SEL;
         }
@@ -543,23 +544,23 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
     {
         while(1)
         {
-            if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+            if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
             {
                 present_key = BUTTON_UP;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
             {
                 present_key = BUTTON_DOWN;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
             {
                 enKey = BUTTON_LEFT;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
             {
                 enKey = BUTTON_RIGHT;
             }
-            else if(GPIO_ReadInputDataBit(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
+            else if(KEY_Press_Status_Get(KEY_BUTTON_SEL_PORT, KEY_BUTTON_SEL_PIN))
             {
                 present_key = BUTTON_SEL;
             }
@@ -812,7 +813,7 @@ static void CDC_Handle_Menu(void)
 
     if (cdc_demo.state == CDC_DEMO_CONFIGURATION)
     {
-        if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET)
+        if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
         {
             if (debounce == 0)
             {
@@ -1437,7 +1438,7 @@ int USBH_USER_MSC_App(void)
 
             /*Key in polling*/
             u32DevConnectTmp = HOST_IsDeviceConnected(&USBHS_Core);
-            while((GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET) && u32DevConnectTmp)
+            while(KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) && u32DevConnectTmp)
             {
             }
             /* Writes a text file, N32.TXT in the disk*/

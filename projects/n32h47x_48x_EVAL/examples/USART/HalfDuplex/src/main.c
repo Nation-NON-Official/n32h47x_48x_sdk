@@ -84,6 +84,7 @@ int main(void)
     GPIO_Configuration();
     
     /* USARTy and USARTz configuration */
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 9600;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;

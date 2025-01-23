@@ -207,6 +207,19 @@ void LIN_IRQHandler(void)
             LIN_EX_RxAsync((uint8_t)USART_ReceiveData(USARTx));
         }
     }
+	
+	/* Determine if an error flag still exists and clear the error flag */
+    if ((USART_GetFlagStatus(USARTx, USART_FLAG_OREF) != RESET)  || \
+        (USART_GetFlagStatus(USARTx, USART_FLAG_NEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTx, USART_FLAG_PEF) != RESET)  || \
+        (USART_GetFlagStatus(USARTx, USART_FLAG_FEF) != RESET))
+    {
+        /*Read the sts register first,and the read the DAT register to clear the all error flag*/
+        (void)USARTx->STS;
+        (void)USARTx->DAT;
+        /* Under normal circumstances, all error flags will be cleared when the upper data is read and will not be executed here; 
+           users can add their own processing according to the actual scenario. */
+    }
 }
 
 

@@ -5,7 +5,7 @@
 
     软件开发环境：KEIL MDK-ARM V5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -30,7 +30,7 @@
                     - 奇偶校验：无
                     - 波特率： 115200 
     使用方法：
-        1、编译后烧录到评估板，上电后，人为给PC13灌入高电平，串口输出RTC Tamper Interrupt。说明入侵检测发生了入侵中断
+        1、编译后烧录到评估板，上电后，PC13添加外部下拉，给PC13灌入高电平，串口输出RTC Tamper Interrupt。说明入侵检测发生了入侵中断
                
 4、注意事项
     如果配置成上升沿或下降沿触发入侵，需要在入侵引脚上外接上拉或下拉
@@ -44,7 +44,7 @@
 
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0
@@ -71,8 +71,8 @@
                             - Baud rate: 115200
 
     Instructions:
-        1. After compiling, it is burned to the evaluation board. After powering on, high level is artificially injected into PC13 and "RTC Tamper interrupt" is output through the serial port. 
-        It indicates that the tamper interrupt is detected
+         1. After compiling, it is burned to the evaluation board. After powering on, add an external pull-down on PC13, then high level is artificially injected into PC13 and "RTC Tamper interrupt" is output through the serial port. 
+            It indicates that the tamper interrupt is detected
         
 4. Matters needing attention
     If a rising or falling edge is configured to trigger a tamper, an external pull up or pull down is required on the tamper pin

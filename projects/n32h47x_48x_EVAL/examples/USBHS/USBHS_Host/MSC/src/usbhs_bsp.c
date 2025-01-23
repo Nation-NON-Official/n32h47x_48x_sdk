@@ -59,10 +59,6 @@
 #include "n32h47x_48x_exti.h"
 #include "misc.h"
 
-#define HOST_SOF_OUTPUT_RCC                RCC_APB2Periph_GPIOA
-#define HOST_SOF_PORT                      GPIOA
-#define HOST_SOF_SIGNAL                    GPIO_Pin_8
-
 /**
 *\*\name   LED_Init.
 *\*\fun    Initialize a GPIO as LED port.
@@ -179,6 +175,26 @@ void KEY_Init(void)
 
 }
 
+
+/**
+*\*\name   KEY_Press_Status_Get.
+*\*\fun    Get key pressed or not status.
+*\*\param  GPIOx: GPIO PORT
+*\*\param  Pin: GPIO_PIN
+*\*\return none
+*/
+FlagStatus KEY_Press_Status_Get(GPIO_Module* GPIOx, uint16_t Pin)
+{
+    if(GPIO_ReadInputDataBit(GPIOx, Pin))
+    {
+        return RESET;
+    }
+    else
+    {
+        return SET;
+    }
+}
+
 /**
 *\*\name    USB_BSP_Init.
 *\*\fun     Initializes BSP configurations
@@ -279,8 +295,6 @@ void USB_BSP_ConfigVBUS(USB_CORE_MODULE * pdev)
     GPIO_InitType GPIO_InitStructure;
     RCC_EnableAHB1PeriphClk(USB_VBUS_DRIVER_CLK, ENABLE);
 
-    GPIO_ConfigPinRemap(0, 0, GPIO_RMP_SWJ_SWD);
-    
     /* Configure VBUS driver Pin */
     GPIO_InitStruct(&GPIO_InitStructure);
     

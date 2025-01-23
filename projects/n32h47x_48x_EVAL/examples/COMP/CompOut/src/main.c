@@ -58,7 +58,7 @@ void RCC_Configuration(void);
 void GPIO_Configuration(void);
 void EXTI_Configuration(void);
 void NVIC_Configuration(void);
-void COMP_Configuratoin(void);
+void COMP_Configuration(void);
 
 
 /**
@@ -101,7 +101,7 @@ int main(void)
     GPIO_Configuration();
 
     /* COMP configuration ------------------------------------------------------*/
-    COMP_Configuratoin();
+    COMP_Configuration();
 
     while (1)
     {
@@ -110,11 +110,11 @@ int main(void)
 }
 
 /**
-*\*\name    COMP_Configuratoin.
+*\*\name    COMP_Configuration.
 *\*\fun     Configures the comp module.
 *\*\return  none
 **/
-void COMP_Configuratoin(void)
+void COMP_Configuration(void)
 {
     COMP_InitType COMP_Initial;
 

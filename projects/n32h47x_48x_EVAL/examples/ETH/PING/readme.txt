@@ -8,7 +8,7 @@
         IAR EWARM 8.50.1
 
     硬件开发环境：
-        基于全功能板N32H487ZEL7_EVB V1.0开发
+        基于全功能板N32H487ZEL7_EVB V1.1开发
 
 3、使用说明
     
@@ -28,7 +28,7 @@
             ETH_RMII_RX_D1<----->PD10
             ETH_RMII_TX_EN<----->PG11
             ETH_RMII_TX_D0<----->PG13
-            ETH_RMII_TX_D0<----->PG14
+            ETH_RMII_TX_D1<----->PG14
             ETH_PPS_OUT<----->PB5
 
     使用方法：
@@ -49,7 +49,7 @@
         IAR EWARM 8.50.1
 
     Hardware development environment:
-        Developed based on the full-featured board N32H487ZEL7_EVB V1.0
+        Developed based on the full-featured board N32H487ZEL7_EVB V1.1
 
 3、Use instructions
     
@@ -69,7 +69,7 @@
             ETH_RMII_RX_D1<----->PD10
             ETH_RMII_TX_EN<----->PG11
             ETH_RMII_TX_D0<----->PG13
-            ETH_RMII_TX_D0<----->PG14
+            ETH_RMII_TX_D1<----->PG14
             ETH_PPS_OUT<----->PB5
 
     Usage:

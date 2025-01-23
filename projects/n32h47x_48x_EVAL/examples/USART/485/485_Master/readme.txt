@@ -32,14 +32,14 @@
     
     USART引脚连接如下：   
     Master:
-     - UART5_Rx.PG7
-     - UART5_Tx.PG6 
-     - UART5_DE.PG15 
+     - UART5_Rx.PG7(J33)
+     - UART5_Tx.PG6(J35)
+     - UART5_DE.PG15(J34) 
      - 485模块
     Slave:
-     - UART5_Rx.PG7
-     - UART5_Tx.PG6 
-     - UART5_DE.PG15
+     - UART5_Rx.PG7(J33)
+     - UART5_Tx.PG6(J35) 
+     - UART5_DE.PG15(J34) 
      - 485模块
      
      485连接：

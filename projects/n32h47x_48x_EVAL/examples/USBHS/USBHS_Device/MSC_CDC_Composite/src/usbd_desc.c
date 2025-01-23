@@ -59,8 +59,8 @@
 
 #define USBD_LANGID_STRING            0x409
 #define USBD_MANUFACTURER_STRING      "Nations"
-#define USBD_PRODUCT_HS_STRING        "Composite Device HID&CDC in HS Mode"
-#define USBD_PRODUCT_FS_STRING        "Composite Device HID&CDC in FS Mode"
+#define USBD_PRODUCT_HS_STRING        "Composite Device MSC&CDC in HS Mode"
+#define USBD_PRODUCT_FS_STRING        "Composite Device MSC&CDC in FS Mode"
 #define USBD_CONFIGURATION_HS_STRING  "Composite Config"
 #define USBD_INTERFACE_HS_STRING      "Composite Interface"
 #define USBD_CONFIGURATION_FS_STRING  "Composite Config"
@@ -191,7 +191,7 @@ uint8_t *USBD_USER_LangIDStrDescriptor(uint8_t speed, uint16_t * length)
 */
 uint8_t *USBD_USER_ProductStrDescriptor(uint8_t speed, uint16_t * length)
 {
-    if (speed == 0)
+    if (speed == USB_SPEED_HIGH)
     {
         USBD_GetString((uint8_t *) (uint8_t *) USBD_PRODUCT_HS_STRING, USBD_StrDesc, length);
     }

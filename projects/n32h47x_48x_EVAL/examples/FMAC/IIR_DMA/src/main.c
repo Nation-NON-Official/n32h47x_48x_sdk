@@ -72,7 +72,7 @@ void FAMC_Init(void);
 */
 static int16_t iir_coeffa[iir_coeffa_size] = 
 {
-    28242, -12412,
+    -12412, 28242,
 };
 
 /*
@@ -105,10 +105,10 @@ __attribute__((aligned(32)))
 int16_t add_data[add_array_size] = 
 {
     -14865, -14142, -15883, -21184, -27297, -30000, -27297, -21184, -15883, -14142,
-        -14865, -14186, -9035, 0, 9035, 14186, 14865, 14142, 15883, 21184,
-        27297, 30000, 27297, 21184, 15883, 14142, 14865, 14186, 9035, 0,
-        -9035, -14186, -14865, -14142, -15883, -21184, -27297, -30000, -27297, -21184,
-        -15883, -14142, -14865, -14186, -9035, 0, 9035, 14186, 14865, 14142,
+    -14865, -14186, -9035, 0, 9035, 14186, 14865, 14142, 15883, 21184,
+    27297, 30000, 27297, 21184, 15883, 14142, 14865, 14186, 9035, 0,
+    -9035, -14186, -14865, -14142, -15883, -21184, -27297, -30000, -27297, -21184,
+    -15883, -14142, -14865, -14186, -9035, 0, 9035, 14186, 14865, 14142,
 };
 
 /* array of output data to preload in Q1.15 format */
@@ -219,7 +219,7 @@ void DMA_CFG(void)
     DMA_InitStructure.CircularMode   = DMA_MODE_NORMAL;
     DMA_InitStructure.Priority       = DMA_PRIORITY_HIGH;
     DMA_InitStructure.Mem2Mem        = DMA_M2M_DISABLE;
-    DMA_Init(DMA1_CH1, &DMA_InitStructure);
+    DMA_Init(DMA1_CH2, &DMA_InitStructure);
 
     DMA_EnableChannel(DMA1_CH2, ENABLE);
 }

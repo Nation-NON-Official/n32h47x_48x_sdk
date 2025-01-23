@@ -91,19 +91,19 @@ Button_TypeDef Key_ReadIOPin_continuous(void)
 {
     Button_TypeDef enKey = BUTTON_NULL;
     
-    if(GPIO_ReadInputDataBit(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
+    if(KEY_Press_Status_Get(KEY_BUTTON_UP_PORT, KEY_BUTTON_UP_PIN))
     {
         enKey = BUTTON_UP;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_DOWN_PORT, KEY_BUTTON_DOWN_PIN))
     {
         enKey = BUTTON_DOWN;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_LEFT_PORT, KEY_BUTTON_LEFT_PIN))
     {
         enKey = BUTTON_LEFT;
     }
-    else if(GPIO_ReadInputDataBit(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
+    else if(KEY_Press_Status_Get(KEY_BUTTON_RIGHT_PORT, KEY_BUTTON_RIGHT_PIN))
     {
         enKey = BUTTON_RIGHT;
     }
@@ -179,6 +179,13 @@ static void USBHS_ConfigPLL(void)
     
     /* Enables the USBHS peripheral clock*/
     RCC_EnableAHBPeriphClk(RCC_AHB_PERIPHEN_USBHS, ENABLE);
+
+#ifdef USE_USB_HS_IN_HS
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0xF << 4)))  | (0x5 << 4);  //TX vref TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 12))) | (0x3 << 12); //TX Rise TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 14))) | (0x3 << 14); //TX Res TUNE
+    RCC->USBHSCTRL2 = (RCC->USBHSCTRL2 & (~(0x3 << 16))) | (0x3 << 16); //TX preempamp TUNE
+#endif /* USE_USB_HS_IN_HS */
 }
 
 

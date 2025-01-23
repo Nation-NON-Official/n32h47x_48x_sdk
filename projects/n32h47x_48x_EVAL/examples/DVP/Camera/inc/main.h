@@ -58,17 +58,10 @@
 extern "C" {
 #endif
 
-#include "n32h47x_48x.h"
+#include "dvp_demo.h"
 
-typedef enum
-{
-    FAILED = 0,
-    PASSED = !FAILED
-} Status;
 
-void SysTick_Delay_Ms( __IO uint32_t ms);
-void SysTick_Delay_Us( __IO uint32_t us);
-void LCD_Logo_init(void);
+
 
 #ifdef __cplusplus
 }

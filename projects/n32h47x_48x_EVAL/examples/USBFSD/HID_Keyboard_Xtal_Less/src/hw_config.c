@@ -77,6 +77,7 @@ void Cfg_KeyIO(void)
     GPIO_InitStruct(&GPIO_InitStructure);
 
     GPIO_InitStructure.Pin = KEY_A_PIN;
+    GPIO_InitStructure.GPIO_Pull = GPIO_PULL_UP;
     GPIO_InitStructure.GPIO_Mode = GPIO_MODE_INPUT;
     GPIO_InitPeripheral(KEY_A_PORT, &GPIO_InitStructure);
     
@@ -136,7 +137,10 @@ void Set_System(void)
 
     /*Enable HSE*/
     RCC->CTRL |= RCC_CTRL_HSEEN;
-    while((RCC->CTRL & RCC_CTRL_HSERDF) != RCC_CTRL_HSERDF);
+    while((RCC->CTRL & RCC_CTRL_HSERDF) != RCC_CTRL_HSERDF)
+    {
+        /* if HSE clock failed, User can add here some code to deal with this error */
+    }
 
 #if defined (N32H473) || defined (N32H474)
     /*Set PLL MUL 192MHz */
@@ -147,7 +151,10 @@ void Set_System(void)
 #endif
     /*Enable PLL*/
     RCC->CTRL |= RCC_CTRL_PLLEN;
-    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF); 
+    while((RCC->CTRL & RCC_CTRL_PLLRDF) != RCC_CTRL_PLLRDF)
+    {
+        /* if PLL clock failed, User can add here some code to deal with this error */
+    } 
 
     /*Set AHB/APB1/APB2*/
     RCC->CFG |= RCC_CFG_AHBPRES_DIV1;
@@ -162,6 +169,7 @@ void Set_System(void)
     RCC->CFG |= (uint32_t)RCC_CFG_SCLKSW_PLL;
     while ((RCC->CFG & RCC_CFG_SCLKSTS) != RCC_CFG_SCLKSTS_PLL) 
     {
+        /* if system clock select failed , User can add here some code to deal with this error */
     }
 #else
     /* Set USB clock UCDR */

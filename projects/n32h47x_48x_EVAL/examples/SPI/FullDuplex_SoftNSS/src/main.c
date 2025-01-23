@@ -111,6 +111,7 @@ int main(void)
     /* GPIO configuration ------------------------------------------------------*/
     GPIO_Configuration(SPI_MODE_MASTER, SPI_MODE_SLAVE);
 
+	  SPI_InitStruct(&SPI_InitStructure);
     /* SPI_Master Config -------------------------------------------------------------*/
     SPI_InitStructure.DataDirection = SPI_DIR_DOUBLELINE_FULLDUPLEX;
     SPI_InitStructure.SpiMode       = SPI_MODE_MASTER;
@@ -327,7 +328,7 @@ void GPIO_Configuration(uint16_t SPI_Master_Mode, uint16_t SPI2_Mode)
 
     /* SPI2 Periph clock enable */
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_SPI2, ENABLE);
-    /* Configure SPI_Master pins: SCK, MISO and MOSI ---------------------------------*/
+    /* Configure SPI3 pins: SCK, MISO and MOSI ---------------------------------*/
     GPIO_InitStructure.Pin       = GPIO_PIN_7 | GPIO_PIN_9;
 		GPIO_InitStructure.GPIO_Pull = GPIO_NO_PULL;
 		GPIO_InitStructure.GPIO_Alternate = GPIO_AF11;

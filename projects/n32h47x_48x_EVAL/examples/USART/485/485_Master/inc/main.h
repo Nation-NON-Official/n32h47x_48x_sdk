@@ -60,6 +60,7 @@ extern "C" {
 
 #include "n32h47x_48x.h"
 #include "misc.h"
+#include "log.h"
 #include <stdio.h>
 #include "n32h47x_48x_rcc.h"
 #include "n32h47x_48x_gpio.h"
@@ -90,6 +91,7 @@ typedef enum
 void RCC_Configuration(void);
 void GPIO_Configuration(void);
 void NVIC_Configuration(void);
+TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 
 #ifdef __cplusplus
 }

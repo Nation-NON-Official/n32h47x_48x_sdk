@@ -85,8 +85,6 @@ void ADC_Initial(void)
     /* ADC1 regular channel1 and channel12 configuration */
     ADC_ConfigRegularChannel(ADC1, ADC1_Channel_01_PB0, 1, ADC_SAMP_TIME_CYCLES_601_5);
     ADC_ConfigRegularChannel(ADC1, ADC1_Channel_12_PB1, 2, ADC_SAMP_TIME_CYCLES_601_5);
-    /* Enable ADC1 DMA */
-    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_LIMIT_RES12_10B);
 
     /* ADC2 configuration ------------------------------------------------------*/
     ADC_InitStruct(&ADC_InitStructure);
@@ -109,17 +107,19 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
+	/* Enable ADC1 DMA */
+    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_LIMIT_RES12_10B);
     /*Check ADC2 Ready*/
     while(ADC_GetFlagStatus(ADC2,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC2 calibration */
-    ADC_CalibrationOperation(ADC2,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC2,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC2 calibration */
-    while (ADC_GetCalibrationStatus(ADC2))
+    while (ADC_GetCalibrationStatus(ADC2,ADC_CALIBRATION_SINGLE_MODE))
         ;
 }
 

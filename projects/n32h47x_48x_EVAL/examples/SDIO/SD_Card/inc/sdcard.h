@@ -180,7 +180,7 @@ typedef struct
 
 /* SDIO clock divider define,SDIO_CLK = (HCLK/2)/(2 + CLK_DIV)*/
 #define SD_INIT_CLK_DIV             (298U)  /* SDIO Intialization Frequency (400KHz max) */
-#define SD_TRANSFER_CLK_DIV         (3U)    /* SDIO Data Transfer Frequency (25MHz max) */
+#define SD_TRANSFER_CLK_DIV         (4U)    /* SDIO Data Transfer Frequency (25MHz max) */
 
 /* SD Supported Memory Cards define */
 #define CARD_SDSC                   (0x00000000U)   /* SD Standard Capacity <2G                          */
@@ -215,8 +215,8 @@ uint32_t SD_GetCardInfo(SD_CardInfoType* pCardInfo);
 
 uint32_t SD_GetCardStatus(SD_CardStatusType *pCardSts);
 uint32_t SD_CofigBusWidth(uint32_t WideMode);
-uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlocks, uint32_t Timeout);
-uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t WriteAddr, uint32_t NumberOfBlocks, uint32_t Timeout);
+uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t BlockAddr, uint32_t NumberOfBlocks, uint32_t Timeout);
+uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t BlockAddr, uint32_t NumberOfBlocks, uint32_t Timeout);
 uint32_t SD_Erase(uint32_t StrAddr, uint32_t EndAddr);
 uint32_t SD_ClearPWD(uint8_t *buf, uint32_t BlockSize, uint32_t Timeout);
 

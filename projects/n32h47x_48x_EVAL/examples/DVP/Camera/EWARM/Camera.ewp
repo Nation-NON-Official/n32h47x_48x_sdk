@@ -1144,6 +1144,9 @@
             <name>$PROJ_DIR$\..\src\bsp_ov5640.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\dvp_demo.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\fonts.c</name>
         </file>
         <file>

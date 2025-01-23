@@ -59,7 +59,7 @@
 /** I2C_Slave_Int **/
 
 
-#define TEST_BUFFER_SIZE  256
+#define TEST_BUFFER_SIZE  100
 #define I2CT_FLAG_TIMEOUT ((uint32_t)0x5000)
 #define I2CT_LONG_TIMEOUT ((uint32_t)(10 * I2CT_FLAG_TIMEOUT))
 #define I2C_SLAVE_ADDR    0x10
@@ -110,7 +110,6 @@ static __IO uint32_t I2CTimeout;
 uint8_t flag_slave_recv_finish         = 0;
 uint8_t flag_slave_send_finish         = 0;
 static uint8_t rxDataNum = 0;
-static uint8_t RCC_RESET_Flag = 0;
 
 void CommTimeOut_CallBack(ErrCode_t errcode);
 
@@ -150,7 +149,8 @@ int i2c_slave_init(void)
     RCC_EnableAPB1PeriphClk(I2Cx_RCC, ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
-
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
 	
     /* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
@@ -170,6 +170,7 @@ int i2c_slave_init(void)
     GPIO_InitPeripheral(I2Cx_SDA_GPIO, &i2cx_gpio);
 
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&i2cx_slave);
     i2cx_slave.BusMode     = I2C_BUSMODE_I2C;
     i2cx_slave.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     i2cx_slave.OwnAddr1    = I2C_SLAVE_ADDR;
@@ -178,12 +179,7 @@ int i2c_slave_init(void)
     i2cx_slave.ClkSpeed    = 100000; // 100000 100K
 
     I2C_Init(I2Cx, &i2cx_slave);
-		
-    //scl enable digital filter:2*Pclk
-    I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-    //sda enable digital filter:2*Pclk
-    I2C_SetSDADigitalFilterWidth(I2Cx, 2);
-		
+				
     // int enable
     I2C_ConfigInt(I2Cx, I2C_INT_EVENT | I2C_INT_BUF | I2C_INT_ERR, ENABLE);
     NVIC_Configuration();
@@ -312,6 +308,10 @@ void I2Cx_ER_IRQHandler(void)
         {
         }
     }
+		else if(last_event == 0x601D0 || last_event == 0x601C0)
+    {
+        CommTimeOut_CallBack(SLAVE_UNKNOW);
+    }
 }
 
 /**
@@ -335,31 +335,10 @@ void SystemNVICReset(void)
 **/
 void IIC_RCCReset(void)
 {
-    if (RCC_RESET_Flag >= 3)
-    {
-        SystemNVICReset();
-    }
-    else
-    {
-        RCC_RESET_Flag++;
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        RCC_EnableAPB1PeriphClk(I2Cx_RCC,DISABLE);
-        #if defined (N32H475)
-        GPIOD->PMODE &= 0xFF3FFFF3;
-        #else
-        GPIOB->PMODE &= 0xFFFFF33F;
-        GPIOC->PMODE &= 0xFFFFFFFC;
-        #endif
-        RCC_EnableAPB2PeriphClk( RCC_APB2_PERIPH_AFIO, DISABLE);
-        RCC_EnableAHB1PeriphClk (I2Cx_clk_en, DISABLE );
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        log_info("***** IIC module by RCC reset! *****\r\n");
-        i2c_slave_init();
-    }
+    RCC_EnableAPB1PeriphReset(RCC_APB1_PERIPH_I2C1);
+    
+    i2c_slave_init();
+    log_info("***** IIC module by RCC reset! *****\r\n");
 }
 
 /**

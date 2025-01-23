@@ -58,11 +58,11 @@
 GPIO_InitType GPIO_InitStructure;
 RCC_ClocksType RCC_ClockFreq;
 
-void SetSysClockToHSI(void);
-void SetSysClockToHSE(void);
-void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq);
-void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout);
-void SetSysClockToUSBHS240M(void);
+ErrorStatus SetSysClockToHSI(void);
+ErrorStatus SetSysClockToHSE(void);
+ErrorStatus SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq);
+ErrorStatus SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout);
+ErrorStatus SetSysClockToUSBHS240M(void);
 /**
 *\*\name    PrintfClockInfo.
 *\*\fun     Printf clock information.
@@ -89,23 +89,38 @@ int main(void)
 /*** Select one of the following configuration methods ***/
 #if SYSCLK_SOURCE_SELECT == SYSCLK_SOURCE_HSI
   /* Method 1  */	
-    SetSysClockToHSI();
+    if(SetSysClockToHSI() == ERROR)
+    {
+        log_info("Clock configuration failure!\n");
+    }
     PrintfClockInfo("HSI->SYSCLK, 8MHz");
 #elif SYSCLK_SOURCE_SELECT == SYSCLK_SOURCE_HSE 
   /* Method 2  */		
-    SetSysClockToHSE();
+    if(SetSysClockToHSE() == ERROR)
+    {
+        log_info("Clock configuration failure!\n");
+    }
     PrintfClockInfo("HSE->SYSCLK, 8MHz");
 #elif SYSCLK_SOURCE_SELECT == SYSCLK_SOURCE_PLL 
 	/* Method 3  */	
-    SetSysClockToPLL(RCC_PLL_SRC_HSE,160000000);
+    if(SetSysClockToPLL(RCC_PLL_SRC_HSE,160000000) == ERROR)
+    {
+        log_info("Clock configuration failure!\n");
+    }
     PrintfClockInfo("HSE->PLL->SYSCLK, 160M");
 #elif SYSCLK_SOURCE_SELECT == SYSCLK_SOURCE_SHRTPLL 
   /* Method 4  */	
-    SetSysClockToSHRTPLL(RCC_SHRTPLL_SRC_HSI, HSI_VALUE, (240000000U));
+    if(SetSysClockToSHRTPLL(RCC_SHRTPLL_SRC_HSI, HSI_VALUE, (240000000U)) == ERROR)
+    {
+        log_info("Clock configuration failure!\n");
+    }
     PrintfClockInfo("HSI->SHRTPLL->SYSCLK, 240M");
 #elif SYSCLK_SOURCE_SELECT == SYSCLK_SOURCE_USBHS240M 		
   /* Method 5  */	
-    SetSysClockToUSBHS240M();
+    if(SetSysClockToUSBHS240M() == ERROR)
+    {
+        log_info("Clock configuration failure!\n");
+    }
     PrintfClockInfo("HSE->SHRTPLL->USBHS240M->SYSCLK, 240M");
 #endif
     
@@ -122,7 +137,7 @@ int main(void)
     /* If the MCO selects PLL, SHRTPLL or USBHS240M, the prescaler can be configured first */
     RCC_ConfigMcoClkPre(RCC_MCO_PLLCLK_DIV10);
     /* Select the corresponding MCO clock source */
-    RCC_ConfigMco1(RCC_MCO_SYSCLK);
+    RCC_ConfigMco1(RCC_MCO_PLL_PRES);
     
     while (1);
 }
@@ -134,8 +149,9 @@ int main(void)
 *\*\param   none
 *\*\return  none 
 **/
-void SetSysClockToHSI(void)
+ErrorStatus SetSysClockToHSI(void)
 {
+    uint32_t timeout_value = 0xFFFFFFFF; 
     ErrorStatus ClockStatus;
     
     RCC_DeInit();
@@ -168,15 +184,18 @@ void SetSysClockToHSI(void)
         /* Wait till HSI is used as system clock source */
         while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_HSI)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
     }
     else
     {
         /* HSI fails  */
-        while (1)
-        {
-        }
+        return ERROR;
     }
+    return SUCCESS;
 }
 
 /**
@@ -186,8 +205,9 @@ void SetSysClockToHSI(void)
 *\*\param   none
 *\*\return  none 
 **/
-void SetSysClockToHSE(void)
+ErrorStatus SetSysClockToHSE(void)
 {
+    uint32_t timeout_value = 0xFFFFFFFF; 
     ErrorStatus ClockStatus;
     
     /* RCC system reset(for debug purpose) */
@@ -222,15 +242,18 @@ void SetSysClockToHSE(void)
         /* Wait till HSE is used as system clock source */
         while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_HSE)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
     }
     else
     {
         /* HSE fails */
-        while (1)
-        {
-        }
+        return ERROR;
     }
+    return SUCCESS;
 }
 
 
@@ -249,8 +272,9 @@ void SetSysClockToHSE(void)
 *\*\	    Fref frequency requirement is in the range of 4MHz ~ 25MHz,
 *\*\	    Fvco frequency requirement is in the range of 64MHz ~ 500MHz. 
 **/
-void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
+ErrorStatus SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
 {
+    uint32_t timeout_value = 0xFFFFFFFF; 
     ErrorStatus ClockStatus;
     uint32_t pllmul;
     uint32_t latency;
@@ -286,9 +310,7 @@ void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
     if(ClockStatus != SUCCESS)
     {
         /* clock source fails to start-up */
-        while (1)
-        {
-        }
+        return ERROR;
     }
 
     switch (PLL_freq)
@@ -335,12 +357,24 @@ void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
      /* Wait till PLL is ready */
     while (RCC_GetFlagStatus(RCC_FLAG_PLLRDF) != SET)
     {
+        if ((timeout_value--) == 0)
+        {
+            return ERROR;
+        }
     }
     /* Select PLL as system clock source */
     RCC_ConfigSysclk(RCC_SYSCLK_SRC_PLL);
 
     /* Wait till PLL is used as system clock source */
-    while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_PLL);
+    timeout_value = 0xFFFFFFFF;
+    while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_PLL)
+    {
+        if ((timeout_value--) == 0)
+        {
+            return ERROR;
+        }
+    }
+    return SUCCESS;
 }
 
 /**
@@ -356,8 +390,9 @@ void SetSysClockToPLL(uint32_t PLL_src, uint32_t PLL_freq)
 *\*\         75000000 ~ 250000000 (Hz)
 *\*\return  none 
 **/
-void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
+ErrorStatus SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
 {
+    uint32_t timeout_value = 0xFFFFFFFF; 
     ErrorStatus ClockStatus;
     
     RCC_DeInit();
@@ -383,9 +418,7 @@ void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
     if(ClockStatus != SUCCESS)
     {
         /* clock source fails to start-up */
-        while (1)
-        {
-        }
+        return ERROR;
     }
 
     /* Enable phase reset to filter waveform burrs */
@@ -397,6 +430,10 @@ void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
          /* Wait till SHRTPLL is ready */
         while (RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF) != SET)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
         /* Disable phase reset */
         RCC_EnableSHRTPLLPHAReset(DISABLE);
@@ -426,8 +463,13 @@ void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
         RCC_EnablePll(ENABLE);
            
         /* Wait till SHRTPLL is used as system clock source */
+        timeout_value = 0xFFFFFFFF;
         while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_PLL)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
     }
     else
@@ -435,10 +477,9 @@ void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
         /* Disable phase reset */
         RCC_EnableSHRTPLLPHAReset(DISABLE);
         /* SHRTPLL fails  */
-        while (1)
-        {
-        }
+        return ERROR;
     }
+    return SUCCESS;
 }
 
 /**
@@ -448,8 +489,9 @@ void SetSysClockToSHRTPLL(uint32_t SHRTPLL_source, uint64_t fin, uint64_t fout)
 *\*\param   none
 *\*\return  none 
 **/
-void SetSysClockToUSBHS240M(void)
+ErrorStatus SetSysClockToUSBHS240M(void)
 {
+    uint32_t timeout_value = 0xFFFFFFFF; 
     ErrorStatus ClockStatus;
     
     RCC_DeInit();
@@ -463,9 +505,7 @@ void SetSysClockToUSBHS240M(void)
     if(ClockStatus != SUCCESS)
     {
         /* clock source fails to start-up */
-        while (1)
-        {
-        }
+        return ERROR;
     }
 
     /* Enable phase reset to filter waveform burrs */
@@ -477,6 +517,10 @@ void SetSysClockToUSBHS240M(void)
          /* Wait till SHRTPLLRDF is used as system clock source */
         while (RCC_GetFlagStatus(RCC_FLAG_SHRTPLLRDF) != SET)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
         /* Disable phase reset */
         RCC_EnableSHRTPLLPHAReset(DISABLE);
@@ -513,8 +557,13 @@ void SetSysClockToUSBHS240M(void)
         RCC_EnablePll(ENABLE);
            
         /* Wait till USBHS240M is used as system clock source */
+        timeout_value = 0xFFFFFFFF;
         while (RCC_GetSysclkSrc() != RCC_CFG_SCLKSTS_PLL)
         {
+            if ((timeout_value--) == 0)
+            {
+                return ERROR;
+            }
         }
     }
     else
@@ -522,10 +571,9 @@ void SetSysClockToUSBHS240M(void)
         /* Disable phase reset */
         RCC_EnableSHRTPLLPHAReset(DISABLE);
         /* SHRTPLL fails  */
-        while (1)
-        {
-        }
+        return ERROR;
     }
+    return SUCCESS;
    
 }
 

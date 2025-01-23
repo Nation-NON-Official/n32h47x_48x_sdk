@@ -97,9 +97,9 @@ void ADC_Initial(ADC_Module* ADCx)
     while(ADC_GetFlagStatus(ADCx,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADCx calibration */
-    ADC_CalibrationOperation(ADCx,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADCx,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADCx calibration */
-    while (ADC_GetCalibrationStatus(ADCx))
+    while (ADC_GetCalibrationStatus(ADCx,ADC_CALIBRATION_SINGLE_MODE))
         ;
 }
 

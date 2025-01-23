@@ -32,14 +32,14 @@
     
     USART引脚连接如下：   
     Master:
-     - UART5_Rx.PG7
-     - UART5_Tx.PG6 
-     - UART5_DE.PG15 
+     - UART5_Rx.PG7(J33)
+     - UART5_Tx.PG6(J35)
+     - UART5_DE.PG15(J34) 
      - 485模块
     Slave:
-     - UART5_Rx.PG7
-     - UART5_Tx.PG6 
-     - UART5_DE.PG15
+     - UART5_Rx.PG7(J33)
+     - UART5_Tx.PG6(J35) 
+     - UART5_DE.PG15(J34) 
      - 485模块
      
      485连接：
@@ -55,7 +55,7 @@
 4、注意事项
 
     需先将开发板NS-LINK的MCU_TX和MCU_RX跳线帽断开
-    Master开发板需先上电，Slave再上电
+    Slave开发板需先上电，Master再上电
 
 
 

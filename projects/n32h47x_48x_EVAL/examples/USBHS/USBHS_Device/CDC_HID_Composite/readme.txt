@@ -10,14 +10,14 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_STB V1.0开发
+        基于评估板N32H487ZEL7_STB V1.1开发
 
 
 3. 使用说明
     描述相关模块配置方法；例如:时钟，I/O等 
          1. SystemClock：240MHz
          2. 串口：USART1 TX -- PA9  RX -- PA10 波特率：115200
-		 3. GPIO：KEY2 -- PA15
+         3. GPIO：KEY2 -- PA15
                   LED1 -- PA3
                   LED2 -- PB4
                   LED3 -- PA8
@@ -28,7 +28,7 @@
          2. 通过 USB 线连接 J62 USB 口，电脑识别出虚拟串口设备和HID设备
          3. 将 USART1 接到串口工具上，然后在PC上打开 USB 虚拟串口，USB 虚拟串口发送数据，
             用串口工具接收数据，然后用串口工具发送数据， USB 虚拟串口接收数据
-		 4. 点击按键KEY2， HID设备会通过IN端点发出按键信息
+         4. 点击按键KEY2， HID设备会通过IN端点发出按键信息
          5. 在PC端通过OUT端点向设备发送数据可以控制LED1~LED3的状态
             发送 0x01 0x00 LED1灭
             发送 0x01 0x01 LED1点亮
@@ -39,7 +39,8 @@
 
 
 4. 注意事项
-    无
+    可通过修改宏定义 USE_USB_HS_IN_FS 或 USE_USB_HS_IN_HS 切换设备为全速模式或者高速模式；
+    使用高速模式时，需要使用16MHz外部晶体。
 
 1. Function description
     USB CDC + HID composite device
@@ -52,7 +53,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_STB V1.0
+        Developed based on the evaluation board N32H487ZEL7_STB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc. 
@@ -78,4 +79,5 @@
            Send 0x03 0x01 LED3 to light up
         
 4. Matters needing attention
-    None.
+    The device can be switched to Full-Speed mode or High-Speed mode by modify the macro definition USE_USB_HS_IN_FS or USE_USB_HS_IN_HS;
+    When using the High-Speed mode, a 16MHz external cycstal is required.

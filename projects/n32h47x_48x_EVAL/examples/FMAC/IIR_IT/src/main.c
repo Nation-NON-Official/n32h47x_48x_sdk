@@ -83,7 +83,7 @@ __IO uint8_t wr_complete = 0;
     the sampling frequency is 16KHz and the cut-off frequency is 500Hz
 */
 static int16_t iir_coeffa[iir_coeffa_size] = {
-    28242, -12412,
+    -12412, 28242, 
 };
 
 /*
@@ -153,12 +153,12 @@ volatile int16_t error[input_array_size + add_array_size - iir_coeffb_size + 1] 
 void FMAC_NVIC_Configuration( void )
 {
     NVIC_InitType NVIC_InitStructure;
-    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_2 );
+    NVIC_PriorityGroupConfig( NVIC_PriorityGroup_2);
     NVIC_InitStructure.NVIC_IRQChannel = FMAC_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init( &NVIC_InitStructure );	
+    NVIC_Init( &NVIC_InitStructure );
 }
 
 /**
@@ -241,10 +241,8 @@ static void FAMC_Init(void)
     FMAC_InitStruct.R              = iir_gain;
     FMAC_ConfigParam(&FMAC_InitStruct);
 
-    
-
-    FMAC_ConfigInt(FMAC_INT_READ | FMAC_INT_WRITE, ENABLE);
-    
     /* Enable FMAC */
     FMAC_Enable(ENABLE);
+    
+    FMAC_ConfigInt(FMAC_INT_READ | FMAC_INT_WRITE, ENABLE);
 }

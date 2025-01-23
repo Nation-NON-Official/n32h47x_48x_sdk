@@ -59,7 +59,6 @@
  * @{
  */
 
-extern __IO uint32_t TimingDelay;
 uint16_t IC1ReadValue1 = 0, IC1ReadValue2 = 0;
 __IO uint16_t CaptureNumber = 0;
 __IO uint32_t Capture       = 0;
@@ -167,7 +166,6 @@ void DebugMon_Handler(void)
 **/
 void SysTick_Handler(void)
 {
-    TimingDelay--;
 }
 
 

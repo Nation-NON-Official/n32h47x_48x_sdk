@@ -8,9 +8,9 @@
                 IAR EWARM 8.50.1
     
     硬件开发环境：
-        N32H482系列：基于评估板N32H487ZEL7_EVB V1.0开发
-        N32H487系列：基于评估板N32H487ZEL7_EVB V1.0开发
-
+        N32H482系列：基于评估板N32H482ZEL7_EVB V1.0开发
+        N32H487系列：基于评估板N32H487ZEL7_EVB V1.1开发
+        
 3、使用说明
     
     系统配置：
@@ -26,7 +26,7 @@
               PB2  - SDIO_CLK 
               PD2  - SDIO_CMD 
         时钟源：120MHz（SDIOCLK = HCLK/2）
-        分频系数：298（初始化）、3（数据传输），SDIO_CLK = SDIOCLK/(2 + 分频系数)
+        分频系数：298（初始化）、4（数据传输），SDIO_CLK = SDIOCLK/(2 + 分频系数)
         SDIO_CLK上升沿有效，禁用硬件流控，总线位宽4bit
     
     5、打印：PA9 - baud rate 115200
@@ -50,8 +50,8 @@
                                       IAR EWARM 8.50.1
     
     Hardware development environment:
-        N32H482 series: Developed based on the board N32H487ZEL7_EVB V1.0
-        N32H487 series: Developed based on the board N32H487ZEL7_EVB V1.0
+        N32H482 series: Developed based on the board N32H482ZEL7_EVB V1.0
+        N32H487 series: Developed based on the board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use   
 
@@ -68,7 +68,7 @@
                     PB2  - SDIO_CLK 
                     PD2  - SDIO_CMD 
             clock source：120MHz (SDIOCLK = HCLK/2)
-            clock divider factor：298(initialization) and 3(data transfer), SDIO_CLK = SDIOCLK/(2 + factor)
+            clock divider factor：298(initialization) and 4(data transfer), SDIO_CLK = SDIOCLK/(2 + factor)
             SDIO_CLK rising edge, hardware flow control disabled, 4bits bus
         5. printf: PA9 - baud rate 115200
         6. GPIO: PA0-KEY

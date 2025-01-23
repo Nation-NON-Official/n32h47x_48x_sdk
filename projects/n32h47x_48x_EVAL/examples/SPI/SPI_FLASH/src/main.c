@@ -54,6 +54,7 @@
 **/
 #include "main.h"
 #include "spi_flash.h"
+#include "log.h"
 
 /** n32h47x_48x_StdPeriph_Examples **/
 

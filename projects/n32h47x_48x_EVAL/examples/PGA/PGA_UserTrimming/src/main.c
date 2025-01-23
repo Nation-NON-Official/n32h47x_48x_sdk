@@ -55,7 +55,6 @@
 #include "log.h"
 #include "delay.h"
 #include "string.h"
-//#define PGA4_TRIM_EN             ((uint32_t)0x40010000U + 0x48)
 
 
 typedef enum{

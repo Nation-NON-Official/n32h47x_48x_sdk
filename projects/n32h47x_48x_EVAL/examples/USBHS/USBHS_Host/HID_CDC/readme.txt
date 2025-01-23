@@ -10,13 +10,13 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发
+        基于评估板N32H487ZEL7_EVB V1.1开发
 
 
 3. 使用说明
     描述相关模块配置方法；例如:时钟，I/O等 
     1. SystemClock：240MHz
-    2. GPIO: 上-KEY1（PC13）、下-KEY2（PA15）、左（PC6）、右（PC7）、确定-WAKEUP（PA0）、KEY3（PC8）、VBUS驱动引脚-PB3。
+    2. GPIO: 上-KEY1（PC13）、下-KEY2（PA15）、左（PC6）、右（PC7）、确定-WAKEUP（PA0）、KEY3（PC8）、VBUS驱动引脚-PE1。
     3. 串口配置：
             - 串口为USART1（TX：PA9  RX：PA10）:
             - 数据位：8
@@ -30,7 +30,7 @@
     3. 连接OTG转接线，再接上鼠标或键盘，等待枚举完成
     4. 枚举完成后，按下KEY3按键，开始鼠标或键盘或CDC设备数据通信 
     5. 串口调试助手界面打印相应鼠标坐标或键盘键值信息或
-       根据打印信息按KEY1和KEY2选择发送或接收串口数据或串口配置，WAKEUP按键确认选项。。
+       根据打印信息按KEY1, KEY2, PC6, PC7选择发送或接收串口数据或串口配置，WAKEUP按键确认选项。。
 
 4. 注意事项
     无
@@ -46,12 +46,12 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc. 
     1. SystemClock: 240MHz
-    2. GPIO: UP-KEY1(PC13), DOWN-KEY2(PA15), LEFT(PC6), RIGHT(PC7), ENTER-WAKEUP(PA0)、KEY3(PC8)、VBUS driver pin(PB3).
+    2. GPIO: UP-KEY1(PC13), DOWN-KEY2(PA15), LEFT(PC6), RIGHT(PC7), ENTER-WAKEUP(PA0)、KEY3(PC8)、VBUS driver pin(PE1).
     3. Serial port configuration:
             - Serial port: USART1 (TX: PA9 RX: PA10) :
             - Data bit: 8
@@ -65,7 +65,7 @@
     3. Connect the OTG adapter, followed by the mouse or keyboard, and wait for enumeration to complete.
     4. After enumeration is complete, press the KEY3 button to start mouse or keyboard or CDC device data communication.
     5. The serial port Debugging Assistant interface will display the corresponding mouse coordinates or keyboard key value information or
-       based on the printed information, pressing KEY1 and KEY2 can select send or receive data or configurate USART, and pressing the WAKEUP KEY confirms the selection.
+       based on the printed information, pressing KEY1, KEY2, PC6, PC7 can select send or receive data or configurate USART, and pressing the WAKEUP KEY confirms the selection.
     
 4. Matters needing attention
     None

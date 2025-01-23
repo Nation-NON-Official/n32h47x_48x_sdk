@@ -86,8 +86,8 @@ int main(void)
     log_info("this is a femc external nand flash demo\r\n");
 
     nand_flash_width = 8; // config memory bus width
-    bank_id          = 2; // config band index,2:bank2;3:bank3,must config FEMC_BANK_NAND in femc_nand.c.
-    bank_address     = BANK2_NAND_ADDR;
+    bank_id          = 3; // config band index,2:bank2;3:bank3,must config FEMC_BANK_NAND in femc_nand.c.
+    bank_address     = BANK3_NAND_ADDR;
     
     FEMC_Nand_Init(bank_id, nand_flash_width);
     log_info(" nand flash test start \r\n");

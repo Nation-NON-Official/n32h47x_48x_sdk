@@ -14,7 +14,7 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_EVB V1.0开发 
+        基于评估板N32H487ZEL7_EVB V1.1开发 
 
 
 3. 使用说明
@@ -48,7 +48,7 @@
             USB 虚拟串口发送数据，用串口工具接收数据，然后用串口工具发送数据， USB 虚拟串口接收数据。
 
 4. 注意事项
-    无
+    如果不使用开发板上的串口工具，需要断开与NSLINK连接的TX和RX
 
 1. Function description
     USB HID + CDC composite device
@@ -66,7 +66,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_EVB V1.0
+        Developed based on the evaluation board N32H487ZEL7_EVB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc. 
@@ -100,4 +100,4 @@
            The USB virtual serial port sends data, the serial port tool receives data, and the serial port tool sends data, and the USB virtual serial port receives data.
  
 4. Matters needing attention
-    None
+    If not use the serial port tool on the development board, disconnect the TX and RX connected to NSLINK

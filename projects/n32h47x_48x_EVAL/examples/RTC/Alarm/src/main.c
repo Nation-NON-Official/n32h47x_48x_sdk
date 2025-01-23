@@ -85,10 +85,10 @@ int main(void)
     RCC_EnableAPB1PeriphClk(RCC_APB1_PERIPH_PWR | RCC_APB1_PERIPH_BKP, ENABLE);
     /* Allow access to RTC */
     PWR_BackupAccessEnable(ENABLE);
-    if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1))
+    /* RTC clock source select */
+    if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
     {
-        /* RTC clock source select */
-        if(SUCCESS==RTC_CLKSourceConfig(RTC_CLK_SRC_TYPE_LSE, true, false))
+        if (USER_WRITE_BKP_DAT1_DATA != RTC_BKUPRgRead(1))
         {
            RTC_PrescalerConfig();
            /* RTC date time and alarm regulate*/
@@ -98,10 +98,10 @@ int main(void)
            RTC_BKUPRgWrite(1, USER_WRITE_BKP_DAT1_DATA);
            log_info("\r\n RTC Init Success\r\n");
         }
-        else
-        {
-           log_info("\r\n RTC Init Faile\r\n");
-        }
+    }
+    else
+    {
+       log_info("\r\n RTC Init Failed\r\n");
     }
     
     /* Alarm output I/O config */

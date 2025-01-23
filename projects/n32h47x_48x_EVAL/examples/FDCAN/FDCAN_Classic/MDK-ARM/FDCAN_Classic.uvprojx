@@ -21,7 +21,7 @@
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H473VE$Flash\N32H47x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H473VE$Flash\N32H47x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H473VE$firmware\CMSIS\device\n32h47x_48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>FDCAN_Loopback</OutputName>
+          <OutputName>FDCAN_Classic</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -595,6 +595,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\n32h47x_48x_fdcan.c</FilePath>
             </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\misc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -649,7 +654,7 @@
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H474QE$Flash\N32H47x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H474QE$Flash\N32H47x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H474QE$firmware\CMSIS\device\n32h47x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -677,7 +682,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>FDCAN_Loopback</OutputName>
+          <OutputName>FDCAN_Classic</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -1223,6 +1228,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\n32h47x_48x_fdcan.c</FilePath>
             </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\misc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1277,7 +1287,7 @@
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H475UE$Flash\N32H47x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H47x_512 -FS08000000 -FL080000 -FP0($$Device:N32H475UE$Flash\N32H47x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H475UE$firmware\CMSIS\device\n32h475.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -1305,7 +1315,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>FDCAN_Loopback</OutputName>
+          <OutputName>FDCAN_Classic</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -1851,6 +1861,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\n32h47x_48x_fdcan.c</FilePath>
             </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\misc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1900,12 +1915,12 @@
         <TargetCommonOption>
           <Device>N32H482ZE</Device>
           <Vendor>Nationstech</Vendor>
-          <PackID>Nationstech.N32H48x_DFP.0.8.0</PackID>
+          <PackID>Nationstech.N32H48x_DFP.0.9.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H482ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -1933,7 +1948,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>FDCAN_Loopback</OutputName>
+          <OutputName>FDCAN_Classic</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -2479,6 +2494,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\n32h47x_48x_fdcan.c</FilePath>
             </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\misc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2528,12 +2548,12 @@
         <TargetCommonOption>
           <Device>N32H487ZE</Device>
           <Vendor>Nationstech</Vendor>
-          <PackID>Nationstech.N32H48x_DFP.0.8.0</PackID>
+          <PackID>Nationstech.N32H48x_DFP.0.9.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H487ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -2561,7 +2581,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>FDCAN_Loopback</OutputName>
+          <OutputName>FDCAN_Classic</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -3106,6 +3126,11 @@
               <FileName>n32h47x_48x_fdcan.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\n32h47x_48x_fdcan.c</FilePath>
+            </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\src\misc.c</FilePath>
             </File>
           </Files>
         </Group>

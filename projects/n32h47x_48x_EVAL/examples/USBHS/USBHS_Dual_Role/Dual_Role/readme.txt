@@ -10,13 +10,13 @@
     N32H482系列：
     基于评估板N32H482ZEL7_STB V1.0开发
     N32H487系列：
-    基于评估板N32H487ZEL7_STB V1.0开发
+    基于评估板N32H487ZEL7_STB V1.1开发
 
 
 3. 使用说明
     描述相关模块配置方法；例如:时钟，I/O等 
     1. SystemClock：240MHz
-    2. GPIO: 上-KEY1（PC13）、下-KEY2（PA15）、确定-WAKEUP（PA0）、VBUS驱动引脚-PB3。
+    2. GPIO: 上-KEY1（PC13）、下-KEY2（PA15）、确定-WAKEUP（PA0）、KEY3（PC8）、VBUS驱动引脚-PE1。
     3. SPI1配置：NSS--PA4、SCK--PA5、MISO--PA6、MOSI--PA7 (连接W25Q128)
     4. 串口配置：
             - 串口为USART1（TX：PA9  RX：PA10）:
@@ -30,7 +30,7 @@
     2. 打开串口调试助手，设置波特率为115200bps
     3. 根据打印使用按键KEY1,KEY2,WAKEUP来选择当前USB角色（主机模式或设备模式）
     4. 如果是选择设备，通过 USB 线连接 J62 USB 口，USB 挂载完成后，识别成 U 盘设备
-    5. 如果选择主机，通过J62连接OTG转接线，再接上U盘，等待枚举完成，根据打印读写U盘
+    5. 如果选择主机，通过J62连接OTG转接线，再接上U盘，等待枚举完成，按下KEY3按键，根据打印选择读写U盘
 
 4. 注意事项
     无
@@ -46,12 +46,12 @@
     N32H482 series:
     Developed based on the evaluation board N32H482ZEL7_STB V1.0
     N32H487 series:
-    Developed based on the evaluation board N32H487ZEL7_STB V1.0
+    Developed based on the evaluation board N32H487ZEL7_STB V1.1
 
 3. Instructions for use
     Describe the configuration method of related modules; for example: clock, I/O, etc. 
     1. SystemClock: 240MHz
-    2. GPIO: UP-KEY1（PC13）、DOWN-KEY2（PA15）、SEL-WAKEUP（PA0）、VBUS driver pin(PB3)。
+    2. GPIO: UP-KEY1(PC13), DOWN-KEY2(PA15), SEL-WAKEUP(PA0), KEY3(PC8), VBUS driver pin(PB3)。
     3. SPI1：NSS--PA4、SCK--PA5、MISO--PA6、MOSI--PA7 (connect W25Q128)
     4. Serial port configuration:
             - Serial port: USART1 (TX: PA9 RX: PA10) :
@@ -66,7 +66,7 @@
     3. Use KEY1,KEY2,WAKEUP to select the current USB role (host mode or device mode) according to the print.
     4. If device mode is selected, connect it to the J62 USB port using a USB cable. After the USB is mounted, the device is identified as a USB flash drive.
     5. If host mode is selected, connect the OTG conversion cable through J62, and then connect the USB flash drive. 
-       Wait for the enumeration to complete, and read and write the USB flash drive according to the print
+       Wait for the enumeration to complete, press KEY3, then select read or write the USB flash drive according to the print
     
 4. Matters needing attention
     None.

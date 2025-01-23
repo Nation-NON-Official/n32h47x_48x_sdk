@@ -58,7 +58,7 @@ void RCC_Configuration(void);
 void GPIO_Configuration(void);
 void EXTI_Configuration(void);
 void NVIC_Configuration(void);
-void COMP_Configuratoin(void);
+void COMP_Configuration(void);
 void TIM_Intial(TIM_Module* TIMx);
 
 TIM_TimeBaseInitType TIM_TimeBaseStructure;
@@ -104,7 +104,7 @@ int main(void)
     GPIO_Configuration();
 
     /* COMP configuration ------------------------------------------------------*/
-    COMP_Configuratoin();
+    COMP_Configuration();
     
     /* ATIM1 configuration -----------------------------------------------------*/
     TIM_Intial(ATIM1);
@@ -122,11 +122,11 @@ int main(void)
 }
 
 /**
-*\*\name    COMP_Configuratoin.
+*\*\name    COMP_Configuration.
 *\*\fun     Configures the comp module.
 *\*\return  none
 **/
-void COMP_Configuratoin(void)
+void COMP_Configuration(void)
 {
     COMP_InitType COMP_Initial;
 
@@ -251,7 +251,7 @@ void TIM_Intial(TIM_Module* TIMx)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
     TIM_InitOc1(TIMx, &TIM_OCInitStructure);
 
     /*TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_DISABLE;*/

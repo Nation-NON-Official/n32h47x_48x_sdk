@@ -62,7 +62,7 @@
  #define TXH_NP_HS_FIFOSIZE                       256
  #define TXH_P_HS_FIFOSIZE                        256
 
-//#define USB_INTERNAL_DMA_ENABLED
+#define USB_INTERNAL_DMA_ENABLED
 
 
 /** USB HS MODE CONFIGURATION **/

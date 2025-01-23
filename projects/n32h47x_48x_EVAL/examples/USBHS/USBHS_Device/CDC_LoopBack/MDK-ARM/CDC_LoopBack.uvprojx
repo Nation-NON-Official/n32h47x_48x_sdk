@@ -21,7 +21,7 @@
           <Cpu>IRAM(0x20000000,0x30000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H482ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -600,7 +600,7 @@
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H487ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -628,7 +628,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>CDC</OutputName>
+          <OutputName>CDC_LoopBack</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -661,8 +661,8 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf --bin --output=.\bin\CDC.bin .\Objects\CDC.axf</UserProg1Name>
-            <UserProg2Name>fromelf --vhx -d --32x1 .\Objects\CDC.axf --output=.\bin\CDC.dua</UserProg2Name>
+            <UserProg1Name>fromelf --bin --output=.\bin\CDC_LoopBack.bin .\Objects\CDC_LoopBack.axf</UserProg1Name>
+            <UserProg2Name>fromelf --vhx -d --32x1 .\Objects\CDC_LoopBack.axf --output=.\bin\CDC_LoopBack.dua</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>

@@ -63,7 +63,9 @@ USART_InitType USART_InitStructure;
 uint8_t TxBuffer2[] = "USART Interrupt Example: USARTz -> USARTy using Interrupt";
 uint8_t RxBuffer2[RxBufferSize2];
 __IO uint8_t RxCounter2         = 0x00;
+__IO uint8_t TxCounter2         = 0x00;
 uint8_t NbrOfDataToRead1        = RxBufferSize1;
+uint8_t NbrOfDataToTransfer2    = TxBufferSize2;
 __IO TestStatus TransferStatus2 = FAILED;
 
 /**
@@ -85,6 +87,7 @@ int main(void)
     GPIO_Configuration();
     
     /* USARTz configuration */
+	USART_StructInit(&USART_InitStructure);
     USART_InitStructure.BaudRate            = 115200;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;
@@ -106,7 +109,7 @@ int main(void)
 
     /* Enable the USARTz */
     USART_Enable(USARTz, ENABLE);
-    log_info(" N32H487ZEL7_EVB 485 test START, Press Master 485 to reset the pins \r\n");
+    log_info(" N32H487ZEL7_EVB 485 Slave test START, Press Master 485 to reset the pins \r\n");
 
     /* Wait until end of transmission from USARTy to USARTz */
     while (RxCounter2 < RxBufferSize2)
@@ -118,12 +121,15 @@ int main(void)
     /* TransferStatus = FAILED, if the data transmitted and received are different */
     if(TransferStatus2 == PASSED)
     {
-        log_info(" N32H487ZEL7_EVB 485 test OK \r\n");
+        log_info(" N32H487ZEL7_EVB 485 Slave test OK \r\n");
     }
     else
     {
-        log_info(" N32H487ZEL7_EVB 485 test Fail \r\n");
+        log_info(" N32H487ZEL7_EVB 485 Slave test Fail \r\n");
     }
+    
+    /* Enable USARTz Receive and Transmit interrupts */
+    USART_ConfigInt(USARTz, USART_INT_TXDE,ENABLE);
     
     while (1)
     {

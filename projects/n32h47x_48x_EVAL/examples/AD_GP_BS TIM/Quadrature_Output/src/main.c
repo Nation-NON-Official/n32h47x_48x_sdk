@@ -212,6 +212,7 @@ void GTIM7_Configuration(void)
 void ATIM1_Configuration(void)
 {
     /* Time Base configuration */
+    TIM_InitTimBaseStruct(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.CapCh2Sel     = TIM_CAPCH2SEL_1;
     TIM_TimeBaseStructure.Prescaler     = PrescalerValue;
     TIM_TimeBaseStructure.CounterMode   = TIM_CNT_MODE_UP;
@@ -221,6 +222,7 @@ void ATIM1_Configuration(void)
     TIM_InitTimeBase(ATIM1, &TIM_TimeBaseStructure);
 
     /* Channel 1 Configuration in PWM mode */
+    TIM_InitOcStruct(&TIM_OCInitStructure);
     TIM_OCInitStructure.OCMode       = TIM_OCMODE_PWM2;
     TIM_OCInitStructure.OutputState  = TIM_OUTPUT_STATE_ENABLE;
     TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_DISABLE;
@@ -228,7 +230,7 @@ void ATIM1_Configuration(void)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
     TIM_InitOc1(ATIM1, &TIM_OCInitStructure);
 
     /* Automatic Output enable, Break, dead time and lock configuration*/
@@ -255,6 +257,7 @@ void ATIM1_Configuration(void)
 void ATIM2_Configuration(void)
 {
     /* Time Base configuration */
+    TIM_InitTimBaseStruct(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.CapCh2Sel     = TIM_CAPCH2SEL_1;
     TIM_TimeBaseStructure.Prescaler     = PrescalerValue;
     TIM_TimeBaseStructure.CounterMode   = TIM_CNT_MODE_UP;
@@ -264,6 +267,7 @@ void ATIM2_Configuration(void)
     TIM_InitTimeBase(ATIM2, &TIM_TimeBaseStructure);
 
     /* Channel 1 Configuration in PWM mode */
+    TIM_InitOcStruct(&TIM_OCInitStructure);
     TIM_OCInitStructure.OCMode       = TIM_OCMODE_PWM2;
     TIM_OCInitStructure.OutputState  = TIM_OUTPUT_STATE_ENABLE;
     TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_DISABLE;
@@ -271,7 +275,7 @@ void ATIM2_Configuration(void)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
     TIM_InitOc1(ATIM2, &TIM_OCInitStructure);
 
     /* Automatic Output enable, Break, dead time and lock configuration*/
@@ -298,6 +302,7 @@ void ATIM2_Configuration(void)
 void GTIM8_Configuration(void)
 {
     /* Time Base configuration */
+    TIM_InitTimBaseStruct(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.CapCh2Sel     = TIM_CAPCH2SEL_4;
     TIM_TimeBaseStructure.Prescaler     = PrescalerValue;
     TIM_TimeBaseStructure.CounterMode   = TIM_CNT_MODE_UP;
@@ -307,6 +312,7 @@ void GTIM8_Configuration(void)
     TIM_InitTimeBase(GTIM8, &TIM_TimeBaseStructure);
 
     /* Channel 1 Configuration in PWM mode */
+    TIM_InitOcStruct(&TIM_OCInitStructure);
     TIM_OCInitStructure.OCMode       = TIM_OCMODE_PWM2;
     TIM_OCInitStructure.OutputState  = TIM_OUTPUT_STATE_ENABLE;
     TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_DISABLE;
@@ -314,7 +320,7 @@ void GTIM8_Configuration(void)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
     TIM_InitOc1(GTIM8, &TIM_OCInitStructure);
 
     /* Automatic Output enable, Break, dead time and lock configuration*/
@@ -342,6 +348,7 @@ void GTIM8_Configuration(void)
 void GTIM9_Configuration(void)
 {
     /* Time Base configuration */
+    TIM_InitTimBaseStruct(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.CapCh2Sel     = TIM_CAPCH2SEL_4;
     TIM_TimeBaseStructure.Prescaler     = PrescalerValue;
     TIM_TimeBaseStructure.CounterMode   = TIM_CNT_MODE_UP;
@@ -351,6 +358,7 @@ void GTIM9_Configuration(void)
     TIM_InitTimeBase(GTIM9, &TIM_TimeBaseStructure);
 
     /* Channel 1 Configuration in PWM mode */
+    TIM_InitOcStruct(&TIM_OCInitStructure);
     TIM_OCInitStructure.OCMode       = TIM_OCMODE_PWM2;
     TIM_OCInitStructure.OutputState  = TIM_OUTPUT_STATE_ENABLE;
     TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_DISABLE;
@@ -358,7 +366,7 @@ void GTIM9_Configuration(void)
     TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_LOW;
     TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_LOW;
     TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;
-    TIM_OCInitStructure.OCNIdleState = TIM_OC_IDLE_STATE_RESET;
+    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_RESET;
     TIM_InitOc1(GTIM9, &TIM_OCInitStructure);
 
     /* Automatic Output enable, Break, dead time and lock configuration*/

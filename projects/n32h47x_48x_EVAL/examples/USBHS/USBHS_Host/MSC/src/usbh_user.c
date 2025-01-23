@@ -344,7 +344,7 @@ USBH_USER_Status USBH_USER_UserInput(void)
     USBH_USER_status = USBH_USER_NO_RESP;
 
     /* Key button is in polling mode to detect user action */
-    if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET)
+    if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
     {
         USBH_USER_status = USBH_USER_RESP_OK;
     }
@@ -411,7 +411,7 @@ int USBH_USER_MSC_App(void)
 
             /*Key in polling*/
             u32DevConnectTmp = HOST_IsDeviceConnected(&USBHS_Core);
-            while((GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET) && u32DevConnectTmp)
+            while((KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN)) && u32DevConnectTmp)
             {
             }
             /* Writes a text file, N32.TXT in the disk*/
@@ -501,7 +501,7 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
                 log_info("Press USER KEY to continue...\r\n");
 
                 /*Key in polling*/
-                while((GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET) && HOST_IsDeviceConnected(&USBHS_Core))
+                while((KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN)) && HOST_IsDeviceConnected(&USBHS_Core))
                 {
                 }
             }

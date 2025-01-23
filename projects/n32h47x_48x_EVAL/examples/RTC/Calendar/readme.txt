@@ -5,7 +5,7 @@
 
     软件开发环境：KEIL MDK-ARM V5.34
                   IAR EWARM 8.50.1
-				  
+
     硬件开发环境：
         N32H473系列：
         基于评估板N32H473VEL7_STB V1.0开发
@@ -45,7 +45,7 @@
 
     Software development environment: KEIL MDK-ARM V5.34
                                       IAR EWARM 8.50.1
-									  
+
     Hardware development environment:
         N32H473 series:
         Developed based on the evaluation board N32H473VEL7_STB V1.0

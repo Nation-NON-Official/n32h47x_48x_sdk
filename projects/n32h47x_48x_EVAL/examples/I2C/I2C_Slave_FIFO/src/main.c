@@ -57,7 +57,6 @@
 
 
 static __IO uint32_t I2CTimeout;
-static uint8_t RCC_RESET_Flag = 0;
 void CommTimeOut_CallBack(ErrCode_t errcode);
 static uint8_t data_buf[TEST_BUFFER_SIZE] = {0};
 /**
@@ -73,6 +72,8 @@ int i2c_slave_init(void)
     RCC_EnableAPB1PeriphClk(I2Cx_RCC, ENABLE);
     RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO, ENABLE);
     RCC_EnableAHB1PeriphClk(I2Cx_clk_en, ENABLE);
+    I2Cx_SCL_GPIO->POD |= (I2Cx_SCL_PIN );//pull up
+    I2Cx_SDA_GPIO->POD |= (I2Cx_SDA_PIN);//pull up
     
 	/* Initialize GPIO_InitStructure */
     GPIO_InitStruct(&i2cx_gpio);
@@ -92,6 +93,7 @@ int i2c_slave_init(void)
     GPIO_InitPeripheral(I2Cx_SDA_GPIO, &i2cx_gpio);
 
     I2C_DeInit(I2Cx);
+    I2C_InitStruct(&i2cx_slave);
     i2cx_slave.BusMode     = I2C_BUSMODE_I2C;
     i2cx_slave.FmDutyCycle = I2C_FMDUTYCYCLE_2;
     i2cx_slave.OwnAddr1    = I2C_SLAVE_ADDR;
@@ -106,10 +108,6 @@ int i2c_slave_init(void)
     I2C_SetTxFifoThreshold(I2Cx, FIFO_HALF_EMPTY_THR);
     I2C_SetRxFifoThreshold(I2Cx, FIFO_HALF_FULL_THR);
 
-    //scl enable digital filter:2*Pclk
-    I2C_SetSCLDigitalFilterWidth(I2Cx, 2);
-    //sda enable digital filter:2*Pclk
-    I2C_SetSDADigitalFilterWidth(I2Cx, 2);
     return 0;
 }
 
@@ -277,31 +275,12 @@ void SystemNVICReset(void)
 **/
 void IIC_RCCReset(void)
 {
-    if (RCC_RESET_Flag >= 3)
-    {
-        SystemNVICReset();
-    }
-    else
-    {
-        RCC_RESET_Flag++;
         
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        RCC_EnableAPB1PeriphClk(I2Cx_RCC,DISABLE);
-        #if defined (N32H475)
-        GPIOD->PMODE &= 0xFF3FFFF3;
-        #else
-        GPIOB->PMODE &= 0xFFFFF33F;
-        GPIOC->PMODE &= 0xFFFFFFFC;
-        #endif
-        RCC_EnableAPB2PeriphClk( RCC_APB2_PERIPH_AFIO, DISABLE);
-        RCC_EnableAHB1PeriphClk (I2Cx_clk_en, DISABLE );
-        
-        RCC_EnableAPB1PeriphReset(I2Cx_RCC);
-        
-        log_info("***** IIC module by RCC reset! *****\r\n");
-        i2c_slave_init();
-    }
+    RCC_EnableAPB1PeriphReset(I2Cx_RCC);
+    
+    log_info("***** IIC module by RCC reset! *****\r\n");
+    i2c_slave_init();
+    
 }
 
 /**

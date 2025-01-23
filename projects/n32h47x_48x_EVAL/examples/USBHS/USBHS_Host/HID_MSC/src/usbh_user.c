@@ -276,6 +276,7 @@ void USBH_USER_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc, USBH_
     {
         log_info((void *)MSG_MSC_CLASS);
         USB_Host.class_cb = &USBH_MSC_cb;
+        USB_HOST_USER_AppState = USH_USER_FS_INIT;
     }
     else if ((*id).bInterfaceClass == 0x03)
     {
@@ -366,13 +367,12 @@ void USBH_USER_DeviceNotSupported(void)
 **/
 USBH_USER_Status USBH_USER_UserInput(void)
 {
-
     USBH_USER_Status USBH_USER_status;
 
     USBH_USER_status = USBH_USER_NO_RESP;
 
     /* Key button is in polling mode to detect user action */
-    if (GPIO_ReadInputDataBit(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN) == SET)
+    if (KEY_Press_Status_Get(KEY_BUTTON_GPIO_PORT, KEY_BUTTON_PIN))
     {
         USBH_USER_status = USBH_USER_RESP_OK;
     }

@@ -21,7 +21,7 @@
           <Cpu>IRAM(0x20000000,0x30000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H482ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H482ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -630,7 +630,7 @@
           <Cpu>IRAM(0x20000000,0x31000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC3000 -FN1 -FF0N32H48x_512 -FS08000000 -FL080000 -FP0($$Device:N32H487ZE$Flash\N32H48x_512.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>$$Device:N32H487ZE$firmware\CMSIS\device\n32h48x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -946,7 +946,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>N32H487, USE_STDPERIPH_DRIVER,SYSCLK_SRC=SYSCLK_USE_HSE_PLL,USE_USB_HS_IN_FS</Define>
+              <Define>N32H487, USE_STDPERIPH_DRIVER,SYSCLK_SRC=SYSCLK_USE_HSE_PLL,USE_USB_HS_IN_HS</Define>
               <Undefine></Undefine>
               <IncludePath>..\inc;..\..\..\..\..\..\..\firmware\CMSIS\core;..\..\..\..\..\..\..\firmware\CMSIS\device;..\..\..\..\..\..\..\firmware\n32h47x_48x_std_periph_driver\inc;..\..\..\..\..\..\..\firmware\n32h47x_48x_usbhs_driver\device\core\inc;..\..\..\..\..\..\..\firmware\n32h47x_48x_usbhs_driver\driver\inc;..\..\..\..\..\..\..\firmware\n32h47x_48x_usbhs_driver\device\class\msc\inc</IncludePath>
             </VariousControls>

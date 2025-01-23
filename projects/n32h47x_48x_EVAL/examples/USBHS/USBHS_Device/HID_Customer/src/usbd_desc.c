@@ -92,7 +92,7 @@ __ALIGN_BEGIN uint8_t USBD_DeviceDesc[USB_SIZ_DEVICE_DESC] __ALIGN_END =
     0x00,                         /* bDeviceClass */
     0x00,                         /* bDeviceSubClass */
     0x00,                         /* bDeviceProtocol */
-    USB_MAX_EP0_SIZE,         /* bMaxPacketSize */
+    USB_MAX_EP0_SIZE,             /* bMaxPacketSize */
     LOBYTE(USBD_VID),             /* idVendor */
     HIBYTE(USBD_VID),             /* idVendor */
     LOBYTE(USBD_PID),             /* idVendor */
@@ -191,7 +191,7 @@ uint8_t *USBD_USER_LangIDStrDescriptor(uint8_t speed, uint16_t * length)
 */
 uint8_t *USBD_USER_ProductStrDescriptor(uint8_t speed, uint16_t * length)
 {
-    if (speed == 0)
+    if (speed == USB_SPEED_HIGH)
     {
         USBD_GetString((uint8_t *) (uint8_t *) USBD_PRODUCT_HS_STRING, USBD_StrDesc, length);
     }

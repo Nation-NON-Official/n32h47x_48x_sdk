@@ -35,7 +35,7 @@
 	引脚：N32H475系列：
 		SCL--PD11、SDA--PD1
 	         N32H473/474/482/487系列：
-            		SCL--PB8、SDA--PB9           
+            		SCL--PC0、SDA--PB5           
 
     5、I2C2配置：
 	时钟：100KHz

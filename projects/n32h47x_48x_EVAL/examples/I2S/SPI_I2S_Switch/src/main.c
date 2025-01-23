@@ -117,14 +117,13 @@ int main(void)
     GPIO_Configuration();
 
     I2S3_TransmitData_funtion();
-
+    
     /* Reset TxIdx, RxIdx indexes */
     TxIdx = 0;
     RxIdx = 0;
     
     SPI_TransmitData_funtion();
 
-    
     /* Reset TxIdx, RxIdx indexes and receive table values */
     for (TxIdx = 0; TxIdx < BufferSize; TxIdx++)
     {

@@ -48,7 +48,7 @@
 /**
 *\*\file http_led.c
 *\*\author Nations
-*\*\version v1.0.0
+*\*\version v1.1.0
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
@@ -455,6 +455,12 @@ static void http_led_gpio_init(GPIO_Module* GPIOx, uint16_t Pin)
 **/
 void http_led_control_init(void)
 {
+    /*
+    LED2: PB4 is multiplexed with the debug interface function,
+    configuration to enable SWD does not affect the LED2 function.
+    */
+    GPIO_ConfigPinRemap(0, 0, GPIO_RMP_SWJ_SWD);
+    
     /* GPIO initialization for LED1 */
     http_led_gpio_init(HTTP_LED1_GPIO, HTTP_LED1_PIN);
     

@@ -56,37 +56,6 @@
 
 #include "usbhs_core.h"
 
-#define LED1_PORT   GPIOA
-#define LED1_PIN    GPIO_PIN_3
-#define LED1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
-
-#define LED2_PORT   GPIOA
-#define LED2_PIN    GPIO_PIN_8
-#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
-
-#define LED3_PORT   GPIOB
-#define LED3_PIN    GPIO_PIN_4
-#define LED3_CLOCK  RCC_AHB_PERIPHEN_GPIOB
-
-#define LED4_PORT   GPIOB
-#define LED4_PIN    GPIO_PIN_5
-#define LED4_CLOCK  RCC_AHB_PERIPHEN_GPIOB
-
-#define KEY_BUTTON_PIN                   GPIO_PIN_15
-#define KEY_BUTTON_GPIO_PORT             GPIOA
-#define KEY_BUTTON_GPIO_CLK              RCC_AHB_PERIPHEN_GPIOA
-#define KEY_BUTTON_EXTI_LINE             EXTI_LINE15
-#define KEY_BUTTON_EXTI_LINE_SOURCE      EXTI_LINE_SOURCE15
-#define KEY_BUTTON_EXTI_PORT_SOURCE      GPIOA_PORT_SOURCE
-#define KEY_BUTTON_EXTI_PIN_SOURCE       GPIO_PIN_SOURCE15
-#define KEY_BUTTON_EXTI_IRQn             EXTI15_10_IRQn
-
-
-void LED_Init(GPIO_Module* GPIOx,uint16_t Pin,uint32_t clock);
-void LED_On(GPIO_Module* GPIOx,uint16_t Pin);
-void LED_Off(GPIO_Module* GPIOx,uint16_t Pin);
-void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin);
-
 void USB_BSP_Init(void);
 void USB_BSP_uDelay(const uint32_t usec);
 void USB_BSP_mDelay(const uint32_t msec);

@@ -161,8 +161,12 @@ void SPI5_IRQHandler(void)
 /** This function handles SPI2 global interrupt request. **/
 void SPI2_I2S2_IRQHandler(void)
 {
-    /* Store SPI2 received data */
-    SPI2_Buffer_Rx[RxIdx++] = SPI_I2S_ReceiveData(SPI2);
+	  /* Check the interrupt source */
+    if (SPI_I2S_GetIntStatus(SPI2, SPI_I2S_INT_RNE) == SET)
+		{
+				/* Store SPI2 received data */
+				SPI2_Buffer_Rx[RxIdx++] = SPI_I2S_ReceiveData(SPI2);
+		}
 }
 
 /******************************************************************************/

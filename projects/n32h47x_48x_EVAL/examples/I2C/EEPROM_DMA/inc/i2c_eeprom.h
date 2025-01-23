@@ -134,5 +134,5 @@ void i2c1_evt_handle(void);
 void i2c1_err_handle(void);
 void i2c1_send_dma_handle(void);
 void i2c1_receive_dma_handle(void);
-
+void IIC_RCCReset(void);
 #endif /* __I2C_EEPROM_H__ */

@@ -63,15 +63,32 @@ extern "C" {
 
 #define MAX_LED_KEY_CNT     (3)
 
+
+/* User LED define */
 #define LED1_PORT   GPIOA
 #define LED1_PIN    GPIO_PIN_3
 #define LED1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
 #if     defined(N32H475)
+
 #define LED2_PORT   GPIOA
 #define LED2_PIN    GPIO_PIN_7
 #define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
+#else   //defined(N32H482) || defined(N32H487) || defined(N32H473) || defined(N32H474)
+
+#define LED2_PORT   GPIOA
+#define LED2_PIN    GPIO_PIN_8
+#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+
+#endif
+
+#define LED3_PORT   GPIOB
+#define LED3_PIN    GPIO_PIN_4
+#define LED3_CLOCK  RCC_AHB_PERIPHEN_GPIOB
+
+/* User KEY define */
+#if     defined(N32H473) || defined(N32H474) || defined(N32H475)
 #define KEY1_PORT   GPIOA
 #define KEY1_PIN    GPIO_PIN_4
 #define KEY1_CLOCK  RCC_AHB_PERIPHEN_GPIOA
@@ -84,11 +101,7 @@ extern "C" {
 #define KEY3_PIN    GPIO_PIN_6
 #define KEY3_CLOCK  RCC_AHB_PERIPHEN_GPIOA
 
-#else
-
-#define LED2_PORT   GPIOA
-#define LED2_PIN    GPIO_PIN_8
-#define LED2_CLOCK  RCC_AHB_PERIPHEN_GPIOA
+#else   //defined(N32H482) || defined(N32H487)
 
 #define KEY1_PORT   GPIOC
 #define KEY1_PIN    GPIO_PIN_13
@@ -103,11 +116,6 @@ extern "C" {
 #define KEY3_CLOCK  RCC_AHB_PERIPHEN_GPIOC
 
 #endif
-
-#define LED3_PORT   GPIOB
-#define LED3_PIN    GPIO_PIN_4
-#define LED3_CLOCK  RCC_AHB_PERIPHEN_GPIOB
-
 
 
 void LED_Init(GPIO_Module* GPIOx,uint16_t Pin,uint32_t clock);

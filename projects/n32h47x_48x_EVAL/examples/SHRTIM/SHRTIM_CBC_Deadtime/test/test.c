@@ -82,7 +82,11 @@ void TestEntry(void)
    "0b'1 in debug(means that EXEV5's source is not from GPIO, means that disconnect the 
     GPIO and EXEV5 by software). 
     Since EXEV5 is level sensitive, EXEV8 is edge sensitive, 
-    if EXEV5 is disconnected, the CBC is edge CBC */
+    if EXEV5 is disconnected, the CBC is edge CBC 
+   Note:  
+    For testing convenience, the prescaler values of TIMA and TIMD were set to different values
+    The master timer and TIMA..F timers can only use different prescaler ratios if the counter and output behavior does not depend on the information and signals from other timers.
+*/
 void CBCTest(void)
 {
     /* Disble TIMA and TIMD, and clear the counter of TIMA and TIMD,

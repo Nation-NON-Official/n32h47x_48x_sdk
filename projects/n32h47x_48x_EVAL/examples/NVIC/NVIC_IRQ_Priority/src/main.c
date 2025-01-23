@@ -117,6 +117,7 @@ void KeyInputExtiInit(GPIO_Module* GPIOx, uint16_t Pin)
 
 
     /*Configure the GPIO pin as input floating*/
+	GPIO_InitStruct(&GPIO_InitStructure);
     GPIO_InitStructure.Pin        = Pin;
     GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_INPUT;
     GPIO_InitStructure.GPIO_Pull  = GPIO_PULL_UP;
@@ -127,6 +128,7 @@ void KeyInputExtiInit(GPIO_Module* GPIOx, uint16_t Pin)
     GPIO_ConfigEXTILine(KEY_INPUT_LIN_SOURCE, KEY_INPUT_PORT_SOURCE,KEY_INPUT_PIN_SOURCE);
 
     /*Configure key EXTI line*/
+	EXTI_InitStruct(&EXTI_InitStructure);
     EXTI_InitStructure.EXTI_Line    = KEY_INPUT_EXTI_LINE;
     EXTI_InitStructure.EXTI_Mode    = EXTI_Mode_Interrupt;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling; // EXTI_Trigger_Rising;

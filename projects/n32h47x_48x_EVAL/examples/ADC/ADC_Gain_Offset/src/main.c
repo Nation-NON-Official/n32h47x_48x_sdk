@@ -87,16 +87,15 @@ void ADC_Initial(void)
     ADC_Init(ADC1, &ADC_InitStructure);
     /* ADC1 regular configuration */
     ADC_ConfigRegularChannel(ADC1, ADC1_Channel_12_PB1, 1, ADC_SAMP_TIME_CYCLES_13_5);
-    /* Enable ADC1 DMA */
-    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
-    /* Enable ADC1 oversamping, x4 and no shift*/
+    
+    /* ADC1 channel offset compensation configuration*/
     ADC_OffsetStructure.OffsetChannel   = ADC1_Channel_12_PB1;
     ADC_OffsetStructure.OffsetData      = OFFSET_VALUE;
     ADC_OffsetStructure.OffsetDirPositiveEn = ENABLE;
     ADC_OffsetStructure.OffsetSatenEn   = ENABLE;
     ADC_OffsetStructure.OffsetEn        = ENABLE;
     ADC_SetOffsetConfig(ADC1,ADC_REGESTER_OFFSET_1,&ADC_OffsetStructure);
-    /* Config ADC1 oversamping, scope */
+    /* Config ADC1 gain compensation factor */
     ADC_SetGainCompensation(ADC1,GAIN_FACTOR);
     /* Enable ADC1 */
     ADC_Enable(ADC1, ENABLE);
@@ -104,10 +103,12 @@ void ADC_Initial(void)
     while(ADC_GetFlagStatus(ADC1,ADC_FLAG_RDY) == RESET)
         ;
     /* Start ADC1 calibration */
-    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SIGNAL_MODE);
+    ADC_CalibrationOperation(ADC1,ADC_CALIBRATION_SINGLE_MODE);
     /* Check the end of ADC1 calibration */
-    while (ADC_GetCalibrationStatus(ADC1))
+    while (ADC_GetCalibrationStatus(ADC1,ADC_CALIBRATION_SINGLE_MODE))
         ;
+	/* Enable ADC1 DMA */
+    ADC_SetDMATransferMode(ADC1, ADC_MULTI_REG_DMA_EACH_ADC);
 }
 
 int main(void)

@@ -39,7 +39,7 @@
             再将两个Spi_Flash设备视为一片存储区，通过双四线模式往Spi_Flash设备写256字节，然后读取确认数据是否为写入的内容，有错误则打印报错。
 
 4、注意事项
-    需连接全功能板的跳线帽J1\J12\J47\J73
+    需连接全功能板的跳线帽J1\J47\J31
 
 
 
@@ -87,5 +87,5 @@
 
 
 4. Matters needing attention
-     Jumper caps J1\J12\J47\J73 required to connect full function boards
+     Jumper caps J1\J47\J31 required to connect full function boards
 	 

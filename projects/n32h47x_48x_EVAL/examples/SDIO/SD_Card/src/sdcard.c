@@ -344,8 +344,7 @@ uint32_t SD_Init(uint32_t ClockBypass, uint32_t ClkDiv, uint32_t BusWidth)
     }
 
     /* Configure the SDIO peripheral after power on identification and card initialization,
-       enter data transmission mode to improve reading and writing speed
-       If the speed exceeds 24m, enter bypass mode */
+       enter data transmission mode to improve reading and writing speed */
     SDIO_InitPara.ClkDiv  = ClkDiv; 
     SDIO_InitPara.ClkEdge = SDIO_CLK_EDGE_RISING;
     SDIO_InitPara.ClkBypass = ClockBypass;
@@ -1080,42 +1079,58 @@ uint32_t SD_CofigBusWidth(uint32_t WideMode)
 
 /**
  *\*\name   SD_ReadBlocks
- *\*\fun    Reads block(s) from a specified address in a card. The Data transfer
- *\*\       is managed by polling mode.
+ *\*\fun    Reads block(s) from a specified address in a card.
  *\*\param  ReadBuf pointer to the buffer that will contain the received data.
- *\*\param  ReadAddr Block Address from where data is to be read.
+ *\*\param  BlockAddr Block Address from where data is to be read,not Byte address.
  *\*\param  NumberOfBlocks number of blocks to be read.
  *\*\param  Timeout: Specify timeout value, can not be 0.
  *\*\return SD card error state,it is SDMMC_ERROR_NONE if successful
  *\*\note This function should be followed by a check on the card state through SD_GetCardState.
  */
-uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlocks, uint32_t Timeout)
+uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t BlockAddr, uint32_t NumberOfBlocks, uint32_t Timeout)
 {
     uint32_t error;
-    uint32_t BlockAddr;
+    uint32_t ReadAddr;
     uint32_t timeout;
 #if defined(SD_POLLING_MODE)
     uint32_t count;
     uint32_t *pBuf;
 #endif
     SDIO_DataInitType InitData;
-
-    /* Check block address */
-    BlockAddr = (ReadAddr / 512) + NumberOfBlocks;
-    if(BlockAddr > SDCardInfo.LogBlockNbr)
+    
+    /* Check nunber of blocks to be read */
+    if(NumberOfBlocks < 1)
+    {
+        return (SDMMC_ERROR_INVALID_PARAMETER);
+    }
+    
+    /* Check the range of data */
+    if((BlockAddr + NumberOfBlocks) > SDCardInfo.LogBlockNbr)
     {
         return (SDMMC_ERROR_ADDR_OUT_OF_RANGE);
     }
+    
+    /* Get the read addreass */
+    if(   (SDCardInfo.CardType == CARD_SDHC_SDXC)     \
+        ||(SDCardInfo.CardType == CARD_MMC_HC)   ) // ReadAddr of the high capacity card is block(512bytes) number, not byte address
+    {
+        ReadAddr = BlockAddr;
+    }
+    else
+    {
+        ReadAddr = BlockAddr * 512U;   // ReadAddr of the standard capacity card is byte address
+    }
 
+    /* Clear all static flags */
     while(SDIO_GetFlag(SDIO_STATIC_FLAGS) != RESET)
     {
-        /* Clear all the static flags */
         SDIO_ClrFlag(SDIO_STATIC_FLAGS);
     }
     
     /* Reset data control register */
     SDIO->DATCTRL = 0x0;
 
+    /* Set block size to 512Bytes */
     error = SDIO_CmdBlockLength(SD_BLOCKSIZE);
     if (error != SDMMC_ERROR_NONE)
     {
@@ -1124,8 +1139,16 @@ uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlo
         return (error);
     }
     
+    /* Check card state */
     while(SD_GetCardState() != SDMMC_CARD_TRANSFER);
     
+    /* Clear all static flags */
+    while(SDIO_GetFlag(SDIO_STATIC_FLAGS) != RESET)
+    {
+        SDIO_ClrFlag(SDIO_STATIC_FLAGS);
+    }
+    
+    /* Config data register */
     InitData.DatTimeout        = SDMMC_DATATIMEOUT;
     InitData.DatLen            = NumberOfBlocks * SD_BLOCKSIZE;
     InitData.DatBlkSize        = SDIO_DATBLK_SIZE_512B;
@@ -1134,13 +1157,7 @@ uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlo
     InitData.DPSMConfig        = SDIO_DPSM_ENABLE;
     SDIO_ConfigData(&InitData);
 
-    BlockAddr = ReadAddr;
-    if(   (SDCardInfo.CardType == CARD_SDHC_SDXC)     \
-        ||(SDCardInfo.CardType == CARD_MMC_HC)   ) // The address of the high capacity card is block(512bytes) number, not byte address
-    {
-        BlockAddr /= 512;
-    }
-
+    /* Send command for reading */
     if(NumberOfBlocks > 1U)
     {
         error = SDIO_CmdReadMultiBlock(ReadAddr);
@@ -1254,12 +1271,12 @@ uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlo
         SDIO_ClrFlag(SDIO_STATIC_FLAGS);
         return (SDMMC_ERROR_RX_OVERRUN);
     }
-//    else if(SDIO_GetFlag(SDIO_FLAG_SBERR) != RESET)
-//    {
-//        /* Clear all the static flags */
-//        SDIO_ClrFlag(SDIO_STATIC_FLAGS);
-//        return (SDMMC_ERROR_START_BIT_ERR);
-//    }
+    else if(SDIO_GetFlag(SDIO_FLAG_SBERR) != RESET)
+    {
+        /* Clear all the static flags */
+        SDIO_ClrFlag(SDIO_STATIC_FLAGS);
+        return (SDMMC_ERROR_START_BIT_ERR);
+    }
     else
     {
         /* Do nothing */
@@ -1296,33 +1313,58 @@ uint32_t SD_ReadBlocks(uint8_t* ReadBuf, uint32_t ReadAddr, uint32_t NumberOfBlo
 
 /**
  *\*\name   SD_WriteBlocks
- *\*\fun    Write block(s) from a specified address in a card. The Data transfer
- *\*\       is managed by polling mode.
+ *\*\fun    Write block(s) from a specified address in a card.
  *\*\param  SrcBuf pointer to the buffer that will contain the data to transmit.
- *\*\param  WriteAddr Block Address where data will be written.
+ *\*\param  BlockAddr Block Address where data will be written,not Byte address.
  *\*\param  NumberOfBlocks number of blocks to be write.
  *\*\param  Timeout: Specify timeout value, can not be 0.
  *\*\return SD card error state,it is SDMMC_ERROR_NONE if successful
  *\*\note This function should be followed by a check on the card state through SD_GetCardState.
  */
-uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t WriteAddr, uint32_t NumberOfBlocks, uint32_t Timeout)
+uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t BlockAddr, uint32_t NumberOfBlocks, uint32_t Timeout)
 {
     uint32_t error;
-    uint32_t BlockAddr;
+    uint32_t WriteAddr;
     uint32_t timeout;
 #if defined(SD_POLLING_MODE)
     uint32_t count;
     uint32_t *pSrc;
 #endif
     SDIO_DataInitType InitData;
-
-    /* Check block address */
-    BlockAddr = (WriteAddr / 512) + NumberOfBlocks;
-    if(BlockAddr > SDCardInfo.LogBlockNbr)
+    
+    /* Check nunber of blocks to be write */
+    if(NumberOfBlocks < 1)
+    {
+        return (SDMMC_ERROR_INVALID_PARAMETER);
+    }
+    
+    /* Check the range of data */
+    if((BlockAddr + NumberOfBlocks) > SDCardInfo.LogBlockNbr)
     {
         return (SDMMC_ERROR_ADDR_OUT_OF_RANGE);
     }
-
+    
+    /* Get the write addreass */
+    if(   (SDCardInfo.CardType == CARD_SDHC_SDXC)     \
+        ||(SDCardInfo.CardType == CARD_MMC_HC)   ) // WriteAddr of the high capacity card is block(512bytes) number, not byte address
+    {
+        WriteAddr = BlockAddr;
+    }
+    else
+    {
+        WriteAddr = BlockAddr * 512U;   // WriteAddr of the standard capacity card is byte address
+    }
+    
+    /* Clear all static flags */
+    while(SDIO_GetFlag(SDIO_STATIC_FLAGS) != RESET)
+    {
+        SDIO_ClrFlag(SDIO_STATIC_FLAGS);
+    }
+    
+    /* Reset data control register */
+    SDIO->DATCTRL = 0x0;
+    
+    /* Set block size to 512Bytes */
     error = SDIO_CmdBlockLength(SD_BLOCKSIZE);
     if (error != SDMMC_ERROR_NONE)
     {
@@ -1331,6 +1373,7 @@ uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t WriteAddr, uint32_t NumberOfBl
         return (error);
     }
     
+    /* Set nunber of blocks for MMC */
     if( (SDCardInfo.CardType != CARD_MMC_HC)    \
       &&(SDCardInfo.CardType != CARD_MMC_LC)    )
     {
@@ -1350,16 +1393,16 @@ uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t WriteAddr, uint32_t NumberOfBl
         }
     }
     
+    /* Check card state */
     while(SD_GetCardState() != SDMMC_CARD_TRANSFER);
     
+    /* Clear all static flags */
     while(SDIO_GetFlag(SDIO_STATIC_FLAGS) != RESET)
     {
         SDIO_ClrFlag(SDIO_STATIC_FLAGS);
     }
     
-    /* Reset data control register */
-    SDIO->DATCTRL = 0x0;
-
+    /* Config data register */
     InitData.DatTimeout        = SDMMC_DATATIMEOUT;
     InitData.DatLen            = NumberOfBlocks * SD_BLOCKSIZE;
     InitData.DatBlkSize        = SDIO_DATBLK_SIZE_512B;
@@ -1368,13 +1411,7 @@ uint32_t SD_WriteBlocks(uint8_t* SrcBuf, uint32_t WriteAddr, uint32_t NumberOfBl
     InitData.DPSMConfig        = SDIO_DPSM_ENABLE;
     SDIO_ConfigData(&InitData);
 
-    BlockAddr = WriteAddr;
-    if(   (SDCardInfo.CardType == CARD_SDHC_SDXC)     \
-        ||(SDCardInfo.CardType == CARD_MMC_HC)   ) // The address of the high capacity card is block(512bytes) number, not byte address
-    {
-        BlockAddr /= 512;
-    }
-
+    /* Send command for writting */
     if(NumberOfBlocks > 1U)
     {
         error = SDIO_CmdWriteMultiBlock(WriteAddr);

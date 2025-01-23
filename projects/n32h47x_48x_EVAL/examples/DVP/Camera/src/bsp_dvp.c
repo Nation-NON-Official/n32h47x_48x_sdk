@@ -52,14 +52,6 @@
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
-
-#include "n32h47x_48x.h"
-#include "n32h47x_48x_it.h"
-#include "misc.h"
-#include "n32h47x_48x_rcc.h"
-#include "n32h47x_48x_gpio.h"
-#include "n32h47x_48x_dvp.h"
-#include "bsp_ov5640.h"
 #include "bsp_dvp.h"
 
 uint8_t g_DVP_int_flag = 0;

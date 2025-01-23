@@ -947,7 +947,6 @@ NOR_Status FEMC_Nor_Get_Status(uint8_t block_index, uint32_t time_out)
 {
     uint16_t val1 = 0x00, val2 = 0x00;
     NOR_Status status = NOR_ONGOING;
-    uint32_t timeout  = time_out;
     uint32_t test_base_addr;
 
     if (block_index == 1)
@@ -965,18 +964,6 @@ NOR_Status FEMC_Nor_Get_Status(uint8_t block_index, uint32_t time_out)
     else if (block_index == 4)
     {
         test_base_addr = Bank1_NOR4_ADDR;
-    }
-    /* Poll on NOR memory Ready/Busy signal ------------------------------------*/
-    while ((GPIO_ReadInputDataBit(GPIOD, GPIO_PIN_6) != RESET) && (timeout > 0))
-    {
-        timeout--;
-    }
-
-    timeout = time_out;
-
-    while ((GPIO_ReadInputDataBit(GPIOD, GPIO_PIN_6) == RESET) && (timeout > 0))
-    {
-        timeout--;
     }
 
     /* Get the NOR memory operation status -------------------------------------*/

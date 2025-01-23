@@ -53,7 +53,6 @@
 **/
 
 #include "n32h47x_48x_cordic.h"
-#include "n32h47x_48x_dma.h"
 #include "n32h47x_48x_it.h"
 #include "log.h"
 
@@ -127,8 +126,8 @@ void Cordic_IRQ_IRQHandler(void);
 **/
 void RCC_Configuration()
 {
-    /* Enable DMA1 and CORDIC clock */
-    RCC_EnableAHBPeriphClk(RCC_AHB_PERIPHEN_CORDIC | RCC_AHB_PERIPHEN_DMA1, ENABLE);
+    /* Enable CORDIC clock */
+    RCC_EnableAHBPeriphClk(RCC_AHB_PERIPHEN_CORDIC, ENABLE);
 }
 
 /**

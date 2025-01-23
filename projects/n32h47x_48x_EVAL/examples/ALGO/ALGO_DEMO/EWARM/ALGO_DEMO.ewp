@@ -263,7 +263,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state></state>
+                    <state>Pe301</state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -792,7 +792,7 @@
                 </option>
                 <option>
                     <name>IlinkSuppressDiags</name>
-                    <state></state>
+                    <state>Li062</state>
                 </option>
                 <option>
                     <name>IlinkTreatAsRem</name>

@@ -1,4 +1,4 @@
-1、功能说明
+﻿1、功能说明
     1、读写 SRAM IS61WV102416FBLL-10TLI
 
 2、使用环境
@@ -14,7 +14,7 @@
         N32H482系列：
         基于评估板N32H482ZEL7_STB V1.0开发
         N32H487系列：
-        基于评估板N32H487ZEL7_STB V1.0开发
+        基于评估板N32H487ZEL7_STB V1.1开发
 
 3、使用说明
     
@@ -44,7 +44,7 @@
         编译后烧录到评估板，上电，串口打印 SRAM 读写结果
 
 4、注意事项
-    无
+    开发板上没有SRAM，需要外接
     
 
 1. Function description
@@ -63,7 +63,7 @@
         N32H482 series:
         Developed based on the evaluation board N32H482ZEL7_STB V1.0
         N32H487 series:
-        Developed based on the evaluation board N32H487ZEL7_STB V1.0
+        Developed based on the evaluation board N32H487ZEL7_STB V1.1
 
 3. Instructions for use
 
@@ -96,5 +96,5 @@
         After compiling, burn it to the evaluation board, power it on, and print the SRAM read-write results through the serial port
 
 4. Matters needing attention
-    None
+    There is no SRAM on the development board, it needs to be connected externally
 
