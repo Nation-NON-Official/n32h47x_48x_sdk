@@ -328,6 +328,8 @@ USB_STS USB_EPClearStall(USB_CORE_MODULE *USBx, USB_EP *ep);
 uint32_t USB_ReadDevAllOutEp_itr(USB_CORE_MODULE *USBx);
 uint32_t USB_ReadDevOutEP_itr(USB_CORE_MODULE *USBx, uint8_t epnum);
 uint32_t USB_ReadDevAllInEPItr(USB_CORE_MODULE *USBx);
+uint32_t USB_ReadDevEachInEPItr(USB_CORE_MODULE *USBx);
+uint32_t USB_ReadDevEachOutEPItr(USB_CORE_MODULE *USBx);
 void USB_InitDevSpeed(USB_CORE_MODULE *USBx, uint8_t speed);
 uint8_t USBH_IsEvenFrame(USB_CORE_MODULE *USBx);
 void USB_EP0_OutStart(USB_CORE_MODULE *USBx);

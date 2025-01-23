@@ -1,6 +1,32 @@
-﻿Nationstech.N32H47x_48x_Library.0.8.0版本：
+﻿Nations.N32H47x_48x_Library.0.9.0版本：
+1. shrtim驱动中增加SHRTIM_EXEV_SOURCE_1～SHRTIM_EXEV_SOURCE_5宏定义
+2. shrtim的PFC demo中修改FAULT的恢复操作，因为FAUTL与定时器单元的绑定问题已进行了ECO
+3. shrtim添加半桥LLC的demo
+4.新增USBHS Auido DEMO
+5.新增USBHS专用专用相关配置，可通过USB_DEDICATED_EP_ENABLED宏定义开启专用端点
+6.修改USBHS DMEO时钟源为PLL
+7.新增USBHS DualRole DEMO
+8.新增USBFSD Auido，HID_Customer，虚拟串口，HID_MSC，HID_CDC和MSC_CDC 组合设备DEMO
+9.新增以太网MQTT DEMO
+10.在n32h47x_48x_adc.c文件中，在ADC复位之后，增加20us的延时
+11.新增USBHS组合设备DEMO
+12.新增USBHS Host HID_CDC，HID_MSC和CDC_MSC DEMO
+13.TIM缺少刹车2双向功能的相关函数，补充
+14.RTC增加选择LSE时钟时版本判断
+15.PWR模块驱动添加PVD_IN引脚选择函数；修改唤醒引脚极性宏定义
+16.RCC模块驱动LPTIM时钟源选择根据芯片版本区分
+17.更新优化n32h47x_48x_eth.c和n32h47x_48x_eth.h文件，并升级为v1.0.1版本
+18.优化LPTIM模块所有DEMO的main函数
+19.FLASH_PrefetchBufSet函数失能有误修改
+20.修改USBHS宏定义命名笔误
+21.更新优化DMA模块的BURST和FLASH_RAM DEMO
+
+
+Nations.N32H47x_48x_Library.0.8.0版本：
 1.初版发布
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+Nations.N32H47x_48x_Library.0.9.0 version:
 
-Nationstech.N32H47x_48x_Library.0.8.0 version:
+
+Nations.N32H47x_48x_Library.0.8.0 version:
 1.Initial Release

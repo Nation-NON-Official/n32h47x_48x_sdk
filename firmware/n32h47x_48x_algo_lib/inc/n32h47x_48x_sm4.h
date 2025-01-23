@@ -52,8 +52,8 @@
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
-#ifndef _N32H47X_SM4_H_
-#define _N32H47X_SM4_H_
+#ifndef __N32H47X_SM4_H__
+#define __N32H47X_SM4_H__
 
 #include <stdint.h>
 
@@ -81,48 +81,43 @@ typedef struct{
 	uint32_t workingMode; //  ECB/CBC 
 }SM4_PARM;
 
-
-/**
-*\*\name    SM4_Init.
-*\*\fun     SM4 initialization.
-*\*\return  SM4_Init_OK, SM4 Init success; othets: SM4 Init fail
-**/
+ /**
+ * @brief SM4_Init
+ * @return SM4_Init_OK, SM4 Init success; othets: SM4 Init fail
+ * @note    
+ */
 uint32_t SM4_Init(SM4_PARM *parm);
-
 /**
-*\*\name    SM4_Crypto.
-*\*\fun     SM4 crypto.
-*\*\param   parm pointer to SM4 context and the detail please refer to struct SM4_PARM in SM4.h
-*\*\return  SM4_Crypto_OK, SM4 crypto success; othets: SM4 crypto fail(reference to the definition by enum variation) 
-*\*\note  	1.Please refer to the demo in user guidance before using this function  
-*\*\        2.Input and output can be the same buffer
-*\*\        3. IV can be NULL when ECB mode
-*\*\        4. The word lengrh of message must be as times as 4.
-*\*\        5. If the input is in byte, make sure align by word.
-**/
+ * @brief SM4 crypto
+ * @param[in] parm pointer to SM4 context and the detail please refer to struct SM4_PARM in SM4.h
+ * @return SM4_Crypto_OK, SM4 crypto success; othets: SM4 crypto fail(reference to the definition by enum variation) 
+ * @note  1.Please refer to the demo in user guidance before using this function  
+ *        2.Input and output can be the same buffer
+ *        3. IV can be NULL when ECB mode
+ *        4. The word lengrh of message must be as times as 4.
+ *        5. If the input is in byte, make sure align by word.
+ */
 uint32_t SM4_Crypto(SM4_PARM *parm);
 
+
 /**
-*\*\name    SM4_Close.
-*\*\fun     SM4 close.
-*\*\param   none
-*\*\return  none
-*\*\note  	if you want to close SM4 algorithm, this function can be recalled.
-**/
+ * @brief Close SM4 algorithm
+ * @return none
+ * @note if you want to close SM4 algorithm, this function can be recalled.  
+ */
 void SM4_Close(void);
 
 
 /**
-*\*\name    SM4_Version.
-*\*\fun     Get SM4 lib version.
-*\*\param	 	type pointer one byte type information represents the type of the lib, like Commercial version.\
-*\*\Bits 		0~4 stands for Commercial (C), Security (S), Normal (N), Evaluation (E), Test (T), Bits 5~7 are reserved. e.g. 0x09 stands for CE version.
-*\*\param	 	customer pointer one byte customer information represents customer ID. for example, 0x00 stands for standard version, 0x01 is for Tianyu customized version...
-*\*\param	 	date pointer array which include three bytes date information. If the returned bytes are 18,9,13,this denotes September 13,2018 
-*\*\param	 	version pointer one byte version information represents develop version of the lib. e.g. 0x12 denotes version 1.2.
-*\*\return  none
-*\*\note  	1.You can recall this function to get SM4 lib information.
-**/
+ * @brief Get SM4 lib version
+ * @param[out] type pointer one byte type information represents the type of the lib, like Commercial version.\
+ * @Bits 0~4 stands for Commercial (C), Security (S), Normal (N), Evaluation (E), Test (T), Bits 5~7 are reserved. e.g. 0x09 stands for CE version.
+ * @param[out] customer pointer one byte customer information represents customer ID. for example, 0x00 stands for standard version, 0x01 is for Tianyu customized version...
+ * @param[out] date pointer array which include three bytes date information. If the returned bytes are 18,9,13,this denotes September 13,2018 
+ * @param[out] version pointer one byte version information represents develop version of the lib. e.g. 0x12 denotes version 1.2.
+ * @return none
+ * @1.You can recall this function to get SM4 lib information
+ */
 void SM4_Version(uint8_t *type, uint8_t *customer, uint8_t date[3], uint8_t *version);
 
 

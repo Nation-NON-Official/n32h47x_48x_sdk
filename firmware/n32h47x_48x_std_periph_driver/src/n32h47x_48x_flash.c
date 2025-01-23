@@ -112,7 +112,7 @@ uint8_t FLASH_GetLatency(void)
 void FLASH_PrefetchBufSet(uint32_t FLASH_PrefetchBuf)
 {
     /* Enable or disable the Prefetch Buffer */
-    FLASH->AC &= FLASH_PrefetchBuf_DIS;
+    FLASH->AC &= FLASH_PrefetchBuf_MSK;
     FLASH->AC |= FLASH_PrefetchBuf;
 }
 

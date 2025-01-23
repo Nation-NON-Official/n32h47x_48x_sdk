@@ -1256,7 +1256,7 @@ void TIM_ConfigPwmIc(TIM_Module* TIMx, TIM_ICInitType* TIM_ICInitStruct)
 *\*\            * DeadTime can be a number between 0x00 and 0xFF
 *\*\          - Break
 *\*\            * TIM_BREAK_IN_ENABLE
-*\*\            * TIM_BREAK_BID_DISABLE
+*\*\            * TIM_BREAK_IN_DISABLE
 *\*\          - BreakPolarity
 *\*\            * TIM_BREAK_POLARITY_LOW
 *\*\            * TIM_BREAK_POLARITY_HIGH
@@ -1539,11 +1539,14 @@ void TIM_Break2InputSourceEnable(TIM_Module* TIMx, uint32_t Source, uint32_t Pol
 
 /**
 *\*\name    TIM_BidirectionDisarm
-*\*\fun     Enable or disable the break2 input source , and set the polarity of the break2 input source.
+*\*\fun     Disarm bidirection of break.
 *\*\param   TIMx (The input parameters must be the following values):
 *\*\          - ATIM1
 *\*\          - ATIM2
 *\*\          - ATIM3
+*\*\          - GTIM8
+*\*\          - GTIM9
+*\*\          - GTIM10
 *\*\return  none
 **/
 void TIM_BidirectionDisarm(TIM_Module* TIMx)
@@ -1553,16 +1556,47 @@ void TIM_BidirectionDisarm(TIM_Module* TIMx)
 
 /**
 *\*\name    TIM_BidirectionRearm
-*\*\fun     Enable or disable the break2 input source , and set the polarity of the break2 input source.
+*\*\fun     Rearm bidirection of break.
+*\*\param   TIMx (The input parameters must be the following values):
+*\*\          - ATIM1
+*\*\          - ATIM2
+*\*\          - ATIM3
+*\*\          - GTIM8
+*\*\          - GTIM9
+*\*\          - GTIM10
+*\*\return  none
+**/
+void TIM_BidirectionRearm(TIM_Module* TIMx)
+{
+    TIMx->BKDT &= (uint32_t)(~TIM_BKDT_BRKDSRM);
+}
+
+/**
+*\*\name    TIM_Bidirection2Disarm
+*\*\fun     Disarm bidirection of break2.
 *\*\param   TIMx (The input parameters must be the following values):
 *\*\          - ATIM1
 *\*\          - ATIM2
 *\*\          - ATIM3
 *\*\return  none
 **/
-void TIM_BidirectionRearm(TIM_Module* TIMx)
+void TIM_Bidirection2Disarm(TIM_Module* TIMx)
 {
-    TIMx->BKDT &= (uint32_t)(~TIM_BKDT_BRKDSRM);
+    TIMx->BKDT |= (uint32_t)TIM_BKDT_BRK2DSRM;
+}
+
+/**
+*\*\name    TIM_Bidirection2Rearm
+*\*\fun     Rearm bidirection of break2.
+*\*\param   TIMx (The input parameters must be the following values):
+*\*\          - ATIM1
+*\*\          - ATIM2
+*\*\          - ATIM3
+*\*\return  none
+**/
+void TIM_Bidirection2Rearm(TIM_Module* TIMx)
+{
+    TIMx->BKDT &= (uint32_t)(~TIM_BKDT_BRK2DSRM);
 }
 
 /**
@@ -1826,7 +1860,7 @@ void TIM_Enable(TIM_Module* TIMx, FunctionalState Cmd)
 
 /**
 *\*\name    TIM_EnableCtrlPwmOutputs
-*\*\fun     Enables or disables the specified TIM peripheral.
+*\*\fun     Enables or disables the TIM peripheral Main Outputs.
 *\*\param   TIMx (The input parameters must be the following values):
 *\*\          - ATIM1
 *\*\          - ATIM2

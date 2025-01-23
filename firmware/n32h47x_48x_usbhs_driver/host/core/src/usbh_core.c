@@ -182,7 +182,7 @@ void USBH_Init(USB_CORE_MODULE *USBx, USBH_HOST *host, USBH_Class_cb_TypeDef *cl
     host->usr_cb = user_cb;  
     
     //VBUS to Device
-    GPIO_SetBits(GPIOB, GPIO_PIN_13); 
+    GPIO_SetBits(GPIOB, GPIO_PIN_3); 
 
     /* Start the USB core */
     USBHOST_CoreInit(USBx);

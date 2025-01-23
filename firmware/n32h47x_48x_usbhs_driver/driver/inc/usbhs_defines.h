@@ -98,10 +98,10 @@
 #define DCFG_FRAME_INTERVAL_90                 2
 #define DCFG_FRAME_INTERVAL_95                 3
 
-#define DEP0CTL_MPS_64                         0
-#define DEP0CTL_MPS_32                         1
-#define DEP0CTL_MPS_16                         2
-#define DEP0CTL_MPS_8                          3
+#define DEP0CTRL_MPS_64                         0
+#define DEP0CTRL_MPS_32                         1
+#define DEP0CTRL_MPS_16                         2
+#define DEP0CTRL_MPS_8                          3
 
 #define EP_SPEED_LOW                           0
 #define EP_SPEED_FULL                          1

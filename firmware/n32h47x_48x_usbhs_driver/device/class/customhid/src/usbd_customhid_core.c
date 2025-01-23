@@ -58,17 +58,14 @@
 #include "n32h47x_48x_gpio.h"
 #include "usbhs_bsp.h"
 
-static uint8_t  USBD_CUSTOM_HID_Init (void  *pdev, uint8_t cfgidx);
+uint8_t  USBD_CUSTOM_HID_Init (void  *pdev, uint8_t cfgidx);
+uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev, uint8_t cfgidx);
+uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev, USB_SETUP_REQ *req);
+uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
+uint8_t  USBD_CUSTOM_HID_DataIn (void  *pdev, uint8_t epnum);
+uint8_t  USBD_CUSTOM_HID_DataOut (void  *pdev, uint8_t epnum);
+uint8_t  USBD_CUSTOM_HID_EP0_RxReady (void  *pdev);
 
-static uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev, uint8_t cfgidx);
-
-static uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev, USB_SETUP_REQ *req);
-
-static uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
-
-static uint8_t  USBD_CUSTOM_HID_DataIn (void  *pdev, uint8_t epnum);
-static uint8_t  USBD_CUSTOM_HID_DataOut (void  *pdev, uint8_t epnum);
-static uint8_t  USBD_CUSTOM_HID_EP0_RxReady (void  *pdev);
 
 USBD_Class_cb_TypeDef  USBD_CUSTOMHID_cb = 
 {
@@ -285,7 +282,7 @@ __ALIGN_BEGIN static uint8_t CustomHID_ReportDesc[USBD_CUSTOM_HID_REPORT_DESC_SI
 *\*\return  USBD_OK.
 *\*\
 **/
-static uint8_t  USBD_CUSTOM_HID_Init (void *pdev, uint8_t cfgidx)
+uint8_t  USBD_CUSTOM_HID_Init (void *pdev, uint8_t cfgidx)
 {
     /* Open EP IN */
     USBDEV_EP_Open(pdev, HID_IN_EP, HID_IN_PACKET, USB_EP_INT);
@@ -305,7 +302,7 @@ static uint8_t  USBD_CUSTOM_HID_Init (void *pdev, uint8_t cfgidx)
 *\*\return  USBD_OK.
 *\*\
 **/
-static uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev, uint8_t cfgidx)
+uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev, uint8_t cfgidx)
 {
     /* Close HID EPs */
     USBDEV_EP_Close (pdev , HID_IN_EP);
@@ -321,7 +318,7 @@ static uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev, uint8_t cfgidx)
 *\*\return  USBD_OK.
 *\*\
 **/
-static uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev, USB_SETUP_REQ *req)
+uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev, USB_SETUP_REQ *req)
 {
     uint8_t USBD_HID_Report_LENGTH=0;
     uint16_t len = 0;
@@ -419,7 +416,7 @@ uint8_t USBD_CUSTOM_HID_SendReport (USB_CORE_MODULE  *pdev, uint8_t *report, uin
 *\*\return  pointer to descriptor buffer.
 *\*\
 **/
-static uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
+uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
 {
     *length = sizeof (USBD_CUSTOM_HID_CfgDesc);
     return USBD_CUSTOM_HID_CfgDesc;
@@ -433,7 +430,7 @@ static uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
 *\*\return  USBD_OK.
 *\*\
 **/
-static uint8_t USBD_CUSTOM_HID_DataIn (void *pdev, uint8_t epnum)
+uint8_t USBD_CUSTOM_HID_DataIn (void *pdev, uint8_t epnum)
 {
     /* Ensure that the FIFO is empty before a new transfer, this condition could 
     be caused by  a new transfer before the end of the previous transfer */
@@ -455,7 +452,7 @@ static uint8_t USBD_CUSTOM_HID_DataIn (void *pdev, uint8_t epnum)
 *\*\return  USBD_OK.
 *\*\
 **/
-uint8_t  USBD_CUSTOM_HID_DataOut (void  *pdev, uint8_t epnum)
+uint8_t USBD_CUSTOM_HID_DataOut (void  *pdev, uint8_t epnum)
 {
     Bit_OperateType Led_State;
     if (epnum == HID_OUT_EP) 

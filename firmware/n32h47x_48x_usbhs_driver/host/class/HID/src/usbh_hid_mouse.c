@@ -97,10 +97,10 @@ static void MOUSE_Init(void)
 **/
 static void  MOUSE_Decode(uint8_t *data)
 {
-  HID_MOUSE_Data.button = data[0];
+    HID_MOUSE_Data.button = data[0];
 
-  HID_MOUSE_Data.x      = data[1];
-  HID_MOUSE_Data.y      = data[2];
-  
-  USER_MOUSE_ProcessData(&HID_MOUSE_Data);
+    HID_MOUSE_Data.x      = data[1];
+    HID_MOUSE_Data.y      = data[2];
+
+    USER_MOUSE_ProcessData(&HID_MOUSE_Data);
 }

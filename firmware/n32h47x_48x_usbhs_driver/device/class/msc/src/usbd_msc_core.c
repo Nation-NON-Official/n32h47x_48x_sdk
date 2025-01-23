@@ -66,7 +66,6 @@ uint8_t  USBD_MSC_Setup (void  *pdev, USB_SETUP_REQ *req);
 
 uint8_t  USBD_MSC_DataIn (void  *pdev, uint8_t epnum);
 
-
 uint8_t  USBD_MSC_DataOut (void  *pdev, uint8_t epnum);
 
 uint8_t  *USBD_MSC_GetCfgDesc (uint8_t speed, uint16_t *length);

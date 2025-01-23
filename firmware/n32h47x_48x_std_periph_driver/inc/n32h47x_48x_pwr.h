@@ -73,9 +73,16 @@ typedef enum
 /** PWR wakeup PIN polarity enmu definition **/
 typedef enum
 {
-    POL_DOWN = 0x0,
-    POL_RISE = 0x1,
+    POL_HIGH = 0x0,
+    POL_LOW = 0x1,
 } WAKEUP_PIN_POL;
+
+/** PVD_IN pin enmu definition **/
+typedef enum
+{
+    PVD_IN_PA10 = 0x0,
+    PVD_IN_PB7  = 0x1,
+} PVD_IN_SEL;
 
 /**  PWR registers bit address in the alias region **/
 #define PWR_OFFSET (PWR_BASE - PERIPH_BASE)
@@ -220,10 +227,11 @@ void PWR_BackupAccessEnable(FunctionalState Cmd);
 void PWR_PvdEnable(FunctionalState Cmd);
 void PWR_PVDLevelConfig(uint32_t level);
 void PWR_PVDSourceConfig(uint32_t PVD_source);
+void PWR_PVDINPinSelect(PVD_IN_SEL PVD_pin);
 void PWR_WakeUpPinEnable(uint32_t pin, FunctionalState Cmd);
 void PWR_WakeUpPinPolarity(uint32_t pin, WAKEUP_PIN_POL polarity);
 void PWR_WakeUpPeriphEnable(uint32_t periph, FunctionalState Cmd);
-void PWR_EnterSLEEPMode(PWR_SLEEPONEXIT_STATUS SLEEPONEXIT, uint8_t PWR_STOPEntry);
+void PWR_EnterSLEEPMode(PWR_SLEEPONEXIT_STATUS SLEEPONEXIT, uint8_t PWR_SLEEPEntry);
 void PWR_EnterSTOPMode(uint32_t PWR_Regulator, uint8_t PWR_STOPEntry);
 void PWR_EnterSTANDBYMode(void);
 FlagStatus PWR_GetFlagStatus(uint32_t PWR_FLAG);

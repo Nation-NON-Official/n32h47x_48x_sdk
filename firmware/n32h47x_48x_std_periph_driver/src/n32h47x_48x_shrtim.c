@@ -6022,11 +6022,11 @@ uint32_t SHRTIM_OUT_GetLevel(SHRTIM_Module *SHRTIMx, uint32_t Output)
 *\*\        - SHRTIM_EVENT_9
 *\*\        - SHRTIM_EVENT_10
 *\*\param  Src This parameter can be one of the following values:
-*\*\        - External event source 1
-*\*\        - External event source 2
-*\*\        - External event source 3
-*\*\        - External event source 4
-*\*\        - External event source 5
+*\*\        - SHRTIM_EXEV_SOURCE_1
+*\*\        - SHRTIM_EXEV_SOURCE_2
+*\*\        - SHRTIM_EXEV_SOURCE_3
+*\*\        - SHRTIM_EXEV_SOURCE_4
+*\*\        - SHRTIM_EXEV_SOURCE_5
 *\*\param SrcCompSel This parameter can be one of the following values:
 *\*\        - SHRTIM_EXEVXSRC2_COMP1_OUT
 *\*\        - SHRTIM_EXEVXSRC2_COMP2_OUT
@@ -6065,6 +6065,7 @@ uint32_t SHRTIM_OUT_GetLevel(SHRTIM_Module *SHRTIMx, uint32_t Output)
 *\*\        - SHRTIM_EXEV_FILTER_14
 *\*\        - SHRTIM_EXEV_FILTER_15
 *\*\return None
+*\*\note Polarity configuration is only valid if sensitivity is SHRTIM_EXEV_SENSITIVITY_LEVEL
 **/
 void SHRTIM_EXEV_Config(SHRTIM_Module *SHRTIMx, uint32_t Event,
                         uint32_t Src, uint32_t SrcCompSel, uint32_t Polarity,
@@ -6093,11 +6094,11 @@ void SHRTIM_EXEV_Config(SHRTIM_Module *SHRTIMx, uint32_t Event,
 *\*\        - SHRTIM_EVENT_9
 *\*\        - SHRTIM_EVENT_10
 *\*\param  Src This parameter can be one of the following values:
-*\*\        - External event source 1
-*\*\        - External event source 2
-*\*\        - External event source 3
-*\*\        - External event source 4
-*\*\        - External event source 5
+*\*\        - SHRTIM_EXEV_SOURCE_1
+*\*\        - SHRTIM_EXEV_SOURCE_2
+*\*\        - SHRTIM_EXEV_SOURCE_3
+*\*\        - SHRTIM_EXEV_SOURCE_4
+*\*\        - SHRTIM_EXEV_SOURCE_5
 *\*\return None
 **/
 void SHRTIM_EXEV_SetSrc(SHRTIM_Module *SHRTIMx, uint32_t Event, uint32_t Src)
@@ -6123,11 +6124,11 @@ void SHRTIM_EXEV_SetSrc(SHRTIM_Module *SHRTIMx, uint32_t Event, uint32_t Src)
 *\*\        - SHRTIM_EVENT_9
 *\*\        - SHRTIM_EVENT_10
 *\*\return EventSrc This parameter can be one of the following values:
-*\*\        - External event source 1
-*\*\        - External event source 2
-*\*\        - External event source 3
-*\*\        - External event source 4
-*\*\        - External event source 5
+*\*\        - SHRTIM_EXEV_SOURCE_1
+*\*\        - SHRTIM_EXEV_SOURCE_2
+*\*\        - SHRTIM_EXEV_SOURCE_3
+*\*\        - SHRTIM_EXEV_SOURCE_4
+*\*\        - SHRTIM_EXEV_SOURCE_5
 **/
 uint32_t SHRTIM_EXEV_GetSrc(SHRTIM_Module *SHRTIMx, uint32_t Event)
 {
@@ -6138,7 +6139,7 @@ uint32_t SHRTIM_EXEV_GetSrc(SHRTIM_Module *SHRTIMx, uint32_t Event)
 }
 
 /**
-*\*\fun  Select the analog comparator of external event source 2.
+*\*\fun  Select the analog comparator of SHRTIM_EXEV_SOURCE_2.
 *\*\param  SHRTIMx Super High Resolution Timer instance
 *\*\param  Event This parameter can be one of the following values:
 *\*\        - SHRTIM_EVENT_1

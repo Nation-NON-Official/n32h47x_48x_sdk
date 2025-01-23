@@ -350,7 +350,7 @@ __ALIGN_BEGIN uint8_t USBD_CDC_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_EN
 *\*\return  USBD_OK.
 *\*\
 **/
-uint8_t  USBD_CDC_Init (void  *pdev, uint8_t cfgidx)
+uint8_t USBD_CDC_Init (void  *pdev, uint8_t cfgidx)
 {
     /* Open EP IN */
     USBDEV_EP_Open(pdev, CDC_IN_EP, CDC_DATA_IN_PACKET_SIZE, USB_EP_BULK);

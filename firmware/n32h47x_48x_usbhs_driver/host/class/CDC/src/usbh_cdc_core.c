@@ -356,7 +356,7 @@ void CDC_ProcessTransmission(USB_CORE_MODULE *pdev, USBH_HOST *phost)
                 
                     len = CDC_Machine.CDC_DataItf.length ;
                     /*Send the data */
-                    USBH_BulkSendData (pdev, CDC_TxParam.pRxTxBuff, len , CDC_Machine.CDC_DataItf.hc_num_out);    
+                    USBH_BulkSendData (pdev, CDC_TxParam.pRxTxBuff, len , CDC_Machine.CDC_DataItf.hc_num_out);
                 }
                 else
                 {
@@ -445,11 +445,8 @@ static void CDC_ProcessReception(USB_CORE_MODULE *pdev, USBH_HOST *phost)
                 if(URB_StatusRx == URB_DONE)
                 {
                     /* Move the pointer as well as datalength */
-//                    CDC_RxParam.DataLength += pdev->host.hch[CDC_Machine.CDC_DataItf.hc_num_in].xfer_count ;
-//                    CDC_RxParam.pFillBuff += pdev->host.hch[CDC_Machine.CDC_DataItf.hc_num_in].xfer_count ;
-                    
                     CDC_RxParam.DataLength += pdev->host.XferCnt[CDC_Machine.CDC_DataItf.hc_num_in];
-                    CDC_RxParam.pFillBuff += pdev->host.XferCnt[CDC_Machine.CDC_DataItf.hc_num_in];
+                    CDC_RxParam.pFillBuff  += pdev->host.XferCnt[CDC_Machine.CDC_DataItf.hc_num_in];
 
 
                     /* Process the recived data */

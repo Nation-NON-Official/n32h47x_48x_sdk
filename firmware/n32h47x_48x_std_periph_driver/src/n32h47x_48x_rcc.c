@@ -1679,9 +1679,25 @@ void RCC_ConfigLPTIM1Clk(uint32_t clock_source)
 
     /* Clear the LPTIM1 clock source */
     temp_value &= RCC_LPTIM1CLK_SRC_MASK;
-
-    /* Select the LPTIM1 clock source */
-    temp_value |= clock_source;
+    
+    if((clock_source == RCC_LPTIMCLK_SRC_LSI)||(clock_source == RCC_LPTIMCLK_SRC_LSE))
+    {
+        if (((DBG->ID & 0x000000FFU) > 0x10 ) && ((DBG->ID & 0x000000FFU) != 0xFF)) /* B version chip */
+        {
+            /* Select the LPTIM1 clock source */
+            temp_value |= clock_source;
+        }
+        else /* A version chip */
+        {
+            /* Select the LPTIM1 clock source */
+            temp_value |= (clock_source - 0x00600000U);
+        }
+    }
+    else
+    {
+        /* Select the LPTIM1 clock source */
+            temp_value |= clock_source;
+    }
 
     RCC->BDCTRL = temp_value;
 }
@@ -1708,8 +1724,25 @@ void RCC_ConfigLPTIM2Clk(uint32_t clock_source)
     /* Clear the LPTIM2 clock source */
     temp_value &= RCC_LPTIM2CLK_SRC_MASK;
 
-    /* Select the LPTIM2 clock source */
+    if((clock_source == RCC_LPTIMCLK_SRC_LSI)||(clock_source == RCC_LPTIMCLK_SRC_LSE))
+    {
+        if (((DBG->ID & 0x000000FFU) > 0x10 ) && ((DBG->ID & 0x000000FFU) != 0xFF)) /* B version chip */
+        {
+            /* Select the LPTIM2 clock source */
+            temp_value |= (clock_source << 4);
+        }
+        else /* A version chip */
+        {
+            /* Select the LPTIM2 clock source */
+            temp_value |= ((clock_source - 0x00600000U) << 4);
+        }
+    }
+    else
+    {
+        /* Select the LPTIM2 clock source */
     temp_value |= (clock_source << 4);
+    }
+    
 
     RCC->BDCTRL = temp_value;
 }

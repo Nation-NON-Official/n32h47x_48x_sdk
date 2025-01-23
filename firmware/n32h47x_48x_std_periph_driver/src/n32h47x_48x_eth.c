@@ -48,7 +48,7 @@
 /**
 *\*\file n32h47x_48x_eth.c
 *\*\author Nations
-*\*\version v1.0.0
+*\*\version v1.0.1
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
@@ -193,8 +193,8 @@ void ETH_StructInit(ETH_InitType* ETH_InitParam)
     ETH_InitParam->Duplex                    = ETH_HALF_DUPLEX_MODE;
     /* Default Selects the speed mode: 10Mbps */
     ETH_InitParam->SpeedSelect               = ETH_SPEED_10M;
-    /* Default Disable Receiving Jumbo Packet */
-    ETH_InitParam->RxJumboPacket             = DISABLE;
+    /* Default Disable Jumbo Packet */
+    ETH_InitParam->JumboPacket               = DISABLE;
     /* Default Enable Jabber timer on Tx path */
     ETH_InitParam->DisTxJabber               = DISABLE;
     /* Default Enable Watchdog timer on Rx path */
@@ -883,7 +883,7 @@ EthFuncStatusType ETH_Init(ETH_Module* ETHx, ETH_InfoType* pInfo, ETH_InitType* 
                | (ETH_InitParam->DisCSDuringTransmit) | (ETH_InitParam->RxOwn)
                | (ETH_InitParam->CSBeforeTransmit)    | (ETH_InitParam->Loopback)
                | (ETH_InitParam->Duplex)              | (ETH_InitParam->SpeedSelect)
-               | (ETH_InitParam->RxJumboPacket)       | (ETH_InitParam->DisTxJabber)
+               | (ETH_InitParam->JumboPacket)         | (ETH_InitParam->DisTxJabber)
                | (ETH_InitParam->DisRxWatchdog)       | (ETH_InitParam->AutoPadCRCStrip)
                | (ETH_InitParam->CRCStripTypePacket)  | (ETH_InitParam->Support2KPacket)
                | (ETH_InitParam->GiantPacketSizeLimitCtrl)
@@ -2040,7 +2040,7 @@ uint32_t ETH_GetTimeStampRegValue(ETH_Module* ETHx, EthTsAddrType Offset)
 *\*\        which defaults to one pulse per second.
 *\*\param   ETHx (The input parameters must be the following values):
 *\*\          - ETH
-*\*\param   AddValue (The input parameters must be the following values):
+*\*\param   OutputFreq (The input parameters must be the following values):
 *\*\          - ETH_MACPPS_FREQCTRL_B2D1
 *\*\          - ETH_MACPPS_FREQCTRL_B4D2
 *\*\          - ETH_MACPPS_FREQCTRL_B8D4
@@ -2100,12 +2100,12 @@ void ETH_MTLDropTxStatusCmd(ETH_Module* ETHx, FunctionalStatus Cmd)
     if (Cmd != DISABLE)
     {
         /* Tx packet status received from the MAC is dropped in the MTL */
-        SET_BIT(ETHx->MTLOPMOD, ETH_MTLOPMOD_CNTPRST);
+        SET_BIT(ETHx->MTLOPMOD, ETH_MTLOPMOD_DTXSTS);
     }
     else
     {
         /* Tx packet status received from the MAC is forwarded to the application */
-        CLEAR_BIT(ETHx->MTLOPMOD, ETH_MTLOPMOD_CNTPRST);
+        CLEAR_BIT(ETHx->MTLOPMOD, ETH_MTLOPMOD_DTXSTS);
     }
 }
 
@@ -2308,7 +2308,7 @@ void ETH_ResumeDMAReception(ETH_Module* ETHx)
 *\*\          - ETH_DMARXINT_WDGTIM_CNTUNIT_1024
 *\*\          - ETH_DMARXINT_WDGTIM_CNTUNIT_2048
 *\*\param   CntValue :
-*\*\          - Count value: 0~0x0000000F.
+*\*\          - Count value: 0~0x000000FF.
 *\*\return  none
 *\*\note    Timer cycles = count unit * count value (CntUnit * CntValue) system
 *\*\        clock cycles.
@@ -3398,12 +3398,9 @@ EthFuncStatusType ETH_GetRxPacketInfo(ETH_InfoType* pInfo, ETH_RxPacketType* pRx
 *\*\        turning on TX and RX MAC controllers, etc.
 *\*\param   ETHx (The input parameters must be the following values):
 *\*\          - ETH
-*\*\param   pInfo :
-*\*\          - Pointer to an ETH_InfoType structure parameter containing various
-*\*\            information about the operation of the ETH module.
 *\*\return  none.
 **/
-void ETH_Start(ETH_Module* ETHx, ETH_InfoType* pInfo)
+void ETH_Start(ETH_Module* ETHx)
 {
     /* Start the MAC Transmitter */
     SET_BIT(ETHx->MACCFG, ETH_MACCFG_TE);
@@ -3488,12 +3485,9 @@ void ETH_StartIT(ETH_Module* ETHx, ETH_InfoType* pInfo)
 *\*\        turning off TX and RX MAC controllers, etc.
 *\*\param   ETHx (The input parameters must be the following values):
 *\*\          - ETH
-*\*\param   pInfo :
-*\*\          - Pointer to an ETH_InfoType structure parameter containing various
-*\*\            information about the operation of the ETH module.
 *\*\return  none.
 **/
-void ETH_Stop(ETH_Module* ETHx, ETH_InfoType* pInfo)
+void ETH_Stop(ETH_Module* ETHx)
 {
     /* Stop the DMA Transmitter */
     CLEAR_BIT(ETHx->DMACH0TXCTRL, ETH_DMACH0TXCTRL_ST);

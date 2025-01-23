@@ -81,6 +81,7 @@
 **/
 void ADC_DeInit(ADC_Module* ADCx)
 {
+    __IO uint32_t delay = 0x216;
     if (ADCx == ADC1)
     {
         RCC_EnableAHBPeriphReset(RCC_AHB_PERIPHRST_ADC1);
@@ -101,6 +102,9 @@ void ADC_DeInit(ADC_Module* ADCx)
     {
         /*no process*/
     }
+    /*Delay about 20us(on the condition @240M systick) to wait for the completion of the ADC reset.Exactly, it need at least 8 ADC sampling clock after ADC reset.
+      for example, When the ADC's sampling clock is 80M, the actual latency just need 8*(1/80)us. */
+    for(; delay != 0; delay--);
     /*When all ADCs are reset, you must disable ADC BUF.*/
     if((RCC->AHB1PCLKEN&ALL_ADC_ENALBE_MASK) == 0)
     {

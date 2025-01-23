@@ -120,6 +120,8 @@ typedef struct
 
     uint16_t CLKPOL; /*!< Specifies the idle state of the I2S clock.
                             This parameter can be a value of @ref I2S_Clock_Polarity */
+	  uint32_t ClkSrcFrequency;   /*!< Specifies the I2S clock source frequency in Hz.*/
+	  
 } I2S_InitType;
 
 

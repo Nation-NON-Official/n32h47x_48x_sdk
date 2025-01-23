@@ -609,7 +609,6 @@ void DMA_ClearFlag(uint32_t DMAFlag, DMA_Module *DMAy)
     /* Calculate the used DMAy */
     /* Clear the selected DMAy flags */
     DMAy->INTCLR = DMAFlag;
-    DMAy->INTCLR &= ~DMAFlag;
 }
 
 /**
@@ -734,7 +733,6 @@ void DMA_ClrIntPendingBit(uint32_t DMAy_Int, DMA_Module *DMAy)
     /* Calculate the used DMAy */
     /* Clear the selected DMAy interrupt pending bits */
     DMAy->INTCLR = DMAy_Int;
-    DMAy->INTCLR &= ~DMAy_Int;
 }
 
 /**

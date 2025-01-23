@@ -669,7 +669,7 @@ void USART_SendBreak(USART_Module* USARTx)
 
 /**
 *\*\name    USART_SetGuardTime
-*\*\fun     Transmits break characters.
+*\*\fun     Sets the specifies USART guard time.
 *\*\param   USARTx (The input parameters must be the following values):
 *\*\          - USART1
 *\*\          - USART2
@@ -886,7 +886,7 @@ void USART_EnableIrDA(USART_Module* USARTx, FunctionalState Cmd)
 *\*\          - USART_FLAG_RXFE     RX FIFO empty flag
 *\*\          - USART_FLAG_TXFE     TX FIFO empty flag
 *\*\          - USART_FLAG_RXFF     RX FIFO full flag
-*\*\          - USART_FLAG_TXFE     TX FIFO full flag
+*\*\          - USART_FLAG_TXFF     TX FIFO full flag
 *\*\return  USART_FLAG
 *\*\          - SET   
 *\*\          - RESET 

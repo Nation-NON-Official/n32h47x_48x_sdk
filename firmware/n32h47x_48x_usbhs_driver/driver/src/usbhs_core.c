@@ -82,37 +82,37 @@ static void USB_EnableCommonInt(USB_CORE_MODULE *USBx)
 static USB_STS USB_CoreReset(USB_CORE_MODULE *USBx)
 {
     USB_STS status = USB_OK;
-    uint32_t u32grstctl;
+    uint32_t u32grstctrl;
     uint32_t count = 0;
 
     /* Wait for AHB master IDLE state. */
     do
     {
         USB_BSP_uDelay(3);
-        u32grstctl = USB_READ_REG32(&USBx->regs.GCSR->GRSTCTRL);
+        u32grstctrl = USB_READ_REG32(&USBx->regs.GCSR->GRSTCTRL);
         if (++count > 200000UL)
         {
             return USB_OK;
         }
-    }while((u32grstctl & USBHS_GRSTCTRL_AHBIDLE) == 0);
+    }while((u32grstctrl & USBHS_GRSTCTRL_AHBIDLE) == 0);
     
     if(status == USB_OK)
     {
     /* Core Soft Reset */
         count = 0;
-        u32grstctl |= USBHS_GRSTCTRL_CSRST;
-        USB_WRITE_REG32(&USBx->regs.GCSR->GRSTCTRL, u32grstctl);
+        u32grstctrl |= USBHS_GRSTCTRL_CSRST;
+        USB_WRITE_REG32(&USBx->regs.GCSR->GRSTCTRL, u32grstctrl);
         do
         {
-            u32grstctl = USB_READ_REG32(&USBx->regs.GCSR->GRSTCTRL);
+            u32grstctrl = USB_READ_REG32(&USBx->regs.GCSR->GRSTCTRL);
             if (++count > 200000UL)
             {
                 break;
             }
-        } while ((u32grstctl & USBHS_GRSTCTRL_SRSTDNE) == 0);
+        } while ((u32grstctrl & USBHS_GRSTCTRL_SRSTDNE) == 0);
         /* clear CSRST bit*/
-        u32grstctl &= (~USBHS_GRSTCTRL_CSRST);
-        USB_WRITE_REG32(&USBx->regs.GCSR->GRSTCTRL, u32grstctl);
+        u32grstctrl &= (~USBHS_GRSTCTRL_CSRST);
+        USB_WRITE_REG32(&USBx->regs.GCSR->GRSTCTRL, u32grstctrl);
         
         USB_BSP_uDelay(3);
     }
@@ -454,7 +454,6 @@ uint32_t USB_ReadCoreItr(USB_CORE_MODULE *USBx)
 }
 
 #ifdef USE_HOST_MODE
-
 /**
 *\*\name    USB_CoreInitHost.
 *\*\fun     Initializes USBHS controller for host mode.
@@ -999,25 +998,20 @@ static void USB_DevHSFifoConfig(USB_CORE_MODULE *USBx)
     USB_WRITE_REG32(&USBx->regs.GCSR->DINEPPTXFSIZ[0],
                   (StardAddr << USBHS_DINEP0TXSIZ_IEP0TXFRSADD_POS) | (TX1_FIFO_HS_SIZE << USBHS_DINEP0TXSIZ_NPTXFDEP_POS));
 
-
     /* EP2 TX*/
     StardAddr += TX1_FIFO_HS_SIZE;
     USB_WRITE_REG32(&USBx->regs.GCSR->DINEPPTXFSIZ[1],
                   (StardAddr << USBHS_DINEP0TXSIZ_IEP0TXFRSADD_POS) | (TX2_FIFO_HS_SIZE << USBHS_DINEP0TXSIZ_NPTXFDEP_POS));
-
-
 
     /* EP3 TX*/
     StardAddr += TX2_FIFO_HS_SIZE;
     USB_WRITE_REG32(&USBx->regs.GCSR->DINEPPTXFSIZ[2],
                   (StardAddr << USBHS_DINEP0TXSIZ_IEP0TXFRSADD_POS) | (TX3_FIFO_HS_SIZE << USBHS_DINEP0TXSIZ_NPTXFDEP_POS));
 
-
     /* EP4 TX*/
     StardAddr += TX3_FIFO_HS_SIZE;
     USB_WRITE_REG32(&USBx->regs.GCSR->DINEPPTXFSIZ[3],
                   (StardAddr << USBHS_DINEP0TXSIZ_IEP0TXFRSADD_POS) | (TX4_FIFO_HS_SIZE << USBHS_DINEP0TXSIZ_NPTXFDEP_POS));
-
 
     /* EP5 TX*/
     StardAddr += TX4_FIFO_HS_SIZE;
@@ -1156,11 +1150,17 @@ USB_STS USB_EnableDevInt(USB_CORE_MODULE *USBx)
     {
         ginten |= USBHS_GINTEN_RXFNEIEN;
     }
-
+#ifdef USB_DEDICATED_EP_ENABLED
+    /* Enable interrupts matching to the Device mode ONLY */
+    ginten |= USBHS_GINTEN_USBSUSPIEN | USBHS_GINTEN_USBRSTIEN | USBHS_GINTEN_ENUMDIEN
+           | USBHS_GINTEN_SOFIEN
+           | USBHS_GINTEN_ISOINCIEN | USBHS_GINTEN_PTNCIEN_ISOUTNCIEN;
+#else
     /* Enable interrupts matching to the Device mode ONLY */
     ginten |= USBHS_GINTEN_USBSUSPIEN | USBHS_GINTEN_USBRSTIEN | USBHS_GINTEN_ENUMDIEN
            | USBHS_GINTEN_INEPIEN | USBHS_GINTEN_OUTEPIEN | USBHS_GINTEN_SOFIEN
            | USBHS_GINTEN_ISOINCIEN | USBHS_GINTEN_PTNCIEN_ISOUTNCIEN;
+#endif
     
     USB_MODIFY_REG32(&USBx->regs.GCSR->GINTEN, ginten, ginten);
     return status;
@@ -1223,14 +1223,14 @@ USB_STS  USB_EP0Activate(USB_CORE_MODULE *USBx)
     {
         case DSTS_ENUMSPD_HS_PHY_30MHZ_OR_60MHZ:
         case DSTS_ENUMSPD_FS_PHY_30MHZ_OR_60MHZ:
-            dinepctrl |= (DEP0CTL_MPS_64 << USBHS_DINEP0CTRL_MPLEN_POS);
+            dinepctrl |= (DEP0CTRL_MPS_64 << USBHS_DINEP0CTRL_MPLEN_POS);
         break;
         case DSTS_ENUMSPD_LS_PHY_6MHZ:
-            dinepctrl |= (DEP0CTL_MPS_8 << USBHS_DINEP0CTRL_MPLEN_POS);
+            dinepctrl |= (DEP0CTRL_MPS_8 << USBHS_DINEP0CTRL_MPLEN_POS);
         break;
 
         default:
-            dinepctrl |= (DEP0CTL_MPS_64 << USBHS_DINEP0CTRL_MPLEN_POS);
+            dinepctrl |= (DEP0CTRL_MPS_64 << USBHS_DINEP0CTRL_MPLEN_POS);
         break;
     }
     USB_WRITE_REG32(&USBx->regs.INEPCSR[0]->DINEPCTRL, dinepctrl);
@@ -1254,7 +1254,7 @@ USB_STS USB_EPActivate(USB_CORE_MODULE *USBx, USB_EP *ep)
     uint32_t depctrl;
     uint32_t depinten;
 
-    /* Read DEPCTLn register */
+    /* Read DEPCTRLn register */
     if (ep->is_in == 1)
     {
         addr = &USBx->regs.INEPCSR[ep->num]->DINEPCTRL;
@@ -1278,8 +1278,12 @@ USB_STS USB_EPActivate(USB_CORE_MODULE *USBx, USB_EP *ep)
 
         USB_WRITE_REG32(addr, depctrl);
     }
+#ifdef USB_DEDICATED_EP_ENABLED
+    USB_SET_REG32_BIT(&USBx->regs.DCSR->DEEPINTEN, depinten);
+#else
     /* Enable the Interrupt for this EP */
     USB_SET_REG32_BIT(&USBx->regs.DCSR->DAEPINTEN, depinten);
+#endif
     return status;
 }
 
@@ -1296,7 +1300,7 @@ USB_STS USB_EPDeactivate(USB_CORE_MODULE *USBx , USB_EP *ep)
     USB_STS status = USB_OK;
     uint32_t depctrl = 0;
 
-    /* Read DEPCTLn register and Disable the IN endpoint*/
+    /* Read DEPCTRLn register and Disable the IN endpoint*/
     if(ep->is_in == 1)
     {
         depctrl = USB_READ_REG32(&USBx->regs.INEPCSR[ep->num]->DINEPCTRL);
@@ -1642,8 +1646,6 @@ USB_STS USB_EPClearStall(USB_CORE_MODULE *USBx , USB_EP *ep)
     return status;
 }
 
-
-
 /**
 *\*\name    USB_ReadDevAllOutEp_itr.
 *\*\fun     returns OUT endpoint interrupt bits.
@@ -1688,6 +1690,34 @@ uint32_t USB_ReadDevAllInEPItr(USB_CORE_MODULE *USBx)
     v = USB_READ_REG32(&USBx->regs.DCSR->DAEPINTSTS);
     v &= USB_READ_REG32(&USBx->regs.DCSR->DAEPINTEN);
     return (v & 0xffff);
+}
+
+/**
+*\*\name    USB_ReadDevEachInEPItr.
+*\*\fun     Get int status register.
+*\*\param   USBx: selected device.
+*\*\return  int status register.
+**/
+uint32_t USB_ReadDevEachInEPItr(USB_CORE_MODULE *USBx)
+{
+    uint32_t v;
+    v = USB_READ_REG32(&USBx->regs.DCSR->DEEPINTSTS);
+    v = USB_READ_REG32(&USBx->regs.DCSR->DEEPINTEN);
+    return (v & 0xFFFF);
+}
+
+/**
+*\*\name    USB_ReadDevEachOutEPItr.
+*\*\fun     Get int status register.
+*\*\param   USBx: selected device.
+*\*\return  int status register.
+**/
+uint32_t USB_ReadDevEachOutEPItr(USB_CORE_MODULE *USBx)
+{
+    uint32_t v;
+    v = USB_READ_REG32(&USBx->regs.DCSR->DEEPINTSTS);
+    v = USB_READ_REG32(&USBx->regs.DCSR->DEEPINTEN);
+    return (v & 0xFFFF0000) >> 16;
 }
 
 /**
@@ -1875,14 +1905,14 @@ uint32_t USB_GetEPStatus(USB_CORE_MODULE *USBx, USB_EP *ep)
 **/
 void USB_SetEPStatus(USB_CORE_MODULE *USBx, USB_EP *ep, uint32_t Status)
 {
-    __IO uint32_t *depctl_addr;
+    __IO uint32_t *depctrl_addr;
     uint32_t depctrl = 0;
 
     /* Process for IN endpoint */
     if(ep->is_in == 1)
     {
-        depctl_addr = &(USBx->regs.INEPCSR[ep->num]->DINEPCTRL);
-        depctrl = USB_READ_REG32(depctl_addr);
+        depctrl_addr = &(USBx->regs.INEPCSR[ep->num]->DINEPCTRL);
+        depctrl = USB_READ_REG32(depctrl_addr);
 
         if(Status == USB_EP_TX_STALL)
         {
@@ -1916,8 +1946,8 @@ void USB_SetEPStatus(USB_CORE_MODULE *USBx, USB_EP *ep, uint32_t Status)
     }
     else /* Process for OUT endpoint */
     {
-        depctl_addr = &(USBx->regs.OUTEPCSR[ep->num]->DOUTEPCTRL);
-        depctrl = USB_READ_REG32(depctl_addr);
+        depctrl_addr = &(USBx->regs.OUTEPCSR[ep->num]->DOUTEPCTRL);
+        depctrl = USB_READ_REG32(depctrl_addr);
 
         if(Status == USB_EP_RX_STALL)
         {
@@ -1948,7 +1978,7 @@ void USB_SetEPStatus(USB_CORE_MODULE *USBx, USB_EP *ep, uint32_t Status)
             /* Do Nothing */
         }
     }
-    USB_WRITE_REG32(depctl_addr, depctrl);
+    USB_WRITE_REG32(depctrl_addr, depctrl);
 }
 
 #endif

@@ -243,13 +243,20 @@ void SPI_Init(SPI_Module* SPIx,const SPI_InitType* SPI_InitStruct)
 *\*\          - CLKPOL
 *\*\           - I2S_CLKPOL_LOW 
 *\*\           - I2S_CLKPOL_HIGH
-*\*\return  none
+*\*\          - ClkSrcFrequency
+*\*\           - RCC_Clocks.SysclkFreq
+*\*\           - RCC_Clocks.HclkFreq
+*\*\           - RCC_Clocks.Pclk1Freq
+*\*\           - RCC_Clocks.Pclk2Freq
+*\*\           - RCC_Clocks.AdcPllClkFreq
+*\*\           - RCC_Clocks.AdcHclkFreq
+*\*\           - RCC_Clocks.ShrtpllFreq
+*\*\           - user defined
 **/
 void I2S_Init(SPI_Module* SPIx,const I2S_InitType* I2S_InitStruct)
 {
     uint16_t tmpregister, i2sdiv, i2sodd, packetlength;
     uint32_t tmp;
-    RCC_ClocksType RCC_Clocks;
     uint32_t sourceclock;
 
     /*----------------------- SPIx SPI_I2S_CFGR & I2SPREDIV Configuration -----------------*/
@@ -282,11 +289,11 @@ void I2S_Init(SPI_Module* SPIx,const I2S_InitType* I2S_InitStruct)
         }
 
         /* I2S Clock source is System clock: Get System Clock frequency */
-        RCC_GetClocksFreqValue(&RCC_Clocks);
+        //RCC_GetClocksFreqValue(&RCC_Clocks);
 
         /* Get the source clock value: based on System Clock value */
-        sourceclock = RCC_Clocks.SysclkFreq;
-
+			  sourceclock = I2S_InitStruct->ClkSrcFrequency;
+				
         /* Compute the Real divider depending on the MCLK output state with a floating point */
         if (I2S_InitStruct->MCLKEnable == I2S_MCLK_ENABLE)
         {
@@ -470,8 +477,8 @@ void I2S_Enable(SPI_Module* SPIx, FunctionalState Cmd)
 *\*\      	 - SPI_I2S_INT_ERR          
 *\*\      	 - SPI_I2S_INT_RXONLYC       
 *\*\      	 - SPI_I2S_INT_RXFIFOF      
-*\*\      	 - SPI_I2S_INT_RXFIFOHF     
-*\*\      	 - SPI_I2S_INT_TXFIFOHE  
+*\*\      	 - SPI_I2S_INT_RXFIFOHF   
+*\*\      	 - SPI_I2S_INT_TXFIFOHE
 *\*\param   Cmd :
 *\*\         - ENABLE
 *\*\         - DISABLE

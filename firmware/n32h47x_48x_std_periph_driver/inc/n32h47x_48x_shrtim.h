@@ -685,6 +685,11 @@ static const uint32_t REG_MASK_TAB_CPT[] =
 #define SHRTIM_EVENT_9        ((uint32_t)0x00000100U)     /* External event channel 9 identifier */
 #define SHRTIM_EVENT_10       ((uint32_t)0x00000200U)     /* External event channel 10 identifier */
 
+#define SHRTIM_EXEV_SOURCE_1 ((uint32_t)0x00000000U) /* Eternal event source is from GPIO */
+#define SHRTIM_EXEV_SOURCE_2 ((uint32_t)0x00000001U) /* Eternal event source is from Comparator */
+#define SHRTIM_EXEV_SOURCE_3 ((uint32_t)0x00000002U) /* Eternal event source is from timer */
+#define SHRTIM_EXEV_SOURCE_4 ((uint32_t)0x00000003U) /* Eternal event source is from adc analog watch dog */
+#define SHRTIM_EXEV_SOURCE_5 ((uint32_t)0x00000004U) /* NA */
 
 /** Defining the state of an SHRTIM output. **/
 #define SHRTIM_OUTPUTSTATE_IDLE          ((uint32_t)0x00000001U) /* Main operating mode, where the output can take the active or inactive level as programmed in the crossbar unit */

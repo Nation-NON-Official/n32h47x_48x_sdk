@@ -87,9 +87,9 @@ void SDIO_DeInit(void)
  *\*\               - SDIO_BUS_WIDTH_1B
  *\*\               - SDIO_BUS_WIDTH_4B
  *\*\               - SDIO_BUS_WIDTH_8B
- *\*\          - HardwareFlowCtrl:  
- *\*\               - SDIO_HARDWARE_FLOW_DISABLE
- *\*\               - SDIO_HARDWARE_FLOW_ENABLE 
+ *\*\          - HardwareClkCtrl:  
+ *\*\               - SDIO_HARDWARE_CLKCTRL_DISABLE
+ *\*\               - SDIO_HARDWARE_CLKCTRL_ENABLE 
  *\*\          - ClkDiv: Must be a value between 0x00 and 0x1FF.
  *\*\return none
  */
@@ -120,7 +120,7 @@ void SDIO_Init(SDIO_InitType* InitStruct)
                 | InitStruct->ClkBypass    \
                 | InitStruct->BusWidth     \
                 | InitStruct->ClkEdge      \
-                | InitStruct->HardwareFlowCtrl  );
+                | InitStruct->HardwareClkCtrl  );
 
     /* Write SDIO CLKCTRL */
     SDIO->CLKCTRL = tempReg;
@@ -139,7 +139,7 @@ void SDIO_InitStruct(SDIO_InitType* InitStruct)
     InitStruct->ClkBypass       = SDIO_CLK_BYPASS_DISABLE;
     InitStruct->ClkPwrSave      = SDIO_CLK_POWER_SAVE_DISABLE;
     InitStruct->BusWidth        = SDIO_BUS_WIDTH_1B;
-    InitStruct->HardwareFlowCtrl = SDIO_HARDWARE_FLOW_DISABLE;
+    InitStruct->HardwareClkCtrl = SDIO_HARDWARE_CLKCTRL_DISABLE;
 }
 
 /**
@@ -161,8 +161,8 @@ void SDIO_EnableClock(FunctionalState Cmd)
  *\*\fun    Sets the power status of the controller.
  *\*\param  PowerState new state of the Power state.
  *\*\           This parameter must be one of the following values:
- *\*\               - SDIO_POWER_OFF 
- *\*\               - SDIO_POWER_ON
+ *\*\               - SDIO_POWER_CTRL_OFF 
+ *\*\               - SDIO_POWER_CTRL_ON
  *\*\return none
  */
 void SDIO_SetPower(uint32_t PowerState)
@@ -184,9 +184,9 @@ void SDIO_SetPower(uint32_t PowerState)
  *\*\fun    Gets the power status of the controller.
  *\*\param  none
  *\*\return Current Power status,the value can be:
- *\*\           - SDIO_POWER_OFF  
- *\*\           - SDIO_POWER_UP
- *\*\           - SDIO_POWER_ON   
+ *\*\           - SDIO_POWER_CTRL_OFF  
+ *\*\           - SDIO_POWER_CTRL_UP
+ *\*\           - SDIO_POWER_CTRL_ON   
  */
 uint32_t SDIO_GetPower(void)
 {
@@ -361,27 +361,27 @@ uint32_t SDIO_GetResp(uint32_t SDIO_RESP)
  *\*\          - DatLen: Number of data bytes to be transferred,
  *\*\                   must be a value between 0x0 and 0x01FFFFFF
  *\*\          - DatBlkSize: 
- *\*\               - SDIO_DAT_BLK_SIZE_1B    
- *\*\               - SDIO_DAT_BLK_SIZE_2B    
- *\*\               - SDIO_DAT_BLK_SIZE_4B    
- *\*\               - SDIO_DAT_BLK_SIZE_8B    
- *\*\               - SDIO_DAT_BLK_SIZE_16B   
- *\*\               - SDIO_DAT_BLK_SIZE_32B   
- *\*\               - SDIO_DAT_BLK_SIZE_64B   
- *\*\               - SDIO_DAT_BLK_SIZE_128B  
- *\*\               - SDIO_DAT_BLK_SIZE_256B  
- *\*\               - SDIO_DAT_BLK_SIZE_512B  
- *\*\               - SDIO_DAT_BLK_SIZE_1024B 
- *\*\               - SDIO_DAT_BLK_SIZE_2048B 
- *\*\               - SDIO_DAT_BLK_SIZE_4096B 
- *\*\               - SDIO_DAT_BLK_SIZE_8192B 
- *\*\               - SDIO_DAT_BLK_SIZE_16384B
+ *\*\               - SDIO_DATBLK_SIZE_1B    
+ *\*\               - SDIO_DATBLK_SIZE_2B    
+ *\*\               - SDIO_DATBLK_SIZE_4B    
+ *\*\               - SDIO_DATBLK_SIZE_8B    
+ *\*\               - SDIO_DATBLK_SIZE_16B   
+ *\*\               - SDIO_DATBLK_SIZE_32B   
+ *\*\               - SDIO_DATBLK_SIZE_64B   
+ *\*\               - SDIO_DATBLK_SIZE_128B  
+ *\*\               - SDIO_DATBLK_SIZE_256B  
+ *\*\               - SDIO_DATBLK_SIZE_512B  
+ *\*\               - SDIO_DATBLK_SIZE_1024B 
+ *\*\               - SDIO_DATBLK_SIZE_2048B 
+ *\*\               - SDIO_DATBLK_SIZE_4096B 
+ *\*\               - SDIO_DATBLK_SIZE_8192B 
+ *\*\               - SDIO_DATBLK_SIZE_16384B
  *\*\          - TransferDirection:  
- *\*\               - SDIO_TRANSFER_TO_CARD
- *\*\               - SDIO_TRANSFER_TO_SDIO
+ *\*\               - SDIO_TRANSDIR_TOCARD
+ *\*\               - SDIO_TRANSDIR_TOSDIO
  *\*\          - TransferMode:  
- *\*\               - SDIO_TRANSFER_MODE_BLOCK 
- *\*\               - SDIO_TRANSFER_MODE_STREAM
+ *\*\               - SDIO_TRANSMODE_BLOCK 
+ *\*\               - SDIO_TRANSMODE_STREAM
  *\*\          - DPSMConfig:  
  *\*\               - SDIO_DPSM_DISABLE
  *\*\               - SDIO_DPSM_ENABLE 
@@ -414,7 +414,7 @@ void SDIO_ConfigData(SDIO_DataInitType* DataInitStruct)
                 | DataInitStruct->DPSMConfig;
                    
     /* Set DMADIR bits if nessarry */
-    if(SDIO_TRANSFER_TO_CARD == DataInitStruct->TransferDirection)
+    if(SDIO_TRANSDIR_TOCARD == DataInitStruct->TransferDirection)
     {
         tempReg |= SDIO_DMA_DATA_TO_DEVICE;
     }              
@@ -433,9 +433,9 @@ void SDIO_InitDataStruct(SDIO_DataInitType* SDIO_DataInitStruct)
 {
     SDIO_DataInitStruct->DatTimeout        = 0xFFFFFFFF;
     SDIO_DataInitStruct->DatLen            = 0x00;
-    SDIO_DataInitStruct->DatBlkSize        = SDIO_DAT_BLK_SIZE_1B;
-    SDIO_DataInitStruct->TransferDirection = SDIO_TRANSFER_TO_CARD;
-    SDIO_DataInitStruct->TransferMode      = SDIO_TRANSFER_MODE_BLOCK;
+    SDIO_DataInitStruct->DatBlkSize        = SDIO_DATBLK_SIZE_1B;
+    SDIO_DataInitStruct->TransferDirection = SDIO_TRANSDIR_TOCARD;
+    SDIO_DataInitStruct->TransferMode      = SDIO_TRANSMODE_BLOCK;
     SDIO_DataInitStruct->DPSMConfig        = SDIO_DPSM_DISABLE;
 }
 
@@ -502,8 +502,8 @@ void SDIO_EnableReadWait(FunctionalState Cmd)
  *\*\fun    Sets one of the two options of inserting read wait interval.
  *\*\param  ReadWaitMode SD I/O Read Wait operation mode.
  *\*\           This parameter must be one of the following values:
- *\*\               - SDIO_READ_WAIT_MODE_CLK 
- *\*\               - SDIO_READ_WAIT_MODE_DAT2
+ *\*\               - SDIO_RDWAIT_MODE_CLK 
+ *\*\               - SDIO_RDWAIT_MODE_DAT2
  *\*\return none
  */
 void SDIO_EnableReadWaitMode(uint32_t ReadWaitMode)

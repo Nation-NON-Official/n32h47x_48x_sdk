@@ -81,10 +81,10 @@ typedef struct
                                     - SDIO_BUS_WIDTH_1B
                                     - SDIO_BUS_WIDTH_4B
                                     - SDIO_BUS_WIDTH_8B      */
-    uint32_t HardwareFlowCtrl;  /* Specifies whether the SDIO hardware flow control is enabled or disabled.
+    uint32_t HardwareClkCtrl;   /* Specifies whether the SDIO hardware flow control is enabled or disabled.
                                     This parameter must be one of the following values:
-                                    - SDIO_HARDWARE_FLOW_DISABLE
-                                    - SDIO_HARDWARE_FLOW_ENABLE          */
+                                    - SDIO_HARDWARE_CLKCTRL_DISABLE
+                                    - SDIO_HARDWARE_CLKCTRL_ENABLE          */
     uint32_t ClkDiv;            /* Specifies the clock frequency of the SDIO controller.
                                     This parameter must be a value between 0x00 and 0x1FF. */
 
@@ -122,29 +122,29 @@ typedef struct
                                     This parameter must be a value between 0x0 and 0x01FFFFFF. */
     uint32_t DatBlkSize;        /* Specifies the data block size for block transfer.
                                     This parameter must be one of the following values: 
-                                    - SDIO_DAT_BLK_SIZE_1B    
-                                    - SDIO_DAT_BLK_SIZE_2B    
-                                    - SDIO_DAT_BLK_SIZE_4B    
-                                    - SDIO_DAT_BLK_SIZE_8B    
-                                    - SDIO_DAT_BLK_SIZE_16B   
-                                    - SDIO_DAT_BLK_SIZE_32B   
-                                    - SDIO_DAT_BLK_SIZE_64B   
-                                    - SDIO_DAT_BLK_SIZE_128B  
-                                    - SDIO_DAT_BLK_SIZE_256B  
-                                    - SDIO_DAT_BLK_SIZE_512B  
-                                    - SDIO_DAT_BLK_SIZE_1024B 
-                                    - SDIO_DAT_BLK_SIZE_2048B 
-                                    - SDIO_DAT_BLK_SIZE_4096B 
-                                    - SDIO_DAT_BLK_SIZE_8192B 
-                                    - SDIO_DAT_BLK_SIZE_16384B  */
+                                    - SDIO_DATBLK_SIZE_1B    
+                                    - SDIO_DATBLK_SIZE_2B    
+                                    - SDIO_DATBLK_SIZE_4B    
+                                    - SDIO_DATBLK_SIZE_8B    
+                                    - SDIO_DATBLK_SIZE_16B   
+                                    - SDIO_DATBLK_SIZE_32B   
+                                    - SDIO_DATBLK_SIZE_64B   
+                                    - SDIO_DATBLK_SIZE_128B  
+                                    - SDIO_DATBLK_SIZE_256B  
+                                    - SDIO_DATBLK_SIZE_512B  
+                                    - SDIO_DATBLK_SIZE_1024B 
+                                    - SDIO_DATBLK_SIZE_2048B 
+                                    - SDIO_DATBLK_SIZE_4096B 
+                                    - SDIO_DATBLK_SIZE_8192B 
+                                    - SDIO_DATBLK_SIZE_16384B  */
     uint32_t TransferDirection; /* Specifies the data transfer direction, whether the transfer is a read or write.
                                     This parameter must be one of the following values: 
-                                    - SDIO_TRANSFER_TO_CARD    
-                                    - SDIO_TRANSFER_TO_SDIO     */
+                                    - SDIO_TRANSDIR_TOCARD    
+                                    - SDIO_TRANSDIR_TOSDIO     */
     uint32_t TransferMode;      /* Specifies whether data transfer is in stream or block mode.
                                     This parameter must be one of the following values: 
-                                    - SDIO_TRANSFER_MODE_BLOCK         
-                                    - SDIO_TRANSFER_MODE_STREAM     */
+                                    - SDIO_TRANSMODE_BLOCK         
+                                    - SDIO_TRANSMODE_STREAM     */
     uint32_t DPSMConfig;        /* Specifies whether SDIO Data path state machine (DPSM) is enabled or disabled.
                                     This parameter can be a value of @ref SDIO_DPSM_State 
                                     - SDIO_DPSM_DISABLE
@@ -201,13 +201,13 @@ typedef struct
 
 /*** SDIO register function define ***/
 /** SDIO power control define **/
-#define SDIO_POWER_OFF              ((uint32_t)0x00000000U)     /* SDIO power off, and the clock to card is stopped */
-#define SDIO_POWER_UP               (SDIO_PWRCTRL_PWRCTRL_1)    /* SDIO power up, and the clock to card is stopped  */
-#define SDIO_POWER_ON               (SDIO_PWRCTRL_PWRCTRL)      /* SDIO power on, and the card is clocked   */
+#define SDIO_POWER_CTRL_OFF         ((uint32_t)0x00000000U)     /* SDIO power off, and the clock to card is stopped */
+#define SDIO_POWER_CTRL_UP          (SDIO_PWRCTRL_PWRCTRL_1)    /* SDIO power up, and the clock to card is stopped  */
+#define SDIO_POWER_CTRL_ON          (SDIO_PWRCTRL_PWRCTRL)      /* SDIO power on, and the card is clocked   */
 
 /** SDIO hardware flow control define **/
-#define SDIO_HARDWARE_FLOW_DISABLE  ((uint32_t)0x00000000U)     /* Hardware flow control disable */
-#define SDIO_HARDWARE_FLOW_ENABLE   (SDIO_CLKCTRL_HWCLKEN)      /* Hardware flow control enable  */
+#define SDIO_HARDWARE_CLKCTRL_DISABLE   ((uint32_t)0x00000000U)     /* Hardware flow control disable */
+#define SDIO_HARDWARE_CLKCTRL_ENABLE    (SDIO_CLKCTRL_HWCLKEN)      /* Hardware flow control enable  */
 
 /** SDIO clock dephasing selection define **/
 #define SDIO_CLK_EDGE_RISING        ((uint32_t)0x00000000U)     /* SDIO_CLK generated on the rising edge of the master clock SDIOCLK  */
@@ -266,12 +266,12 @@ typedef struct
 #define SDIO_DPSM_ENABLE            (SDIO_DATCTRL_DATEN)        /* Data transfer enable  */
 
 /* SDIO data transfer mode selection define */
-#define SDIO_TRANSFER_MODE_BLOCK    ((uint32_t)0x00000000U)     /* Block data transfer  */
-#define SDIO_TRANSFER_MODE_STREAM   (SDIO_DATCTRL_TRANSMOD)     /* Stream or SDIO multibyte data transfer */
+#define SDIO_TRANSMODE_BLOCK        ((uint32_t)0x00000000U)     /* Block data transfer  */
+#define SDIO_TRANSMODE_STREAM       (SDIO_DATCTRL_TRANSMOD)     /* Stream or SDIO multibyte data transfer */
 
 /* SDIO data transfer direction define */
-#define SDIO_TRANSFER_TO_CARD       ((uint32_t)0x00000000U)     /* Data transfer from SDIO controller to card */
-#define SDIO_TRANSFER_TO_SDIO       (SDIO_DATCTRL_DATDIR)       /* Data transfer form card to SDIO controller */
+#define SDIO_TRANSDIR_TOCARD        ((uint32_t)0x00000000U)     /* Data transfer from SDIO controller to card */
+#define SDIO_TRANSDIR_TOSDIO        (SDIO_DATCTRL_DATDIR)       /* Data transfer form card to SDIO controller */
 
 /* SDIO DMA control define */
 #define SDIO_DMA_DISABLE            ((uint32_t)0x00000000U)     /* DMA disable */
@@ -282,8 +282,8 @@ typedef struct
 #define SDIO_READ_WAIT_ENABLE       (SDIO_DATCTRL_RWAITEN)      /* Read wait operation start */
 
 /* SDIO read wait mode define */
-#define SDIO_READ_WAIT_MODE_CLK     ((uint32_t)0x00000000U)     /* Read Wait control using SDIO_CK */
-#define SDIO_READ_WAIT_MODE_DAT2    ((uint32_t)0x00000001U)     /* Read Wait control stopping SDIO_DAT2 */
+#define SDIO_RDWAIT_MODE_CLK        ((uint32_t)0x00000000U)     /* Read Wait control using SDIO_CK */
+#define SDIO_RDWAIT_MODE_DAT2       ((uint32_t)0x00000001U)     /* Read Wait control stopping SDIO_DAT2 */
 
 /* SDIO read wait stop define */
 #define SDIO_READ_WAIT_IN_PROGRESS  ((uint32_t)0x00000000U)     /* Read wait in progress if RWAITEN bit is set */
@@ -294,21 +294,21 @@ typedef struct
 #define SDIO_IOCARD_ENABLE          (SDIO_DATCTRL_SDIOEN)       /* SD I/O-card-specific operation enable */
 
 /** SDIO data block size define **/
-#define SDIO_DAT_BLK_SIZE_1B        (SDIO_DATCTRL_BLKSIZE_1    )  /* Data block size is 1 byte     */
-#define SDIO_DAT_BLK_SIZE_2B        (SDIO_DATCTRL_BLKSIZE_2    )  /* Data block size is 2 byte     */
-#define SDIO_DAT_BLK_SIZE_4B        (SDIO_DATCTRL_BLKSIZE_4    )  /* Data block size is 4 byte     */
-#define SDIO_DAT_BLK_SIZE_8B        (SDIO_DATCTRL_BLKSIZE_8    )  /* Data block size is 8 byte     */
-#define SDIO_DAT_BLK_SIZE_16B       (SDIO_DATCTRL_BLKSIZE_16   )  /* Data block size is 16 byte    */
-#define SDIO_DAT_BLK_SIZE_32B       (SDIO_DATCTRL_BLKSIZE_32   )  /* Data block size is 32 byte    */
-#define SDIO_DAT_BLK_SIZE_64B       (SDIO_DATCTRL_BLKSIZE_64   )  /* Data block size is 64 byte    */
-#define SDIO_DAT_BLK_SIZE_128B      (SDIO_DATCTRL_BLKSIZE_128  )  /* Data block size is 128 byte   */
-#define SDIO_DAT_BLK_SIZE_256B      (SDIO_DATCTRL_BLKSIZE_256  )  /* Data block size is 256 byte   */
-#define SDIO_DAT_BLK_SIZE_512B      (SDIO_DATCTRL_BLKSIZE_512  )  /* Data block size is 512 byte   */
-#define SDIO_DAT_BLK_SIZE_1024B     (SDIO_DATCTRL_BLKSIZE_1024 )  /* Data block size is 1024 byte  */
-#define SDIO_DAT_BLK_SIZE_2048B     (SDIO_DATCTRL_BLKSIZE_2048 )  /* Data block size is 2048 byte  */
-#define SDIO_DAT_BLK_SIZE_4096B     (SDIO_DATCTRL_BLKSIZE_4096 )  /* Data block size is 4096 byte  */
-#define SDIO_DAT_BLK_SIZE_8192B     (SDIO_DATCTRL_BLKSIZE_8192 )  /* Data block size is 8192 byte  */
-#define SDIO_DAT_BLK_SIZE_16384B    (SDIO_DATCTRL_BLKSIZE_16384)  /* Data block size is 16384 byte */
+#define SDIO_DATBLK_SIZE_1B         (SDIO_DATCTRL_BLKSIZE_1    )  /* Data block size is 1 byte     */
+#define SDIO_DATBLK_SIZE_2B         (SDIO_DATCTRL_BLKSIZE_2    )  /* Data block size is 2 byte     */
+#define SDIO_DATBLK_SIZE_4B         (SDIO_DATCTRL_BLKSIZE_4    )  /* Data block size is 4 byte     */
+#define SDIO_DATBLK_SIZE_8B         (SDIO_DATCTRL_BLKSIZE_8    )  /* Data block size is 8 byte     */
+#define SDIO_DATBLK_SIZE_16B        (SDIO_DATCTRL_BLKSIZE_16   )  /* Data block size is 16 byte    */
+#define SDIO_DATBLK_SIZE_32B        (SDIO_DATCTRL_BLKSIZE_32   )  /* Data block size is 32 byte    */
+#define SDIO_DATBLK_SIZE_64B        (SDIO_DATCTRL_BLKSIZE_64   )  /* Data block size is 64 byte    */
+#define SDIO_DATBLK_SIZE_128B       (SDIO_DATCTRL_BLKSIZE_128  )  /* Data block size is 128 byte   */
+#define SDIO_DATBLK_SIZE_256B       (SDIO_DATCTRL_BLKSIZE_256  )  /* Data block size is 256 byte   */
+#define SDIO_DATBLK_SIZE_512B       (SDIO_DATCTRL_BLKSIZE_512  )  /* Data block size is 512 byte   */
+#define SDIO_DATBLK_SIZE_1024B      (SDIO_DATCTRL_BLKSIZE_1024 )  /* Data block size is 1024 byte  */
+#define SDIO_DATBLK_SIZE_2048B      (SDIO_DATCTRL_BLKSIZE_2048 )  /* Data block size is 2048 byte  */
+#define SDIO_DATBLK_SIZE_4096B      (SDIO_DATCTRL_BLKSIZE_4096 )  /* Data block size is 4096 byte  */
+#define SDIO_DATBLK_SIZE_8192B      (SDIO_DATCTRL_BLKSIZE_8192 )  /* Data block size is 8192 byte  */
+#define SDIO_DATBLK_SIZE_16384B     (SDIO_DATCTRL_BLKSIZE_16384)  /* Data block size is 16384 byte */
 
 /** SDIO DMA direction define **/
 #define SDIO_DMA_DEVICE_DATA_IN     ((uint32_t)0x00000000U)     /* Data input from external device in DMA mode */

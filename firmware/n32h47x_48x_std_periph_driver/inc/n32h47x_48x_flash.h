@@ -89,7 +89,8 @@ typedef enum
 #define FLASH_PRFTBS_MSK                  ((uint32_t)FLASH_AC_PRFTBFSTS)
 /** Prefetch_Buffer_Enable_Disable **/
 #define FLASH_PrefetchBuf_EN              ((uint32_t)FLASH_AC_PRFTBFEN)            /* FLASH Prefetch Buffer Enable */
-#define FLASH_PrefetchBuf_DIS             (~((uint32_t)FLASH_AC_PRFTBFEN))         /* FLASH Prefetch Buffer Disable */
+#define FLASH_PrefetchBuf_DIS             ((uint32_t)0x00000000U)         		   /* FLASH Prefetch Buffer Disable */
+#define FLASH_PrefetchBuf_MSK             (~((uint32_t)FLASH_AC_PRFTBFEN))         /* FLASH Prefetch Buffer mask */
 
 
 /** iCache_Enable_Disable **/

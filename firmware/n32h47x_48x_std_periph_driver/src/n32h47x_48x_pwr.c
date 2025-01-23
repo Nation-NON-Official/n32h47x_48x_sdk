@@ -155,6 +155,29 @@ void PWR_PVDSourceConfig(uint32_t PVD_source)
    }  
 }
 
+/**
+*\*\name    PWR_PVDINPinSelect.
+*\*\fun     PVD_IN pin selection.
+*\*\param   PVD_pin (The input parameters must be the following values):
+*\*\          - PVD_IN_PA10      
+*\*\          - PVD_IN_PB7   
+*\*\return  none
+*\*\note    none
+**/
+void PWR_PVDINPinSelect(PVD_IN_SEL PVD_pin)
+{
+    if(PVD_pin == PVD_IN_PB7)
+   {
+       /* Set PVD_IN bit */
+       *(uint32_t *)0x40010018 |= 0x1;
+   }
+   else
+   {
+       /* Reset PVD_IN bit */
+       *(uint32_t *)0x40010018 &= 0xFFFFFFFE;
+   }  
+}
+
 
 /**
 *\*\name    PWR_WakeUpPinEnable.
@@ -195,13 +218,13 @@ void PWR_WakeUpPinEnable(uint32_t pin, FunctionalState Cmd)
 *\*\          - WAKEUP_PIN3POL   WKUP3(PA2)
 *\*\          - WAKEUP_PIN4POL   WKUP4(PC5)
 *\*\param   polarity (The input parameters must be the following values): 
-*\*\          - POL_RISE
-*\*\          - POL_DOWN
+*\*\          - POL_LOW
+*\*\          - POL_HIGH
 *\*\return  none
 **/
 void PWR_WakeUpPinPolarity(uint32_t pin, WAKEUP_PIN_POL polarity)
 {
-    if(polarity == POL_RISE)
+    if(polarity == POL_LOW)
     {
         /* Set WKUPxPOL bit */
         PWR->CTRLSTS |= pin;
@@ -249,7 +272,7 @@ void PWR_WakeUpPeriphEnable(uint32_t periph, FunctionalState Cmd)
 *\*\          - PWR_SLEEPENTRY_WFE    enter SLEEP mode with WFE instruction
 *\*\return  none
 **/
-void PWR_EnterSLEEPMode(PWR_SLEEPONEXIT_STATUS SLEEPONEXIT, uint8_t PWR_STOPEntry)
+void PWR_EnterSLEEPMode(PWR_SLEEPONEXIT_STATUS SLEEPONEXIT, uint8_t PWR_SLEEPEntry)
 {
     /* Clear SLEEPDEEP bit of Cortex System Control Register */
     SCB->SCR &= (uint32_t) ~((uint32_t)SCB_SCR_SLEEPDEEP);
@@ -269,7 +292,7 @@ void PWR_EnterSLEEPMode(PWR_SLEEPONEXIT_STATUS SLEEPONEXIT, uint8_t PWR_STOPEntr
       
 
     /* Select SLEEP mode entry --------------------------------------------------*/
-    if (PWR_STOPEntry == PWR_SLEEPENTRY_WFI)
+    if (PWR_SLEEPEntry == PWR_SLEEPENTRY_WFI)
     {
         /* Request Wait For Interrupt */
         __WFI();

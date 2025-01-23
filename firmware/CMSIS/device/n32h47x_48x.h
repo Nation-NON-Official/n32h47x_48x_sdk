@@ -1060,9 +1060,9 @@ typedef struct
     __IO uint32_t DINEPFEINTEN;               /* dev IN EP fifo empty interrupt enable     Address offset: 0x834 */
     __IO uint32_t DEEPINTSTS;                 /* Each EP interrupt Status register         Address offset: 0x838 */
     __IO uint32_t DEEPINTEN;                  /* Each EP interrupt enable                  Address offset: 0x83C */  
-    __IO uint32_t DINEPXINTEN[9];              /* dedicated EP mask                         Address offset: 0x840-0x860 */
+    __IO uint32_t DINEPXINTEN[9];             /* dedicated EP mask                         Address offset: 0x840-0x860 */
     uint32_t  Reserved64[7];                  /* Reserved                                  Address offset: 0x864-0x87C */
-    __IO uint32_t DOUTEPXINTEN[9];              /* dedicated EP msk                          Address offset: 0x880-0x8A0 */   
+    __IO uint32_t DOUTEPXINTEN[16];           /* dedicated EP msk                          Address offset: 0x880-0x8A0 */   
 } USB_Device_Registers;
 
 
@@ -3075,8 +3075,8 @@ typedef struct {
 #define RCC_BDCTRL_LPTIM2SEL_1       ((uint32_t)0x02000000U) /*Bit25*/
 #define RCC_BDCTRL_LPTIM2SEL_2       ((uint32_t)0x04000000U) /*Bit26*/
 
-#define RCC_BDCTRL_LPTIM2SEL_LSI     ((uint32_t)0x00000000U) /* LSI used as LPTIM2 clock */
-#define RCC_BDCTRL_LPTIM2SEL_LSE     ((uint32_t)0x01000000U) /* LSE used as LPTIM2 clock */
+#define RCC_BDCTRL_LPTIM2SEL_LSI     ((uint32_t)0x06000000U) /* LSI used as LPTIM2 clock, Note: B version chip  */
+#define RCC_BDCTRL_LPTIM2SEL_LSE     ((uint32_t)0x07000000U) /* LSE used as LPTIM2 clock, Note: B version chip  */
 #define RCC_BDCTRL_LPTIM2SEL_HSI     ((uint32_t)0x02000000U) /* HSI used as LPTIM2 clock */
 #define RCC_BDCTRL_LPTIM2SEL_HSE     ((uint32_t)0x03000000U) /* HSE used as LPTIM2 clock */
 #define RCC_BDCTRL_LPTIM2SEL_PCLK1   ((uint32_t)0x04000000U) /* PCLK1 used as LPTIM2 clock */
@@ -3088,8 +3088,9 @@ typedef struct {
 #define RCC_BDCTRL_LPTIM1SEL_1       ((uint32_t)0x00200000U) /*Bit21*/
 #define RCC_BDCTRL_LPTIM1SEL_2       ((uint32_t)0x00400000U) /*Bit22*/
 
-#define RCC_BDCTRL_LPTIM1SEL_LSI     ((uint32_t)0x00000000U) /* LSI used as LPTIM1 clock */
-#define RCC_BDCTRL_LPTIM1SEL_LSE     ((uint32_t)0x00100000U) /* LSE used as LPTIM1 clock */
+
+#define RCC_BDCTRL_LPTIM1SEL_LSI     ((uint32_t)0x00600000U) /* LSI used as LPTIM1 clock, Note: B version chip */
+#define RCC_BDCTRL_LPTIM1SEL_LSE     ((uint32_t)0x00700000U) /* LSE used as LPTIM1 clock, Note: B version chip  */
 #define RCC_BDCTRL_LPTIM1SEL_HSI     ((uint32_t)0x00200000U) /* HSI used as LPTIM1 clock */
 #define RCC_BDCTRL_LPTIM1SEL_HSE     ((uint32_t)0x00300000U) /* HSE used as LPTIM1 clock */
 #define RCC_BDCTRL_LPTIM1SEL_PCLK1   ((uint32_t)0x00400000U) /* PCLK1 used as LPTIM1 clock */
@@ -8851,15 +8852,15 @@ typedef struct {
 
 
 /** Bit definition for USBHS_GAHBCFG register **/
-#define USBFS_GAHBCFG_GINTEN_POS                       (0U)
+#define USBHS_GAHBCFG_GINTEN_POS                       (0U)
 #define USBHS_GAHBCFG_GINTEN                           ((uint32_t)0x00000001U)
 #define USBHS_GAHBCFG_BURSTTYP_POS                     (1U)
 #define USBHS_GAHBCFG_BURSTTYP                         ((uint32_t)0x0000001EU)
-#define USBFS_GAHBCFG_DMAEN_POS                        (5U)
+#define USBHS_GAHBCFG_DMAEN_POS                        (5U)
 #define USBHS_GAHBCFG_DMAEN                            ((uint32_t)0x00000020U)
 #define USBHS_GAHBCFG_NPTXFETH_POS                     (7U)
 #define USBHS_GAHBCFG_NPTXFETH                         ((uint32_t)0x00000080U)
-#define USBFS_GAHBCFG_PTXFETH_POS                      (8U)
+#define USBHS_GAHBCFG_PTXFETH_POS                      (8U)
 #define USBHS_GAHBCFG_PTXFETH                          ((uint32_t)0x00000100U)
 
 /**  Bit definition for USBHS_GCFG register **/
@@ -9632,7 +9633,7 @@ typedef struct {
 #define USBHS_PWRCTRL_PHYSLEEP_POS                     (6U)
 #define USBHS_PWRCTRL_PHYSLEEP                         ((uint32_t)0x00000040U)
 #define USBHS_PWRCTRL_DSLEEP_POS                       (7U)
-#define USBFS_PWRCTRL_DSLEEP                           ((uint32_t)0x00000080U)
+#define USBHS_PWRCTRL_DSLEEP                           ((uint32_t)0x00000080U)
 
 /** Bit definition for USBHS_PWRCTRL1 register **/
 #define USBHS_PWRCTRL1_GATEN_POS                       (0U)

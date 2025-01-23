@@ -5302,6 +5302,12 @@
         </settings>
     </configuration>
     <group>
+        <name>BSP</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\bsp\src\delay.c</name>
+        </file>
+    </group>
+    <group>
         <name>CMSIS</name>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\..\firmware\CMSIS\device\system_n32h47x_48x.c</name>

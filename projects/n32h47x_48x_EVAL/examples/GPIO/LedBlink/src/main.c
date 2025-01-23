@@ -55,6 +55,7 @@
 #include "main.h"
 #include "n32h47x_48x_rcc.h"
 #include "n32h47x_48x_gpio.h"
+#include "delay.h"
 
 /**
  *\*\name   main.
@@ -77,7 +78,7 @@ int main(void)
         LED_Blink(LED1_PORT, LED1_PIN);
         LED_Blink(LED2_PORT, LED2_PIN);
         LED_Blink(LED3_PORT, LED3_PIN);
-        Delay(SystemCoreClock/8);
+        systick_delay_ms(500);
     }
     
     /* LED3 port is default used for JTAG, must remap first */
@@ -95,17 +96,17 @@ int main(void)
         /* Turn on LED1 and turn off LED3*/
         LED_Off(LED3_PORT, LED3_PIN);
         LED_On(LED1_PORT, LED1_PIN);
-        Delay(SystemCoreClock/8);
+        systick_delay_ms(500);
         
         /* Turn on LED2 and turn off LED1*/
         LED_Off(LED1_PORT, LED1_PIN);
         LED_On(LED2_PORT, LED2_PIN);
-        Delay(SystemCoreClock/8);
+        systick_delay_ms(500);
         
         /* Turn on LED3 and turn off LED2 */
         LED_Off(LED2_PORT, LED2_PIN);
         LED_On(LED3_PORT, LED3_PIN);
-        Delay(SystemCoreClock/8);
+        systick_delay_ms(500);
     }
 }
 
@@ -201,16 +202,5 @@ void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin)
     GPIO_TogglePin(GPIOx,Pin);
 }
 
-/**
- *\*\name   Delay.
- *\*\fun    Delay a short time.
- *\*\param  none
- *\*\return none
- */
-void Delay(uint32_t delay)
-{
-    uint32_t i;
-    
-    for(i=0;i<delay;i++);
-}
+
 

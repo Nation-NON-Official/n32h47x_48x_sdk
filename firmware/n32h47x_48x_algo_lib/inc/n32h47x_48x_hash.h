@@ -52,8 +52,9 @@
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
-#ifndef _N32H47X_HASH_H_
-#define _N32H47X_HASH_H_
+
+#ifndef __N32H47X_HASH_H__
+#define __N32H47X_HASH_H__
 #include <stdint.h>
 #ifndef true
 #define true					1
@@ -63,14 +64,14 @@
 #define false					0
 #endif // false
 
-//typedef unsigned char			bool;	///<BOOL
+typedef unsigned char			bool;	///<BOOL
 #define  ALG_SHA1           (uint16_t)(0x0004)
 #define  ALG_SHA224         (uint16_t)(0x000A)
 #define  ALG_SHA256         (uint16_t)(0x000B)
 #define  ALG_MD5            (u16)(0x000C)
 #define  ALG_SM3	    (uint16_t)(0x0012)
 
-//extern bool g_sac_hashdone;
+
 
 enum
 {
@@ -128,124 +129,113 @@ extern const HASH_ALG HASH_ALG_MD5[1];
 extern const HASH_ALG HASH_ALG_SM3[1];
 extern const HASH_ALG HASH_ALG_SM3_160[1];
 extern const HASH_ALG HASH_ALG_SM3_192[1];
-
 /**
-*\*\name    HASH_Init.
-*\*\fun     Hash initialization.
-*\*\param   ctx pointer to HASH_CTX struct
-*\*\return  HASH_Init_OK,  Hash init success; othets:  Hash init fail
-*\*\note    1.Please refer to the demo in user guidance before using this function 
-**/
+ * @brief  Hash init
+ * @param[in] ctx pointer to HASH_CTX struct
+ * @return HASH_Init_OK,  Hash init success; othets:  Hash init fail
+ * @note   1.Please refer to the demo in user guidance before using this function 
+ */
 uint32_t HASH_Init(HASH_CTX *ctx);
 
 /**
-*\*\name    HASH_Start.
-*\*\fun     Hash start.
-*\*\param   ctx pointer to HASH_CTX struct
-*\*\return  HASH_Start_OK,  Hash start success; othets:  Hash start fail
-*\*\note    1.Please refer to the demo in user guidance before using this function 
-*\*\        2.HASH_Init() should be recalled before use this function 
-**/
+ * @brief  Hash start
+ * @param[in] ctx pointer to HASH_CTX struct
+ * @return HASH_Start_OK,  Hash start success; othets:  Hash start fail
+ * @note   1.Please refer to the demo in user guidance before using this function 
+ *         2.HASH_Init() should be recalled before use this function 
+ */
 uint32_t HASH_Start(HASH_CTX *ctx);
 
 /**
-*\*\name    HASH_Update.
-*\*\fun     Hash update.
-*\*\param   ctx pointer to HASH_CTX struct
-*\*\param   in pointer to message
-*\*\param   out pointer tohash result,digest
-*\*\return  HASH_Update_OK,  Hash update success; othets:  Hash update fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-*\*\        2.HASH_Init() and HASH_Start() should be recalled before use this function 
-**/
+ * @brief  Hash update
+ * @param[in] ctx pointer to HASH_CTX struct
+ * @param[in] in pointer to message
+ * @param[out] out pointer tohash result,digest
+ * @return HASH_Update_OK,  Hash update success; othets:  Hash update fail
+ * @note   1.Please refer to the demo in user guidance before using this function 
+ *         2.HASH_Init() and HASH_Start() should be recalled before use this function 
+ */
 uint32_t HASH_Update(HASH_CTX *ctx,  uint8_t *in,  uint32_t byteLen);
 
 /**
-*\*\name    HASH_Complete.
-*\*\fun     Hash complete.
-*\*\param   ctx pointer to HASH_CTX struct
-*\*\param   out pointer tohash result,digest
-*\*\return  HASH_Complete_OK,  Hash complete success; othets:  Hash complete fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-*\*\        2.HASH_Init(), HASH_Start() and HASH_Update() should be recalled before use this function 
-**/
+ * @brief  Hash complete
+ * @param[in] ctx pointer to HASH_CTX struct
+ * @param[out] out pointer tohash result,digest
+ * @return HASH_Complete_OK,  Hash complete success; othets:  Hash complete fail
+ * @note   1.Please refer to the demo in user guidance before using this function 
+ *         2.HASH_Init(), HASH_Start() and HASH_Update() should be recalled before use this function 
+ */
 uint32_t HASH_Complete(HASH_CTX *ctx,  uint8_t *out);
 
 /**
-*\*\name    HASH_Close.
-*\*\fun     Hash close.
-*\*\param   none
-*\*\return  HASH_Close_OK, Hash close success; othets: Hash close fail
-*\*\note    1.Please refer to the demo in user guidance before using this function 
-**/
+ * @brief  Hash close
+ * @return HASH_Close_OK, Hash close success; othets: Hash close fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t HASH_Close(void);
 
 /**
-*\*\name    SM3_Hash.
-*\*\fun    	SM3 Hash for 256bits digest.
-*\*\param   in pointer to message
-*\*\param   byte length of in
-*\*\param   out pointer tohash result,digest
-*\*\return  SM3_Hash_OK, SM3 hash success; othets: SM3 hash fail
-*\*\note    1.Please refer to the demo in user guidance before using this function  
-**/
+ * @brief  SM3 Hash for 256bits digest
+ * @param[in] in pointer to message
+ * @param[in] byte length of in
+ * @param[out] out pointer tohash result,digest
+ * @return SM3_Hash_OK, SM3 hash success; othets: SM3 hash fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t SM3_Hash(uint8_t *in,uint32_t byteLen, uint8_t* out);
 
+
 /**
-*\*\name    SHA1_Hash.
-*\*\fun    	SHA1 Hash.
-*\*\param   in pointer to message
-*\*\param   byte length of in
-*\*\param   out pointer tohash result,digest
-*\*\return  SHA1_Hash_OK, SHA1 hash success; othets: SHA1 hash fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-**/
+ * @brief  SHA1 Hash
+ * @param[in] in pointer to message
+ * @param[in] byte length of in
+ * @param[out] out pointer tohash result,digest
+ * @return SHA1_Hash_OK, SHA1 hash success; othets: SHA1 hash fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t SHA1_Hash(uint8_t*in, uint32_t byteLen, uint8_t*out);
 
 /**
-*\*\name    SHA224_Hash.
-*\*\fun    	SHA224 Hash.
-*\*\param   in pointer to message
-*\*\param   byte length of in
-*\*\param   out pointer tohash result,digest
-*\*\return  SHA224_Hash_OK, SHA224 hash success; othets: SHA224 hash fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-**/
+ * @brief  SHA224 Hash
+ * @param[in] in pointer to message
+ * @param[in] byte length of in
+ * @param[out] out pointer tohash result,digest
+ * @return SHA224_Hash_OK, SHA224 hash success; othets: SHA224 hash fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t SHA224_Hash(uint8_t* in,uint32_t byteLen, uint8_t* out);
 
+
 /**
-*\*\name    SHA256_Hash.
-*\*\fun    	SHA256 Hash.
-*\*\param   in pointer to message
-*\*\param   byte length of in
-*\*\param   out pointer tohash result,digest
-*\*\return  SHA256_Hash_OK, SHA256 hash success; othets: SHA256 hash fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-**/
+ * @brief  SHA256 Hash
+ * @param[in] in pointer to message
+ * @param[in] byte length of in
+ * @param[out] out pointer tohash result,digest
+ * @return SHA256_Hash_OK, SHA256 hash success; othets: SHA256 hash fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t SHA256_Hash(uint8_t* in,uint32_t byteLen, uint8_t* out);
 
 /**
-*\*\name    MD5_Hash.
-*\*\fun    	MD5 Hash.
-*\*\param   in pointer to message
-*\*\param   byte length of in
-*\*\param   out pointer tohash result,digest
-*\*\return  MD5_Hash_OK, MD5 hash success; othets: MD5 hash fail
-*\*\note    1.Please refer to the demo in user guidance before using this function
-**/
+ * @brief  MD5 Hash
+ * @param[in] in pointer to message
+ * @param[in] byte length of in
+ * @param[in] out pointer tohash result,digest
+ * @return MD5_Hash_OK, MD5 hash success; othets: MD5 hash fail
+ * @note   1.Please refer to the demo in user guidance before using this function  
+ */
 uint32_t MD5_Hash(uint8_t* in,uint32_t byteLen, uint8_t* out);
 
 /**
-*\*\name    HASH_Version.
-*\*\fun     Get HASH lib version.
-*\*\param	 	type pointer one byte type information represents the type of the lib, like Commercial version.\
-*\*\Bits 		0~4 stands for Commercial (C), Security (S), Normal (N), Evaluation (E), Test (T), Bits 5~7 are reserved. e.g. 0x09 stands for CE version.
-*\*\param		customer pointer one byte customer information represents customer ID. for example, 0x00 stands for standard version, 0x01 is for Tianyu customized version...
-*\*\param		date pointer array which include three bytes date information. If the returned bytes are 18,9,13,this denotes September 13,2018 
-*\*\param		version pointer one byte version information represents develop version of the lib. e.g. 0x12 denotes version 1.2.
-*\*\return  none
-*\*\note  	1.You can recall this function to get HASH lib information.
-**/
+ * @brief Get HASH lib version
+ * @param[out] type pointer one byte type information represents the type of the lib, like Commercial version.\
+ * @Bits 0~4 stands for Commercial (C), Security (S), Normal (N), Evaluation (E), Test (T), Bits 5~7 are reserved. e.g. 0x09 stands for CE version.
+ * @param[out] customer pointer one byte customer information represents customer ID. for example, 0x00 stands for standard version, 0x01 is for Tianyu customized version...
+ * @param[out] date pointer array which include three bytes date information. If the returned bytes are 18,9,13,this denotes September 13,2018 
+ * @param[out] version pointer one byte version information represents develop version of the lib. e.g. 0x12 denotes version 1.2.
+ * @return none
+ * @1.You can recall this function to get RSA lib information
+ */
 void HASH_Version(uint8_t*type, uint8_t*customer, uint8_t date[3], uint8_t *version);
 
 

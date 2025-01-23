@@ -88,7 +88,7 @@ void LED_Init(GPIO_Module* GPIOx,uint16_t Pin,uint32_t clock);
 void LED_On(GPIO_Module* GPIOx,uint16_t Pin);
 void LED_Off(GPIO_Module* GPIOx,uint16_t Pin);
 void LED_Blink(GPIO_Module* GPIOx,uint16_t Pin);
-void Delay(uint32_t delay);
+
 
 #ifdef __cplusplus
 }

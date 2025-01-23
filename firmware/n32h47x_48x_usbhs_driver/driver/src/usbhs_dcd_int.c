@@ -513,7 +513,7 @@ static uint32_t USBDEV_WriteEmptyTxFifo(USB_CORE_MODULE *USBx, uint32_t epnum)
 static uint32_t USBDEV_HandleUsbReset_ISTR(USB_CORE_MODULE *USBx)
 {
     uint32_t i;
-    uint32_t daepinten = 0;
+    uint32_t depinten = 0;
     uint32_t doutepinten = 0;
     uint32_t dinepinten = 0;
     uint32_t dcfg;
@@ -522,7 +522,7 @@ static uint32_t USBDEV_HandleUsbReset_ISTR(USB_CORE_MODULE *USBx)
     USB_MODIFY_REG32(&USBx->regs.DCSR->DCTRL, USBHS_DCTRL_RMWKUP, 0);
 
     /* Flush the Tx FIFO */
-    USB_FlushTxFifo(USBx , 0);
+    USB_FlushTxFifo(USBx , 0x10);
 
     for (i=0; i<USBx->cfg.dev_endpoints_num; i++)
     {
@@ -531,21 +531,50 @@ static uint32_t USBDEV_HandleUsbReset_ISTR(USB_CORE_MODULE *USBx)
         USB_WRITE_REG32(&USBx->regs.OUTEPCSR[i]->DOUTEPINTSTS, 0xFFFFU);
         USB_MODIFY_REG32(&USBx->regs.OUTEPCSR[i]->DOUTEPCTRL, USBHS_DOUTEPCTRL_STALL, USBHS_DOUTEPCTRL_SNAK);
     }
+#ifdef USB_DEDICATED_EP_ENABLED
+    USB_WRITE_REG32(&USBx->regs.DCSR->DEEPINTSTS, 0xFFFFFFFF);
+    depinten |= 1 << USBHS_DEEPINTSTS_INEPINT_POS;
+    depinten |= 1 << USBHS_DEEPINTSTS_OUTEPINT_POS;
+    USB_WRITE_REG32(&USBx->regs.DCSR->DEEPINTEN, depinten);
+#else
     USB_WRITE_REG32(&USBx->regs.DCSR->DAEPINTSTS, 0xFFFFFFFF);
-
-    daepinten |= 1 << USBHS_DAEPINTEN_INEPIEN_POS;
-    daepinten |= 1 << USBHS_DAEPINTEN_OUTEPIEN_POS;
-    USB_WRITE_REG32(&USBx->regs.DCSR->DAEPINTEN, daepinten);
-
+    depinten |= 1 << USBHS_DAEPINTEN_INEPIEN_POS;
+    depinten |= 1 << USBHS_DAEPINTEN_OUTEPIEN_POS;
+    USB_WRITE_REG32(&USBx->regs.DCSR->DAEPINTEN, depinten);
+#endif /* USB_DEDICATED_EP_ENABLED */
+    
     doutepinten |= USBHS_DOUTEPINTEN_STUPDNEIEN;
     doutepinten |= USBHS_DOUTEPINTEN_TXCIEN;
     doutepinten |= USBHS_DOUTEPINTEN_EPDIEN;
+    
+#ifdef USB_DEDICATED_EP_ENABLED
+    for (i = 0UL; i < USBx->cfg.dev_endpoints_num ; i++)
+    {
+        if(i==0 || i>=9)
+        {
+            USB_WRITE_REG32(&USBx->regs.DCSR->DOUTEPXINTEN[i], doutepinten);
+        }
+    }
+#else
+
     USB_WRITE_REG32(&USBx->regs.DCSR->DOUTEPINTEN, doutepinten);
+#endif /* USB_DEDICATED_EP_ENABLED */
 
     dinepinten |= USBHS_DINEPINTEN_TXCIEN;
     dinepinten |= USBHS_DINEPINTEN_TOIEN;
     dinepinten |= USBHS_DINEPINTEN_EPDIEN;
+    
+#ifdef USB_DEDICATED_EP_ENABLED
+    for (i = 0UL; i < USBx->cfg.dev_endpoints_num ; i++)
+    {
+        if(i<=8)
+        {
+            USB_WRITE_REG32(&USBx->regs.DCSR->DINEPXINTEN[i], dinepinten);
+        }
+    }
+#else
     USB_WRITE_REG32(&USBx->regs.DCSR->DINEPINTEN, dinepinten);
+#endif /* USB_DEDICATED_EP_ENABLED */
 
     /* Reset Device Address */
     dcfg = USB_READ_REG32(&USBx->regs.DCSR->DCFG);
@@ -740,6 +769,195 @@ void USBD_ISTR_WKUP_handler(USB_CORE_MODULE *USBx)
     }
 }
 
+#ifdef USB_DEDICATED_EP_ENABLED
+
+/**
+*\*\name    USBDEV_HandleEachInEP_ISTR.
+*\*\fun     Indicates that Each IN EP has a pending Interrupt.
+*\*\param   USBx: device instance.
+*\*\return  status.
+**/
+static uint32_t USBDEV_HandleEachInEP_ISTR(USB_CORE_MODULE *USBx)
+{  
+    uint32_t ep_intr;
+    uint32_t epnum = 0;
+    uint32_t fifoemptymsk;
+    uint32_t dinepintsts, dinepinten;
+
+    ep_intr = USB_ReadDevEachInEPItr(USBx);
+
+    while(ep_intr)
+    {
+        if((ep_intr & 0x1) == 0x01) /* In ITR */
+        {
+            dinepinten  = USB_READ_REG32(&USBx->regs.DCSR->DINEPXINTEN[epnum]); /* Get In ITR status */
+            dinepinten |= (((USB_READ_REG32(&USBx->regs.DCSR->DINEPFEINTEN) >> epnum) & 0x1UL) << 7U);
+            dinepintsts = (USB_READ_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS) & dinepinten); 
+            if(dinepintsts & USBHS_DINEPINTSTS_TXCIF)
+            {
+                fifoemptymsk = 0x1 << epnum;
+                USB_MODIFY_REG32(&USBx->regs.DCSR->DINEPFEINTEN, fifoemptymsk, 0);
+                USB_WRITE_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS, USBHS_DINEPINTSTS_TXCIF);
+                /* TX COMPLETE */
+                USBD_DEV_INT_fops->DataInStage(USBx , epnum);
+
+                if (USBx->cfg.dma_enable == 1 && (epnum == 0))
+                {
+                    if(USBx->dev.device_state == USB_EP0_STATUS_IN)
+                    {
+                        /* prepare to rx more setup packets */
+                        USB_EP0_OutStart(USBx);
+                    }
+                }
+            }
+            if(dinepintsts & USBHS_DINEPINTSTS_EPDISIF)
+            {
+                USB_WRITE_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS, USBHS_DINEPINTSTS_EPDISIF);
+            }       
+            if(dinepintsts & USBHS_DINEPINTSTS_TOUTIF)
+            {
+                USB_WRITE_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS, USBHS_DINEPINTSTS_TOUTIF);
+            }
+            if(dinepintsts & USBHS_DINEPINTSTS_TXFERINTIF)
+            {
+                USB_WRITE_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS, USBHS_DINEPINTSTS_TXFERINTIF);
+            }
+            if(dinepintsts & USBHS_DINEPINTSTS_INEPNAKEIF)
+            {
+                USB_WRITE_REG32(&USBx->regs.INEPCSR[epnum]->DINEPINTSTS, USBHS_DINEPINTSTS_INEPNAKEIF);
+            }
+            if(dinepintsts & USBHS_DINEPINTSTS_TXFEIF)
+            {
+                USBDEV_WriteEmptyTxFifo(USBx, epnum);
+            }
+        }
+        epnum++;
+        ep_intr >>= 1;
+    }
+
+    return 1;
+}
+
+/**
+*\*\name    USBDEV_HandleEachOutEP_ISTR.
+*\*\fun     Indicates that Each OUT EP has a pending Interrupt.
+*\*\param   USBx: device instance.
+*\*\return  status.
+**/
+static uint32_t USBDEV_HandleEachOutEP_ISTR(USB_CORE_MODULE *USBx)
+{
+    uint32_t ep_intr;
+    uint32_t epnum = 0;
+    uint32_t doutepintsts;
+    uint32_t douteptxsiz;
+    uint32_t doutepintsts_v;
+
+    /* Read in the device interrupt bits */
+    ep_intr = USB_ReadDevEachOutEPItr(USBx);
+
+    while(ep_intr)
+    {
+        if(ep_intr&0x1)
+        {
+            doutepintsts = USB_READ_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS);
+            doutepintsts &= USB_READ_REG32(&USBx->regs.DCSR->DOUTEPXINTEN[epnum]);
+            doutepintsts_v = USB_READ_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS);
+            /* Transfer complete */
+            if(doutepintsts & USBHS_DOUTEPINTSTS_TXCIF)
+            {
+                /* Clear the bit in DOUTEPINTSTSn for this interrupt */
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_TXCIF);
+                if(USBx->cfg.dma_enable == 1)
+                {
+                    /* Setup Phase Done (control EPs) */
+                    if(doutepintsts_v & USBHS_DOUTEPINTSTS_STUPPDNEIF)
+                    {
+                        if(doutepintsts_v & USBHS_DOUTEPINTSTS_STUPPRXIF)
+                        {
+                            USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_STUPPRXIF);
+                        }
+                    }
+                    else if(doutepintsts_v & USBHS_DOUTEPINTSTS_STSPRXIF)
+                    {
+                        USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_STSPRXIF);
+                    }
+                    else if((doutepintsts_v & (USBHS_DOUTEPINTSTS_STUPPDNEIF | USBHS_DOUTEPINTSTS_STSPRXIF)) == 0)
+                    {
+                        if(doutepintsts_v & USBHS_DOUTEPINTSTS_STUPPRXIF)
+                        {
+                            USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_STUPPRXIF);
+                        }
+                    }
+                    douteptxsiz = USB_READ_REG32((&USBx->regs.OUTEPCSR[epnum]->DOUTEPTXSIZ));
+                    /*ToDo : handle more than one single MPS size packet */
+                    USBx->dev.out_ep[epnum].xfer_count = USBx->dev.out_ep[epnum].maxpacket - (douteptxsiz & USBHS_DOUTEPTXSIZ_TLEN);
+                    
+                    /* Inform upper layer: data ready */
+                    /* RX COMPLETE */
+                    USBD_DEV_INT_fops->DataOutStage(USBx , epnum);
+                    if((epnum == 0) && (USBx->dev.device_state == USB_EP0_STATUS_OUT) && (USBx->dev.out_ep[epnum].xfer_len == 0))
+                    {
+                        /* prepare to rx more setup packets */
+                        USB_EP0_OutStart(USBx);
+                    }
+                }
+                else
+                {
+                    /* Inform upper layer: data ready */
+                    /* RX COMPLETE */
+                    USBD_DEV_INT_fops->DataOutStage(USBx , epnum);
+                }
+            }
+            if(doutepintsts & USBHS_DOUTEPINTSTS_OUTTRXEPDISIF)
+            {
+                /* Clear the bit in DOUTEPINTSTSn for this interrupt */
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_OUTTRXEPDISIF);
+            }
+            /* Endpoint disable  */
+            if(doutepintsts & USBHS_DOUTEPINTSTS_EPDISIF)
+            {
+                /* Clear the bit in DOUTEPINTSTSn for this interrupt */
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_EPDISIF);
+                
+            }
+            /* Setup Phase Done (control EPs) */
+            if(doutepintsts & USBHS_DOUTEPINTSTS_STUPPDNEIF)
+            {
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_STUPPDNEIF);
+                /* inform the upper layer that a setup packet is available */
+                /* SETUP COMPLETE */
+                USBD_DEV_INT_fops->SetupStage(USBx);
+
+                if(doutepintsts_v & USBHS_DOUTEPINTSTS_STUPPRXIF)
+                {
+                    USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_STUPPRXIF);
+                }
+                if((epnum == 0) && (USBx->cfg.dma_enable == 1) && (USBx->dev.out_ep[epnum].xfer_len == 0))
+                {
+                    /* prepare to rx more setup packets */
+                    USB_EP0_OutStart(USBx);
+                }
+            }
+            
+            if(doutepintsts & USBHS_DOUTEPINTSTS_OUTTRXEPDISIF)
+            {
+                /* Clear the bit in DOUTEPINTSTSn for this interrupt */
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_OUTTRXEPDISIF);
+            }
+            
+            /* Endpoint disable  */
+            if(doutepintsts & USBHS_DOUTEPINTSTS_EPDISIF)
+            {
+                /* Clear the bit in DOUTEPINTSTSn for this interrupt */
+                USB_WRITE_REG32(&USBx->regs.OUTEPCSR[epnum]->DOUTEPINTSTS, USBHS_DOUTEPINTSTS_EPDISIF);
+            }
+        }
+        epnum++;
+        ep_intr >>= 1;
+    }
+    return 1;
+}
+
 /**
 *\*\name    USBD_EP_IN_ISTR_Handler.
 *\*\fun     Handle IN EP interrupt.
@@ -751,12 +969,13 @@ void USBD_EP_IN_ISTR_Handler(USB_CORE_MODULE *USBx)
     uint32_t ep_intr;
     if (USB_IsDeviceMode(USBx)) 
     {
-        ep_intr = USB_ReadDevAllInEPItr(USBx);
+        ep_intr = USB_ReadDevEachInEPItr(USBx);
+        
         if (ep_intr == 0UL) 
         {
             return;
         }
-        USBDEV_HandleInEP_ISTR(USBx);
+        USBDEV_HandleEachInEP_ISTR(USBx);
     }
 }
 
@@ -771,12 +990,13 @@ void USBD_EP_OUT_ISTR_Handler(USB_CORE_MODULE *USBx)
     uint32_t ep_intr;
     if (USB_IsDeviceMode(USBx)) 
     {
-        ep_intr = USB_ReadDevAllOutEp_itr(USBx);
+        ep_intr = USB_ReadDevEachOutEPItr(USBx);
         if (ep_intr == 0UL) 
         {
             return;
         }
-        USBDEV_HandleOutEP_ISTR(USBx);
+        USBDEV_HandleEachOutEP_ISTR(USBx);
     }
 }
 
+#endif /* USB_DEDICATED_EP_ENABLED */

@@ -769,6 +769,8 @@ void TIM_BreakInputSourceEnable(TIM_Module* TIMx, uint32_t Source, uint32_t Pola
 void TIM_Break2InputSourceEnable(TIM_Module* TIMx, uint32_t Source, uint32_t Polarity, FunctionalState Cmd);
 void TIM_BidirectionDisarm(TIM_Module* TIMx);
 void TIM_BidirectionRearm(TIM_Module* TIMx);
+void TIM_Bidirection2Disarm(TIM_Module* TIMx);
+void TIM_Bidirection2Rearm(TIM_Module* TIMx);
 void TIM_InitTimBaseStruct(TIM_TimeBaseInitType* TIM_TimeBaseInitStruct);
 void TIM_InitOcStruct(OCInitType* TIM_OCInitStruct);
 void TIM_InitIcStruct(TIM_ICInitType* TIM_ICInitStruct);

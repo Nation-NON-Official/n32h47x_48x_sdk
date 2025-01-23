@@ -48,7 +48,7 @@
 /**
 *\*\file n32h47x_48x_eth.h
 *\*\author Nations
-*\*\version v1.0.0
+*\*\version v1.0.1
 *\*\copyright Copyright (c) 2023, Nations Technologies Inc. All rights reserved.
 **/
 
@@ -177,9 +177,9 @@ typedef enum
 typedef enum
 {
     ETH_BACK_OFF_LIMIT_10 = ((uint32_t)0x00000000U),
-    ETH_BACK_OFF_LIMIT_8  = ((uint32_t)0x00000002U),
-    ETH_BACK_OFF_LIMIT_4  = ((uint32_t)0x00000004U),
-    ETH_BACK_OFF_LIMIT_1  = ((uint32_t)0x00000006U)
+    ETH_BACK_OFF_LIMIT_8  = ((uint32_t)0x00000020U),
+    ETH_BACK_OFF_LIMIT_4  = ((uint32_t)0x00000040U),
+    ETH_BACK_OFF_LIMIT_1  = ((uint32_t)0x00000060U)
 } EthBacOffLimType;
 
 typedef enum
@@ -370,7 +370,7 @@ typedef struct
 
     EthSpeedType     SpeedSelect;               /* Selects the speed mode: 10Mbps or 100Mbps */
 
-    uint32_t         RxJumboPacket;             /* Enables or Disable Receiving Jumbo Packet */
+    uint32_t         JumboPacket;               /* Enables or Disable Jumbo Packet */
 
     uint32_t         DisTxJabber;               /* Enables or Disable Jabber timer on Tx path */
 
@@ -497,17 +497,17 @@ typedef struct
 /** ETH Rx VLAN tag initialize configuration structure definition **/
 typedef struct
 {
-    uint32_t           VLANTagHashTableMatch;     /* Enables or Disables VLAN Tag Hash Table Match */
+    uint32_t           VLANTagHashTableMatch;   /* Enables or Disables VLAN Tag Hash Table Match */
 
-    uint32_t           VLANTagInStatus;           /* Enables or Disables VLAN Tag in Rx status */
+    uint32_t           VLANTagInStatus;         /* Enables or Disables VLAN Tag in Rx status */
 
-    EthRxVlanStripType StripVLANTag;              /* Sets the VLAN Tag Stripping on Receive */
+    EthRxVlanStripType StripVLANTag;            /* Sets the VLAN Tag Stripping on Receive */
 
-    EthVlanCheckType   VLANTypeCheck;             /* Enables or Disables VLAN Type Check */
-                                                                                    
-    uint32_t           VLANTagInverceMatch;       /* Enables or disables VLAN Tag Inverse Match */
+    EthVlanCheckType   VLANTypeCheck;           /* Enables or Disables VLAN Type Check */
 
-    uint32_t           VLANTagComparison12Bit;    /* Enables or disables 12-Bit VLAN Tag Comparison */
+    uint32_t           VLANTagInverceMatch;     /* Enables or disables VLAN Tag Inverse Match */
+
+    uint32_t           VLANTagComparison12Bit;  /* Enables or disables 12-Bit VLAN Tag Comparison */
 
 } ETH_RxVLANTagInitType;
 
@@ -1359,9 +1359,9 @@ uint8_t ETH_IsRxDataAvailable(ETH_InfoType* pInfo);
 EthFuncStatusType ETH_GetRxDataBuffer(ETH_InfoType* pInfo, ETH_BufferType* pRxBuffer);
 uint32_t ETH_GetRxDataLength(ETH_InfoType* pInfo);
 EthFuncStatusType ETH_GetRxPacketInfo(ETH_InfoType* pInfo, ETH_RxPacketType* pRxPacket);
-void ETH_Start(ETH_Module* ETHx, ETH_InfoType* pInfo);
+void ETH_Start(ETH_Module* ETHx);
 void ETH_StartIT(ETH_Module* ETHx, ETH_InfoType* pInfo);
-void ETH_Stop(ETH_Module* ETHx, ETH_InfoType* pInfo);
+void ETH_Stop(ETH_Module* ETHx);
 void ETH_StopIT(ETH_Module* ETHx, ETH_InfoType* pInfo);
 
 FlagStatus ETH_GetTxDescFlagStatus(ETH_DMADescType* pTxDescriptor, uint32_t Flag);
