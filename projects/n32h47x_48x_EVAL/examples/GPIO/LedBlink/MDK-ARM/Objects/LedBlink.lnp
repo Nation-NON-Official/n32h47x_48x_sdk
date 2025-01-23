@@ -1,0 +1,12 @@
+--cpu=Cortex-M4.fp.sp
+".\objects\startup_n32h487.o"
+".\objects\system_n32h47x_48x.o"
+".\objects\n32h47x_48x_gpio.o"
+".\objects\n32h47x_48x_rcc.o"
+".\objects\misc.o"
+".\objects\main.o"
+".\objects\n32h47x_48x_it.o"
+--library_type=microlib --strict --scatter ".\Objects\LedBlink.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\LedBlink.map" -o .\Objects\LedBlink.axf
