@@ -109,7 +109,7 @@ void log_init(void)
     GPIO_InitStructure.GPIO_Alternate  = LOG_RX_AF;
     GPIO_InitPeripheral(GPIOA, &GPIO_InitStructure);
 
-    USART_InitStructure.BaudRate            = 115200;
+    USART_InitStructure.BaudRate            = 921600;
     USART_InitStructure.WordLength          = USART_WL_8B;
     USART_InitStructure.StopBits            = USART_STPB_1;
     USART_InitStructure.Parity              = USART_PE_NO;
