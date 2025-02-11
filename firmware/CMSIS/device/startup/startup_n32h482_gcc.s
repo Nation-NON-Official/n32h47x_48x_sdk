@@ -54,6 +54,9 @@
 .global g_pfnVectors
 .global Default_Handler
 
+.word _siisr_vector
+.word _sisr_vector
+.word _eisr_vector
 /* start address for the initialization values of the .data section.
 defined in linker script */
 .word _sidata
@@ -61,6 +64,9 @@ defined in linker script */
 .word _sdata
 /* end address for the .data section. defined in linker script */
 .word _edata
+.word _siramcode
+.word _sramcode
+.word _eramcode
 /* start address for the .bss section. defined in linker script */
 .word _sbss
 /* end address for the .bss section. defined in linker script */
@@ -72,6 +78,22 @@ defined in linker script */
 Reset_Handler:
   ldr   r0, =_estack
   mov   sp, r0          /* set stack pointer */
+
+  ldr r0, =_sisr_vector
+  ldr r1, =_eisr_vector
+  ldr r2, =_siisr_vector
+  movs r3, #0
+  b LoopCopyISRVectorInit
+
+CopyISRVectorInit:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyISRVectorInit:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyISRVectorInit
 
 /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
@@ -89,6 +111,22 @@ LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
   bcc CopyDataInit
+
+  ldr r0, =_sramcode
+  ldr r1, =_eramcode
+  ldr r2, =_siramcode
+  movs r3, #0
+  b LoopCopyRamcodeInit
+
+CopyRamcodeInit:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyRamcodeInit:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyRamcodeInit
   
 /* Zero fill the bss segment. */
   ldr r2, =_sbss

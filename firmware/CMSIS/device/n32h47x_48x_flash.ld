@@ -57,20 +57,24 @@ _Min_Stack_Size = 0x1000;     /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x30000       /* 192K */
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x28000       /* 160K */
+RAMCODE (xrw)  : ORIGIN = 0x10028000, LENGTH = 0x8000        /* 32K */
 FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 0x80000       /* 512K */
 }
 
 /* Define output sections */
 SECTIONS
 {
+  _siisr_vector = LOADADDR(.isr_vector);
   /* The startup code goes first into FLASH */
   .isr_vector :
   {
+    _sisr_vector = .;
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+    _eisr_vector = .;
+  } >RAM AT> FLASH
 
   /* The program code and other data goes into FLASH */
   .text :
@@ -140,6 +144,19 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
+
+  _siramcode = LOADADDR(.ramcode);
+  . = ALIGN(4);
+  .ramcode : 
+  {
+    . = ALIGN(4);
+    _sramcode = .;        /* create a global symbol at ramcode start */
+    *(.ramcode)           /* .ramcode sections */
+    *(.ramcode*)          /* .ramcode* sections */
+
+    . = ALIGN(4);
+    _eramcode = .;        /* define a global symbol at ramcode end */
+  } >RAMCODE AT> FLASH
 
   
   /* Uninitialized data section */

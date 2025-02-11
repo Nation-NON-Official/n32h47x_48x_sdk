@@ -268,7 +268,7 @@ void SystemInit(void)
     /* Configure the Flash Latency cycles and enable prefetch buffer */
     SetSysClock();
 
-#ifdef VECT_TAB_SRAM
+#if 1
     SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM. */
 #else
     SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH. */
