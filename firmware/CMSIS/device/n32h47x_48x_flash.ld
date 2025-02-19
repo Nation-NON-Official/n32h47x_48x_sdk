@@ -59,7 +59,7 @@ MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x28000       /* 160K */
 RAMCODE (xrw)  : ORIGIN = 0x10028000, LENGTH = 0x8000        /* 32K */
-FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 0x80000       /* 512K */
+FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 0x70000       /* 448K */
 }
 
 /* Define output sections */
