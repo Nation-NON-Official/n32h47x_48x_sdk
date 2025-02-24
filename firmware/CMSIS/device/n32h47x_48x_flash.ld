@@ -76,6 +76,20 @@ SECTIONS
     _eisr_vector = .;
   } >RAM AT> FLASH
 
+  _siramcode = LOADADDR(.ramcode);
+  . = ALIGN(4);
+  .ramcode : 
+  {
+    . = ALIGN(4);
+    _sramcode = .;        /* create a global symbol at ramcode start */
+    *(.ramcode)           /* .ramcode sections */
+    *(.ramcode*)          /* .ramcode* sections */
+    *FreeRTOSv202212.01/Source/*(.text .text.*)
+
+    . = ALIGN(4);
+    _eramcode = .;        /* define a global symbol at ramcode end */
+  } >RAMCODE AT> FLASH
+
   /* The program code and other data goes into FLASH */
   .text :
   {
@@ -144,20 +158,6 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
-
-  _siramcode = LOADADDR(.ramcode);
-  . = ALIGN(4);
-  .ramcode : 
-  {
-    . = ALIGN(4);
-    _sramcode = .;        /* create a global symbol at ramcode start */
-    *(.ramcode)           /* .ramcode sections */
-    *(.ramcode*)          /* .ramcode* sections */
-
-    . = ALIGN(4);
-    _eramcode = .;        /* define a global symbol at ramcode end */
-  } >RAMCODE AT> FLASH
-
   
   /* Uninitialized data section */
   . = ALIGN(4);
