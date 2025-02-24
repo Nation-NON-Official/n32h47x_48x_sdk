@@ -151,7 +151,7 @@ void FLASH_iCacheCmd(uint32_t FLASH_iCache)
 *\*\param  none
 *\*\return none
 **/
-MONO_RAM_CODE void FLASH_Unlock(void)
+void FLASH_Unlock(void)
 {
     FLASH->KEY = FLASH_KEY1;
     FLASH->KEY = FLASH_KEY2;
@@ -163,7 +163,7 @@ MONO_RAM_CODE void FLASH_Unlock(void)
 *\*\param  none
 *\*\return none
 **/
-MONO_RAM_CODE void FLASH_Lock(void)
+void FLASH_Lock(void)
 {
     FLASH->CTRL |= CTRL_Set_LOCK;
 }
@@ -176,7 +176,7 @@ MONO_RAM_CODE void FLASH_Lock(void)
 *\*\            - SET     FLASH is in Lock state
 *\*\            - RESET   FLASH is in Unlock state
 **/
-MONO_RAM_CODE FlagStatus Flash_GetLockStatus(void)
+FlagStatus Flash_GetLockStatus(void)
 {
     FlagStatus bit_status;
     if ((FLASH->CTRL & CTRL_Set_LOCK) != (uint32_t)RESET)
@@ -253,7 +253,7 @@ FlagStatus OB_GetLockStatus(void)
 *\*\            - FLASH_ERR_EV   Erase Verification Error
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_EraseOnePage(uint32_t Page_Address)
+FLASH_STS FLASH_EraseOnePage(uint32_t Page_Address)
 {
     FLASH_STS status_value;
 
@@ -295,7 +295,7 @@ MONO_RAM_CODE FLASH_STS FLASH_EraseOnePage(uint32_t Page_Address)
 *\*\            - FLASH_ERR_EV   Erase Verification Error
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_MassErase(void)
+FLASH_STS FLASH_MassErase(void)
 {
     FLASH_STS status_value;
 
@@ -342,7 +342,7 @@ MONO_RAM_CODE FLASH_STS FLASH_MassErase(void)
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 *\*\            - FLASH_TIMEOUT  FLASH operation timeout
 **/
-MONO_RAM_CODE FLASH_STS FLASH_ProgramdoubleWord(uint32_t address, uint32_t data0,uint32_t data1)
+FLASH_STS FLASH_ProgramdoubleWord(uint32_t address, uint32_t data0,uint32_t data1)
 {
     FLASH_STS status_value = FLASH_EOP;
 
@@ -399,7 +399,7 @@ MONO_RAM_CODE FLASH_STS FLASH_ProgramdoubleWord(uint32_t address, uint32_t data0
 *\*\            - DISABLE Disable Row programmer
 *\*\return none
 **/
-MONO_RAM_CODE void FLASH_RowProgramSet(FunctionalState Cmd)
+void FLASH_RowProgramSet(FunctionalState Cmd)
 {
     if(Cmd == ENABLE)
     {
@@ -419,7 +419,7 @@ MONO_RAM_CODE void FLASH_RowProgramSet(FunctionalState Cmd)
 *\*\            - DISABLE Row programmer in main flash
 *\*\return none
 **/
-MONO_RAM_CODE void FLASH_RowProgramAreaSet(FunctionalState Cmd)
+void FLASH_RowProgramAreaSet(FunctionalState Cmd)
 {
     if(Cmd == ENABLE)
     {
@@ -453,7 +453,7 @@ MONO_RAM_CODE void FLASH_RowProgramAreaSet(FunctionalState Cmd)
 *\*\            - FLASH_TIMEOUT     FLASH operation timeout
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_RowProgram(uint32_t address, uint32_t row_num, uint32_t *data)
+FLASH_STS FLASH_RowProgram(uint32_t address, uint32_t row_num, uint32_t *data)
 {
     FLASH_STS status_value = FLASH_EOP;
     uint32_t address_value;
@@ -742,7 +742,7 @@ FLASH_STS FLASH_ProgramOB_RUDD(uint32_t option_byte_rpd1, uint32_t option_byte_i
 *\*\            - FLASH_TIMEOUT  FLASH operation timeout
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_EnWriteProtection(uint32_t FLASH_Pages)
+FLASH_STS FLASH_EnWriteProtection(uint32_t FLASH_Pages)
 {
     uint16_t WRP0_Data = 0xFF, WRP1_Data = 0xFF, WRP2_Data = 0xFF, WRP3_Data = 0xFF;
 
@@ -986,7 +986,7 @@ FLASH_STS FLASH_ProgramOB_CCMSRAM(uint32_t option_byte_CCMSRAM)
 *\*\note   If the user has already programmed the other option bytes before calling
 *\*\       this function, he must re-program them since this function erases all option bytes.
 **/
-MONO_RAM_CODE FLASH_STS FLASH_ReadOutProtectionL1(FunctionalState Cmd)
+FLASH_STS FLASH_ReadOutProtectionL1(FunctionalState Cmd)
 {
     uint32_t user_rpd1_tmp = 0xFF,data0_data1_tmp = 0xFF,wrp0_wrp1_tmp = 0xFF,wrp2_wrp3_tmp = 0xFF,rdp2_user2_tmp = 0xFF,user3_tmp = 0xFF,CCMSRAM_tmp = 0xFF;
     FLASH_STS status_value = FLASH_EOP;
@@ -1148,7 +1148,7 @@ MONO_RAM_CODE FLASH_STS FLASH_ReadOutProtectionL1(FunctionalState Cmd)
 *\*\note   If the user has already programmed the other option bytes before calling
 *\*\       this function, he must re-program them since this function erases all option bytes.
 **/
-MONO_RAM_CODE FLASH_STS FLASH_ReadOutProtectionL2_ENABLE(void)
+FLASH_STS FLASH_ReadOutProtectionL2_ENABLE(void)
 {
     uint32_t user_rpd1_tmp = 0xFF,data0_data1_tmp = 0xFF,wrp0_wrp1_tmp = 0xFF,wrp2_wrp3_tmp = 0xFF,rdp2_user2_tmp = 0xFF,user3_tmp = 0xFF,CCMSRAM_tmp = 0xFF;
     FLASH_STS status_value = FLASH_EOP;
@@ -1358,7 +1358,7 @@ uint32_t FLASH_GetOptionBytes_Data1(void)
 *\*\return The FLASH Write Protection  Option Bytes Register value :
 *\*\            - Bit31 - Bit0 write-protects pages (62~63) - page (0~1) 
 **/
-MONO_RAM_CODE uint32_t FLASH_GetWriteProtectionSTS(void)
+uint32_t FLASH_GetWriteProtectionSTS(void)
 {
     /* Return the Flash write protection Register value */
     return (uint32_t)(FLASH->WRP);
@@ -1373,7 +1373,7 @@ MONO_RAM_CODE uint32_t FLASH_GetWriteProtectionSTS(void)
 *\*\        - SET    Read protection L1 enable
 *\*\        - RESET  Read protection L1 disable
 **/
-MONO_RAM_CODE FlagStatus FLASH_GetReadOutProtectionSTS(void)
+FlagStatus FLASH_GetReadOutProtectionSTS(void)
 {
     FlagStatus readoutstatus;
     if ((FLASH->OB & FLASH_RDPRTL1_MSK) != (uint32_t)RESET)
@@ -1395,7 +1395,7 @@ MONO_RAM_CODE FlagStatus FLASH_GetReadOutProtectionSTS(void)
 *\*\        - SET    Read protection L2 enable
 *\*\        - RESET  Read protection L2 disable
 **/
-MONO_RAM_CODE FlagStatus FLASH_GetReadOutProtectionL2STS(void)
+FlagStatus FLASH_GetReadOutProtectionL2STS(void)
 {
     FlagStatus readoutstatus;
     if ((FLASH->OB & FLASH_RDPRTL2_MSK) != (uint32_t)RESET)
@@ -1418,7 +1418,7 @@ MONO_RAM_CODE FlagStatus FLASH_GetReadOutProtectionL2STS(void)
 *\*\        - SET    Flash prefetch buffer enable
 *\*\        - RESET  Flash prefetch buffer disable
 **/
-MONO_RAM_CODE FlagStatus FLASH_GetPrefetchBufSTS(void)
+FlagStatus FLASH_GetPrefetchBufSTS(void)
 {
     FlagStatus bitstatus;
 
@@ -1491,7 +1491,7 @@ void FLASH_INTConfig(uint32_t FLASH_INT, FunctionalState Cmd)
 *\*\            - FLASH_FLAG_OBERR      FLASH Option Byte error flag
 *\*\return none
 **/
-MONO_RAM_CODE FlagStatus FLASH_GetFlagSTS(uint32_t FLASH_FLAG)
+FlagStatus FLASH_GetFlagSTS(uint32_t FLASH_FLAG)
 {
     FlagStatus bitstatus;
 
@@ -1541,7 +1541,7 @@ MONO_RAM_CODE FlagStatus FLASH_GetFlagSTS(uint32_t FLASH_FLAG)
 *\*\            - FLASH_FLAG_RPADDERR   row programmmer address error
 *\*\return none
 **/
-MONO_RAM_CODE void FLASH_ClearFlag(uint32_t FLASH_FLAG)
+void FLASH_ClearFlag(uint32_t FLASH_FLAG)
 {
     /* Clear the flags */
     FLASH->STS = FLASH_FLAG;
@@ -1560,7 +1560,7 @@ MONO_RAM_CODE void FLASH_ClearFlag(uint32_t FLASH_FLAG)
 *\*\            - FLASH_ERR_EV   Erase Verification Error
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_GetSTS(void)
+FLASH_STS FLASH_GetSTS(void)
 {
     FLASH_STS flashstatus;
 
@@ -1629,7 +1629,7 @@ MONO_RAM_CODE FLASH_STS FLASH_GetSTS(void)
 *\*\            - FLASH_ERR_EV   Erase Verification Error
 *\*\            - FLASH_ERR_RPADD   FLASH Row programmer address error
 **/
-MONO_RAM_CODE FLASH_STS FLASH_WaitForLastOpt(uint32_t Timeout)
+FLASH_STS FLASH_WaitForLastOpt(uint32_t Timeout)
 {
     FLASH_STS status_value;
     uint32_t Timeout_temp;
