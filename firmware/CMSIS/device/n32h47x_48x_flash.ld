@@ -49,7 +49,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20028000;    /* end of RAM */
+_estack = 0x20027000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x400;      /* required amount of heap  */
 _Min_Stack_Size = 0x1000;     /* required amount of stack */
@@ -57,7 +57,8 @@ _Min_Stack_Size = 0x1000;     /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x28000       /* 160K */
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 0x27000       /* 156K */
+RAMDATA (xrw)  : ORIGIN = 0x20027000, LENGTH = 0x1000        /* 4K */
 RAMCODE (xrw)  : ORIGIN = 0x10028000, LENGTH = 0x8000        /* 32K */
 FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 0x70000       /* 448K */
 }
@@ -75,6 +76,20 @@ SECTIONS
     . = ALIGN(4);
     _eisr_vector = .;
   } >RAM AT> FLASH
+
+  _siramdata = LOADADDR(.ramdata);
+  . = ALIGN(4);
+  .ramdata :
+  {
+    . = ALIGN(4);
+    _sramdata = .;        /* create a global symbol at ramdata start */
+    *(.ramdata)         /* .ramdata sections (constants, strings, etc.) */
+    *(.ramdata*)        /* .ramdata* sections (constants, strings, etc.) */
+    *FreeRTOSv202212.01/Source/*(.rodata .rodata.*)
+
+    . = ALIGN(4);
+    _eramdata = .;        /* define a global symbol at ramdata end */
+  } >RAMDATA AT> FLASH
 
   _siramcode = LOADADDR(.ramcode);
   . = ALIGN(4);

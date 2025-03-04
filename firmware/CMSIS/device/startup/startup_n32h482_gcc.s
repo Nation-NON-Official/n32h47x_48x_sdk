@@ -64,6 +64,9 @@ defined in linker script */
 .word _sdata
 /* end address for the .data section. defined in linker script */
 .word _edata
+.word _siramdata
+.word _sramdata
+.word _eramdata
 .word _siramcode
 .word _sramcode
 .word _eramcode
@@ -111,6 +114,22 @@ LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
   bcc CopyDataInit
+
+  ldr r0, =_sramdata
+  ldr r1, =_eramdata
+  ldr r2, =_siramdata
+  movs r3, #0
+  b LoopCopyRamdataInit
+
+CopyRamdataInit:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyRamdataInit:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyRamdataInit
 
   ldr r0, =_sramcode
   ldr r1, =_eramcode
