@@ -656,7 +656,7 @@ void DMA_ClearFlag(uint32_t DMAFlag, DMA_Module *DMAy)
 *\*\note    Global interrupt status is the logic or generation of transfer completion
 *\*\        interrupt, half-transfer interrupt, transfer error interrupt.
 **/
-INTStatus DMA_GetIntStatus(uint32_t DMAy_Int, DMA_Module *DMAy)
+MONO_RAM_CODE INTStatus DMA_GetIntStatus(uint32_t DMAy_Int, DMA_Module *DMAy)
 {
     INTStatus bitstatus;
     uint32_t tmpregister;
@@ -728,7 +728,7 @@ INTStatus DMA_GetIntStatus(uint32_t DMAy_Int, DMA_Module *DMAy)
 *\*\        after clearing the three interrupt states, the global interrupt state
 *\*\        will also be cleared.
 **/
-void DMA_ClrIntPendingBit(uint32_t DMAy_Int, DMA_Module *DMAy)
+MONO_RAM_CODE void DMA_ClrIntPendingBit(uint32_t DMAy_Int, DMA_Module *DMAy)
 {
     /* Calculate the used DMAy */
     /* Clear the selected DMAy interrupt pending bits */
