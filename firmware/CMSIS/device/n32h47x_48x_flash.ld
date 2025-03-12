@@ -86,6 +86,8 @@ SECTIONS
     *(.ramdata)         /* .ramdata sections (constants, strings, etc.) */
     *(.ramdata*)        /* .ramdata* sections (constants, strings, etc.) */
     *FreeRTOSv202212.01/Source/*(.rodata .rodata.*)
+    *(*CSWTCH.*)
+    *libgcc.a(.rodata .rodata*)
 
     . = ALIGN(4);
     _eramdata = .;        /* define a global symbol at ramdata end */
@@ -100,6 +102,8 @@ SECTIONS
     *(.ramcode)           /* .ramcode sections */
     *(.ramcode*)          /* .ramcode* sections */
     *FreeRTOSv202212.01/Source/*(.text .text.*)
+    *libgcc.a:(.text .text*)
+    *n32h47x_48x_flash.*(.text .text.*)
 
     . = ALIGN(4);
     _eramcode = .;        /* define a global symbol at ramcode end */
